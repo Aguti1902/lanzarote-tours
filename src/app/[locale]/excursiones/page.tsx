@@ -10,7 +10,7 @@ import { localePath } from "@/i18n/path";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Excursions | Lanzarote Experience Tours",
+  title: "Salidas",
 };
 
 type Props = { params: Promise<{ locale: string }> };

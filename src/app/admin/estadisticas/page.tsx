@@ -51,9 +51,9 @@ export default function AdminEstadisticasPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-ink">Estadísticas</h1>
+        <h1 className="text-3xl font-bold text-ink">Números</h1>
         <p className="mt-1 text-sm text-ink-muted">
-          Ingresos, pagos, efectivo y facturación
+          Cobros, efectivo y facturación de la casa
         </p>
       </div>
 

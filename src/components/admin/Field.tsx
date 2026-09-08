@@ -16,7 +16,7 @@ export function Field({
 }
 
 export const adminInput =
-  "w-full rounded-lg border border-sand-line bg-white px-3 py-2 text-sm outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20";
+  "w-full border border-sand-line bg-white px-3 py-2 text-sm outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20";
 
 export const adminTextarea = `${adminInput} min-h-[96px] resize-y`;
 

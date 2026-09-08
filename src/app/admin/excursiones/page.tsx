@@ -32,14 +32,14 @@ export default function AdminExcursionesPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl text-ink">Excursiones</h1>
+          <h1 className="font-display text-3xl text-ink">Salidas</h1>
           <p className="mt-1 text-sm text-ink-muted">
-            Añade, edita o elimina tours. Los cambios se ven en la web al instante.
+            Alta, edición y baja. Los cambios salen en la web al momento.
           </p>
         </div>
         <Link
           href="/admin/excursiones/nueva"
-          className="inline-flex items-center gap-2 rounded-md bg-ocean px-4 py-2.5 text-sm font-semibold text-white hover:bg-ocean-deep"
+          className="inline-flex items-center gap-2 bg-ocean px-4 py-2.5 text-sm font-semibold tracking-wide text-white uppercase hover:bg-ocean-deep"
         >
           <Plus className="h-4 w-4" />
           Nueva excursión

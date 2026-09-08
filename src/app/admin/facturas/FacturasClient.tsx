@@ -142,7 +142,7 @@ export function FacturasClient() {
 <style>body{font-family:system-ui,sans-serif;max-width:640px;margin:40px auto;color:#171c26}
 h1{font-size:22px;margin:0}table{width:100%;border-collapse:collapse;margin-top:24px}
 td,th{padding:8px 0;border-bottom:1px solid #e5e7eb;text-align:left;font-size:14px}
-.total{font-size:18px;font-weight:700;color:#eb4823}.muted{color:#6b7280;font-size:13px}</style></head><body>
+.total{font-size:18px;font-weight:700;color:#2a7a4a}.muted{color:#6b7280;font-size:13px}</style></head><body>
 <p class="muted">${selected.type === "credit_note" ? "FACTURA ABONO" : "FACTURA"}</p>
 <h1>${selected.id}</h1>
 <p class="muted">${new Date(selected.createdAt).toLocaleString("es-ES")}</p>

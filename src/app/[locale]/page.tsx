@@ -1,13 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Building2,
-  Bus,
-  Globe2,
-  ShieldCheck,
-  Users,
-} from "lucide-react";
+import { ArrowRight, Leaf, Bus, Languages, ShieldCheck, Users } from "lucide-react";
 import { TourCard } from "@/components/TourCard";
 import { getFeaturedTours, getSettings } from "@/lib/content";
 import { getDictionary } from "@/i18n/dictionaries";
@@ -28,7 +21,7 @@ const awards = [
   { src: "/images/awards/tripadvisor-excellence.svg", alt: "Tripadvisor Excellence" },
 ];
 
-const advantageIcons = [ShieldCheck, Bus, Users, Globe2, Building2];
+const advantageIcons = [ShieldCheck, Bus, Users, Languages, Leaf];
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -46,40 +39,53 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <>
-      <section className="relative min-h-[88vh] overflow-hidden bg-bg-deep text-white md:min-h-[92vh]">
-        <Image
-          src={settings.homeHeroImage}
-          alt="Lanzarote"
-          fill
-          priority
-          className="hero-image object-cover"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-bg-deep/80 via-bg-deep/45 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-bg-deep/70 via-transparent to-bg-deep/25" />
-
-        <div className="relative mx-auto flex min-h-[88vh] max-w-6xl flex-col justify-end px-4 pb-24 pt-28 md:min-h-[92vh] md:justify-center md:px-6 md:pb-20">
-          <p className="animate-fade-up font-display text-[clamp(2.8rem,8vw,5.5rem)] leading-[0.95] tracking-[-0.04em] text-white drop-shadow-lg">
-            {settings.brandName}
-          </p>
-          <p className="animate-fade-up-delay mt-5 max-w-md text-lg text-white/90 md:text-xl">
-            {settings.tagline}
-          </p>
-          <div className="animate-fade-up-delay-2 mt-8 flex flex-wrap gap-3">
-            <Link href={lp("/excursiones")} className="btn-primary">
-              {dict.home.ctaOffers}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link href={lp("/cruceristas")} className="btn-ghost">
-              {dict.home.ctaCruise}
-            </Link>
+      <section className="relative overflow-hidden bg-bg-deep text-white">
+        <div className="grid min-h-[86vh] lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="relative z-10 flex flex-col justify-center px-4 py-16 md:px-10 lg:px-16">
+            <p className="animate-fade-up section-kicker !text-[#cfe8d4]">
+              {dict.home.heroKicker}
+            </p>
+            <h1 className="animate-fade-up-delay mt-5 max-w-xl font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.98] text-white">
+              {settings.homeHeadline}
+            </h1>
+            <p className="animate-fade-up-delay mt-5 max-w-md text-lg leading-relaxed text-white/80 md:text-xl">
+              {settings.tagline}
+            </p>
+            <div className="animate-fade-up-delay-2 mt-8 flex flex-wrap gap-3">
+              <Link href={lp("/excursiones")} className="btn-primary">
+                {dict.home.ctaOffers}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link href={lp("/cruceristas")} className="btn-ghost">
+                {dict.home.ctaCruise}
+              </Link>
+            </div>
+          </div>
+          <div className="relative min-h-[42vh] lg:min-h-full">
+            <Image
+              src={settings.homeHeroImage}
+              alt="Lanzarote"
+              fill
+              priority
+              className="hero-image object-cover"
+              sizes="(max-width:1024px) 100vw, 50vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-bg-deep via-transparent to-transparent lg:bg-gradient-to-l lg:from-transparent lg:via-transparent lg:to-bg-deep/40" />
+            <div className="absolute right-4 bottom-4 left-4 border-l-4 border-ocean bg-surface/95 p-4 text-ink shadow-[6px_6px_0_rgba(16,36,24,0.2)] md:right-8 md:bottom-8 md:left-auto md:max-w-sm">
+              <p className="text-[11px] font-bold tracking-[0.18em] text-ocean-deep uppercase">
+                {dict.home.heroCardKicker}
+              </p>
+              <p className="mt-2 font-display text-xl leading-snug">
+                {dict.home.heroCardTitle}
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="absolute right-0 bottom-0 left-0 overflow-hidden border-t border-white/10 bg-ocean py-2.5 text-sm text-white">
+        <div className="overflow-hidden border-t border-white/10 bg-ocean py-2.5 text-sm text-white">
           <div className="marquee-track gap-12 px-4">
             {[0, 1].map((i) => (
-              <p key={i} className="shrink-0 whitespace-nowrap">
+              <p key={i} className="shrink-0 whitespace-nowrap tracking-wide">
                 {dict.home.marquee}
               </p>
             ))}
@@ -87,7 +93,7 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
-      <section className="overflow-hidden border-b border-sand-line bg-white py-7">
+      <section className="overflow-hidden border-b border-sand-line bg-surface py-8">
         <div className="marquee-track items-center gap-10 px-4 md:gap-14">
           {awardLoop.map((award, i) => (
             <div
@@ -108,24 +114,27 @@ export default async function HomePage({ params }: Props) {
 
       <section className="py-14 md:py-16">
         <div className="mx-auto max-w-6xl px-4 md:px-6">
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <ol className="grid gap-px bg-sand-line sm:grid-cols-2 lg:grid-cols-5">
             {dict.home.advantages.map((label, index) => {
               const Icon = advantageIcons[index] || Users;
               return (
                 <li
                   key={label}
-                  className="group relative overflow-hidden rounded-2xl bg-white p-5 shadow-[0_8px_30px_rgba(23,28,38,0.05)] ring-1 ring-sand-line"
+                  className="bg-surface p-5"
                 >
-                  <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-ocean text-white shadow-[0_8px_20px_rgba(235,72,35,0.3)] transition group-hover:scale-105">
+                  <span className="mb-4 flex h-11 w-11 items-center justify-center bg-ocean text-white">
                     <Icon className="h-5 w-5" />
                   </span>
-                  <p className="text-sm font-semibold leading-snug text-ink">
+                  <p className="text-[11px] font-bold tracking-[0.16em] text-ocean-deep uppercase">
+                    0{index + 1}
+                  </p>
+                  <p className="mt-2 text-sm font-semibold leading-snug text-ink">
                     {label}
                   </p>
                 </li>
               );
             })}
-          </ul>
+          </ol>
         </div>
       </section>
 
@@ -137,7 +146,7 @@ export default async function HomePage({ params }: Props) {
           </div>
           <Link
             href={lp("/excursiones")}
-            className="inline-flex items-center gap-1 text-sm font-bold text-ocean hover:text-ocean-deep"
+            className="inline-flex items-center gap-1 text-sm font-bold tracking-wide text-ocean-deep uppercase hover:text-ocean"
           >
             {dict.common.seeAll} <ArrowRight className="h-4 w-4" />
           </Link>
@@ -149,61 +158,64 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
-      <section className="band-dark mt-8 min-h-[380px]">
-        <Image
-          src="/images/home/traslados.jpg"
-          alt=""
-          fill
-          className="object-cover"
-          sizes="100vw"
-        />
-        <div className="relative z-10 mx-auto flex min-h-[380px] max-w-6xl flex-col justify-center px-4 py-16 md:px-6">
-          <p className="text-sm font-bold tracking-[0.18em] text-ocean uppercase">
-            {dict.home.transfersKicker}
-          </p>
-          <h2 className="mt-3 max-w-xl font-display text-4xl font-extrabold tracking-tight md:text-5xl">
-            {dict.home.transfersTitle}
-          </h2>
-          <p className="mt-4 max-w-lg text-base leading-relaxed text-white/85">
-            {settings.transferIntro}
-          </p>
-          <Link href={lp("/traslados")} className="btn-primary mt-8 w-fit">
-            {dict.home.transfersCta}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
+      <section className="mx-auto grid max-w-6xl gap-6 px-4 py-8 md:grid-cols-2 md:px-6 md:py-12">
+        <article className="relative min-h-[360px] overflow-hidden text-white">
+          <Image
+            src="/images/home/traslados.jpg"
+            alt=""
+            fill
+            className="object-cover"
+            sizes="(max-width:768px) 100vw, 50vw"
+          />
+          <div className="absolute inset-0 bg-bg-deep/70" />
+          <div className="relative z-10 flex h-full min-h-[360px] flex-col justify-end p-8">
+            <p className="text-[11px] font-bold tracking-[0.2em] text-[#cfe8d4] uppercase">
+              {dict.home.transfersKicker}
+            </p>
+            <h2 className="mt-3 max-w-sm font-display text-3xl md:text-4xl">
+              {dict.home.transfersTitle}
+            </h2>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-white/80">
+              {settings.transferIntro}
+            </p>
+            <Link href={lp("/traslados")} className="btn-primary mt-6 w-fit">
+              {dict.home.transfersCta}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </article>
+        <article className="relative min-h-[360px] overflow-hidden text-white">
+          <Image
+            src="/images/home/cruceros.jpg"
+            alt=""
+            fill
+            className="object-cover"
+            sizes="(max-width:768px) 100vw, 50vw"
+          />
+          <div className="absolute inset-0 bg-ocean-deep/75" />
+          <div className="relative z-10 flex h-full min-h-[360px] flex-col justify-end p-8">
+            <p className="text-[11px] font-bold tracking-[0.2em] text-[#cfe8d4] uppercase">
+              {dict.home.cruisesKicker}
+            </p>
+            <h2 className="mt-3 max-w-sm font-display text-3xl md:text-4xl">
+              {dict.home.cruisesTitle}
+            </h2>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-white/80">
+              {settings.cruiseIntro}
+            </p>
+            <Link href={lp("/cruceristas")} className="btn-primary mt-6 w-fit">
+              {dict.home.cruisesCta}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </article>
       </section>
 
-      <section className="band-dark min-h-[380px]">
-        <Image
-          src="/images/home/cruceros.jpg"
-          alt=""
-          fill
-          className="object-cover"
-          sizes="100vw"
-        />
-        <div className="relative z-10 mx-auto flex min-h-[380px] max-w-6xl flex-col justify-center px-4 py-16 md:items-end md:px-6 md:text-right">
-          <p className="text-sm font-bold tracking-[0.18em] text-ocean uppercase">
-            {dict.home.cruisesKicker}
-          </p>
-          <h2 className="mt-3 max-w-xl font-display text-4xl font-extrabold tracking-tight md:text-5xl">
-            {dict.home.cruisesTitle}
-          </h2>
-          <p className="mt-4 max-w-lg text-base leading-relaxed text-white/85">
-            {settings.cruiseIntro}
-          </p>
-          <Link href={lp("/cruceristas")} className="btn-primary mt-8 w-fit">
-            {dict.home.cruisesCta}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </section>
-
-      <section className="py-20 md:py-24">
+      <section className="py-16 md:py-24">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 md:grid-cols-2 md:px-6">
           <div className="relative">
-            <div className="absolute -inset-3 rounded-[2rem] bg-ocean/10 blur-2xl" />
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] shadow-[0_24px_60px_rgba(23,28,38,0.18)]">
+            <div className="absolute -top-4 -left-4 h-full w-full bg-ocean" />
+            <div className="relative aspect-[4/5] overflow-hidden">
               <Image
                 src={settings.aboutImage}
                 alt="LET"
@@ -230,7 +242,7 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
-      <section className="border-t border-sand-line bg-white py-20 md:py-24">
+      <section className="border-t border-sand-line bg-surface py-16 md:py-24">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 md:grid-cols-[0.9fr_1.1fr] md:px-6">
           <div className="relative mx-auto aspect-square w-full max-w-sm">
             <Image
@@ -247,10 +259,7 @@ export default async function HomePage({ params }: Props) {
             <p className="mt-5 text-base leading-relaxed text-ink-muted">
               {dict.home.islandBody}
             </p>
-            <Link
-              href={lp("/excursiones")}
-              className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-ocean hover:text-ocean-deep"
-            >
+            <Link href={lp("/excursiones")} className="btn-ghost-dark mt-8">
               {dict.home.islandCta}
               <ArrowRight className="h-4 w-4" />
             </Link>

@@ -55,7 +55,7 @@ export default async function SobreNosotrosPage({ params }: Props) {
               ))}
           </div>
         </div>
-        <div className="relative aspect-[4/5] overflow-hidden rounded-lg ring-1 ring-sand-line">
+        <div className="relative aspect-[4/5] overflow-hidden ring-1 ring-sand-line">
           <Image
             src={settings.aboutImageSecondary}
             alt="Lanzarote Experience Tours"
@@ -98,7 +98,7 @@ export default async function SobreNosotrosPage({ params }: Props) {
             ))}
           </ul>
 
-          <div className="mt-12 overflow-hidden rounded-lg bg-bg-deep text-white md:grid md:grid-cols-2">
+          <div className="mt-12 overflow-hidden bg-bg-deep text-white md:grid md:grid-cols-2">
             <div className="relative min-h-[240px]">
               <Image
                 src={settings.aboutImage}
@@ -119,7 +119,7 @@ export default async function SobreNosotrosPage({ params }: Props) {
                 </Link>
                 <Link
                   href={lp("/contacto")}
-                  className="rounded border border-white/30 px-5 py-2.5 text-sm font-bold text-white hover:bg-white/10"
+          className="rounded border border-white/30 px-5 py-2.5 text-sm font-bold tracking-wide text-white uppercase hover:bg-white/10"
                 >
                   {dict.about.contact}
                 </Link>

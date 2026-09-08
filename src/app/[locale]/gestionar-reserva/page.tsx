@@ -51,7 +51,7 @@ export default function GestionarReservaPage() {
       <section className="mx-auto max-w-xl px-4 py-14 md:px-6">
         <form
           onSubmit={handleSubmit}
-          className="space-y-4 rounded-lg bg-white p-6 ring-1 ring-sand-line"
+          className="space-y-4 border-t-4 border-ocean bg-surface p-6 ring-1 ring-sand-line"
         >
           <div>
             <label className="mb-1 block text-sm font-bold">

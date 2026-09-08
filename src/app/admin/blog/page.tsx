@@ -34,14 +34,14 @@ export default function AdminBlogPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl text-ink">Blog</h1>
+          <h1 className="font-display text-3xl text-ink">Cuaderno</h1>
           <p className="mt-1 text-sm text-ink-muted">
-            Gestiona entradas del blog
+            Entradas del blog de la isla
           </p>
         </div>
         <Link
           href="/admin/blog/nueva"
-          className="inline-flex items-center gap-2 rounded-md bg-ocean px-4 py-2.5 text-sm font-semibold text-white hover:bg-ocean-deep"
+          className="inline-flex items-center gap-2 bg-ocean px-4 py-2.5 text-sm font-semibold tracking-wide text-white uppercase hover:bg-ocean-deep"
         >
           <Plus className="h-4 w-4" />
           Nueva entrada

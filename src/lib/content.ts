@@ -256,16 +256,16 @@ export async function deleteBlogPost(slug: string): Promise<boolean> {
 
 const defaultSettings: SiteSettings = {
   brandName: "Lanzarote Experience Tours",
-  tagline: "LET us guide you",
+  tagline: "La isla, a pie de tierra",
   phone: "+34 646 08 05 85",
   email: "support@lanzaroteexperiencetours.com",
-  hours: "Contacto 24 / 7",
-  homeHeadline: "Lanzarote Experience Tours",
-  homeSubheadline: "LET us guide you",
+  hours: "Casa abierta todos los días",
+  homeHeadline: "Salir a la isla con gente de aquí",
+  homeSubheadline: "La isla, a pie de tierra",
   homeHeroImage: "/images/heroes/home.jpg",
   aboutTitle: "Lanzarote Experience Tours",
   aboutLead:
-    "LET es una empresa familiar local que ofrece visitas guiadas en Lanzarote.",
+    "Somos una familia de Lanzarote. Salimos con minibuses propios, grupos contenidos y el relato en español.",
   aboutText: "",
   aboutImage: "/images/heroes/about.jpg",
   aboutImageSecondary: "/images/heroes/about-2.jpg",

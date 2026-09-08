@@ -68,7 +68,7 @@ export function AIChat() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="fixed right-4 bottom-[5.5rem] z-50 flex items-center gap-2 rounded-full bg-header px-4 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-bg-deep md:right-6"
+        className="fixed right-4 bottom-[5.5rem] z-50 flex items-center gap-2 bg-bg-deep px-4 py-3 text-sm font-bold tracking-wide text-white uppercase shadow-[4px_4px_0_rgba(42,122,74,0.35)] transition hover:bg-ocean md:right-6"
         aria-label={open ? "Close" : "AI Chat"}
       >
         {open ? (
@@ -76,15 +76,15 @@ export function AIChat() {
         ) : (
           <>
             <Sparkles className="h-5 w-5" />
-            <span className="hidden sm:inline">Chat IA</span>
+            <span className="hidden sm:inline">Guía</span>
           </>
         )}
       </button>
 
       {open && (
-        <div className="fixed right-4 bottom-[9.5rem] z-50 flex h-[min(520px,65vh)] w-[min(400px,calc(100vw-2rem))] flex-col overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-sand-line md:right-6">
-          <div className="flex items-center gap-3 bg-header px-4 py-3 text-white">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ocean">
+        <div className="fixed right-4 bottom-[9.5rem] z-50 flex h-[min(520px,65vh)] w-[min(400px,calc(100vw-2rem))] flex-col overflow-hidden bg-surface shadow-[8px_8px_0_rgba(16,36,24,0.14)] ring-1 ring-sand-line md:right-6">
+          <div className="flex items-center gap-3 bg-bg-deep px-4 py-3 text-white">
+            <div className="flex h-9 w-9 items-center justify-center bg-ocean">
               <Sparkles className="h-4 w-4" />
             </div>
             <div className="min-w-0 flex-1">
@@ -108,10 +108,10 @@ export function AIChat() {
                 className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[85%] rounded-xl px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
+                  className={`max-w-[85%] px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
                     m.role === "user"
-                      ? "rounded-br-md bg-ocean text-white"
-                      : "rounded-bl-md bg-white text-ink ring-1 ring-sand-line"
+                      ? "bg-ocean text-white"
+                      : "bg-white text-ink ring-1 ring-sand-line"
                   }`}
                 >
                   {m.content}
@@ -136,7 +136,7 @@ export function AIChat() {
                   key={s}
                   type="button"
                   onClick={() => send(s)}
-                  className="rounded-full bg-sky-soft px-2.5 py-1 text-xs font-medium text-ocean-deep transition hover:bg-ocean/15"
+                  className="bg-sky-soft px-2.5 py-1 text-xs font-medium text-ocean-deep transition hover:bg-ocean/15"
                 >
                   {s}
                 </button>
@@ -162,7 +162,7 @@ export function AIChat() {
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-ocean text-white transition hover:bg-ocean-deep disabled:opacity-50"
+              className="flex h-10 w-10 shrink-0 items-center justify-center bg-ocean text-white transition hover:bg-ocean-deep disabled:opacity-50"
               aria-label={dict.common.send}
             >
               <Send className="h-4 w-4" />

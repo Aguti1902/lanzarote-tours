@@ -78,10 +78,9 @@ export default function AdminAjustesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-3xl text-ink">Ajustes de la web</h1>
+        <h1 className="font-display text-3xl text-ink">Textos de la casa</h1>
         <p className="mt-1 text-sm text-ink-muted">
-          Textos, imágenes de cabecera y datos de contacto. Todo sincronizado con
-          la web pública.
+          Titulares, imágenes y datos que salen en la web pública.
         </p>
       </div>
 
@@ -226,7 +225,7 @@ export default function AdminAjustesPage() {
         <button
           type="submit"
           disabled={saving}
-          className="rounded-md bg-ocean px-6 py-2.5 text-sm font-semibold text-white hover:bg-ocean-deep disabled:opacity-60"
+          className="bg-ocean px-6 py-2.5 text-sm font-semibold tracking-wide text-white uppercase hover:bg-ocean-deep disabled:opacity-60"
         >
           {saving ? "Guardando…" : "Guardar ajustes"}
         </button>

@@ -84,9 +84,9 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-ink">Dashboard</h1>
+        <h1 className="font-display text-3xl text-ink">Mesa de trabajo</h1>
         <p className="mt-1 text-sm text-ink-muted">
-          Resumen operativo de Lanzarote Experience Tours
+          Plazas, cobros y ritmo del día en Lanzarote
         </p>
       </div>
 
@@ -103,14 +103,14 @@ export default function AdminDashboard() {
             <Link
               key={c.label}
               href={c.href}
-              className="rounded-lg bg-white p-5 ring-1 ring-sand-line transition hover:ring-ocean/40"
+              className="border-l-4 border-ocean bg-surface p-5 ring-1 ring-sand-line transition hover:shadow-[6px_6px_0_rgba(42,122,74,0.12)]"
             >
               {inner}
             </Link>
           ) : (
             <div
               key={c.label}
-              className="rounded-lg bg-white p-5 ring-1 ring-sand-line"
+              className="border-l-4 border-ocean bg-surface p-5 ring-1 ring-sand-line"
             >
               {inner}
             </div>
@@ -120,15 +120,15 @@ export default function AdminDashboard() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { href: "/admin/excursiones", label: "Excursiones", count: counts.tours, icon: Map },
+          { href: "/admin/excursiones", label: "Salidas", count: counts.tours, icon: Map },
           { href: "/admin/traslados", label: "Traslados", count: counts.transfers, icon: Bus },
           { href: "/admin/facturas", label: "Facturas", count: counts.invoices, icon: FileText },
-          { href: "/admin/blog", label: "Blog", count: counts.posts, icon: BookOpen },
+          { href: "/admin/blog", label: "Cuaderno", count: counts.posts, icon: BookOpen },
         ].map((item) => (
           <Link
             key={item.href}
             href={item.href}
-            className="flex items-center gap-3 rounded-lg bg-white p-4 ring-1 ring-sand-line hover:ring-ocean/40"
+            className="flex items-center gap-3 border-l-4 border-ocean bg-surface p-4 ring-1 ring-sand-line hover:shadow-[4px_4px_0_rgba(42,122,74,0.12)]"
           >
             <item.icon className="h-5 w-5 text-ocean" />
             <div>
@@ -144,7 +144,7 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold">Próximas salidas</h2>
             <Link href="/admin/reservas" className="text-xs font-bold text-ocean">
-              Ver reservas
+              Ver plazas
             </Link>
           </div>
           <ul className="mt-4 space-y-3 text-sm">

@@ -79,7 +79,7 @@ export default function CarritoPage() {
       </div>
 
       {items.length === 0 ? (
-        <div className="rounded-lg bg-white p-10 text-center ring-1 ring-sand-line">
+        <div className="rounded-none bg-surface p-10 text-center ring-1 ring-sand-line">
           <p className="text-ink-muted">{dict.cart.empty}</p>
           <Link href={href("/excursiones")} className="btn-primary mt-6 inline-flex">
             {dict.cart.seeExcursions}
@@ -91,7 +91,7 @@ export default function CarritoPage() {
             {items.map((item) => (
               <li
                 key={item.id}
-                className="flex gap-4 rounded-lg bg-white p-4 ring-1 ring-sand-line"
+                className="flex gap-4 bg-surface p-4 ring-1 ring-sand-line"
               >
                 <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded">
                   <Image
@@ -126,7 +126,7 @@ export default function CarritoPage() {
             ))}
           </ul>
 
-          <aside className="h-fit rounded-lg bg-white p-6 ring-1 ring-sand-line">
+          <aside className="h-fit border-t-4 border-ocean bg-surface p-6 ring-1 ring-sand-line">
             <p className="text-sm text-ink-muted">{dict.common.total}</p>
             <p className="text-3xl font-bold text-ocean-deep">
               {formatPrice(total)}

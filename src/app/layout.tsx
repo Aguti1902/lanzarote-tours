@@ -1,29 +1,29 @@
 import type { Metadata } from "next";
-import { Outfit, Syne } from "next/font/google";
+import { Figtree, Fraunces } from "next/font/google";
 import { CartProvider } from "@/components/CartProvider";
 import "./globals.css";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const figtree = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
-const syne = Syne({
-  variable: "--font-syne",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: ["500", "600", "700"],
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Lanzarote Experience Tours - Visitas guiadas en Lanzarote",
+    default: "Lanzarote Experience Tours — Salidas locales por la isla",
     template: "%s | Lanzarote Experience Tours",
   },
   description:
-    "Somos Lanzarote Experience Tours, una empresa familiar y local. Organizamos visitas guiadas en Lanzarote sin intermediarios, en Español y en grupos reducidos (máx 14 personas).",
+    "Empresa familiar de Lanzarote. Salidas guiadas en español, grupos pequeños y minibuses propios: volcanes, jameos, costa y traslados sin intermediarios.",
   other: {
-    "theme-color": "#eb4823",
+    "theme-color": "#2a7a4a",
   },
   icons: {
     icon: "/favicon.ico",
@@ -36,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${outfit.variable} ${syne.variable} h-full`}>
+    <html lang="es" className={`${figtree.variable} ${fraunces.variable} h-full`}>
       <body className="flex min-h-full flex-col font-sans antialiased">
         <CartProvider>{children}</CartProvider>
       </body>

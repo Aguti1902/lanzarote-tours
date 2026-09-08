@@ -89,7 +89,7 @@ export function TransferBookingForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-xl bg-surface p-6 ring-1 ring-sand-line"
+      className="border-t-4 border-ocean bg-surface p-6 ring-1 ring-sand-line"
     >
       <h3 className="font-display text-2xl text-ink">{dict.transferForm.title}</h3>
       <p className="mt-1 text-sm text-ink-muted">{dict.transferForm.subtitle}</p>
@@ -255,7 +255,7 @@ export function TransferBookingForm({
         <button
           type="submit"
           disabled={loading}
-          className="rounded-md bg-ocean px-8 py-3 font-semibold text-white hover:bg-ocean-deep disabled:opacity-60"
+          className="bg-ocean px-8 py-3 font-semibold tracking-wide text-white uppercase hover:bg-ocean-deep disabled:opacity-60"
         >
           {loading ? dict.common.processing : dict.transferForm.confirm}
         </button>

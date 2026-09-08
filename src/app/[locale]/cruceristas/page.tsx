@@ -61,7 +61,7 @@ export default async function CruceristasPage({ params }: Props) {
           {pillars.map((item) => (
             <div
               key={item.title}
-              className="rounded-lg bg-white p-6 ring-1 ring-sand-line"
+              className="rounded-none bg-surface p-6 ring-1 ring-sand-line"
             >
               <item.icon className="h-7 w-7 text-ocean" />
               <h3 className="mt-4 text-xl font-bold">{item.title}</h3>

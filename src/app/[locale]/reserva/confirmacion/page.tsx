@@ -39,7 +39,7 @@ export default async function ConfirmacionPage({ params, searchParams }: Props) 
       <p className="mt-3 text-ink-muted">{dict.confirmation.body}</p>
 
       {booking ? (
-        <div className="mt-8 w-full rounded-lg bg-white p-6 text-left ring-1 ring-sand-line">
+        <div className="mt-8 w-full border-t-4 border-ocean bg-surface p-6 text-left ring-1 ring-sand-line">
           <p className="text-xs tracking-wide text-ink-muted uppercase">
             {dict.confirmation.locator}
           </p>

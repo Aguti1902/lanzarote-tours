@@ -133,7 +133,7 @@ export function BookingWidget({ tour }: { tour: Tour }) {
   }
 
   return (
-    <aside className="sticky top-24 rounded-lg bg-white p-5 shadow-lg ring-1 ring-sand-line">
+    <aside className="sticky top-24 border-t-4 border-ocean bg-surface p-5 shadow-[6px_6px_0_rgba(16,36,24,0.08)] ring-1 ring-sand-line">
       <div className="mb-4 flex items-end justify-between border-b border-sand-line pb-4">
         <div>
           <p className="text-sm text-ink-muted">{dict.common.from}</p>
@@ -305,7 +305,7 @@ export function BookingWidget({ tour }: { tour: Tour }) {
         <button
           type="button"
           onClick={handleAddToCart}
-          className="flex w-full items-center justify-center gap-2 rounded border border-ocean py-3 font-bold text-ocean transition hover:bg-ocean/5"
+          className="flex w-full items-center justify-center gap-2 border border-ocean py-3 font-bold tracking-wide text-ocean uppercase transition hover:bg-ocean/5"
         >
           <ShoppingCart className="h-4 w-4" />
           {dict.booking.addToCart}
@@ -314,7 +314,7 @@ export function BookingWidget({ tour }: { tour: Tour }) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded bg-ocean py-3 font-bold text-white transition hover:bg-ocean-deep disabled:opacity-60"
+          className="w-full bg-ocean py-3 font-bold tracking-wide text-white uppercase transition hover:bg-ocean-deep disabled:opacity-60"
         >
           {loading ? dict.common.processing : dict.booking.bookNow}
         </button>

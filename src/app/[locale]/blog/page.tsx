@@ -40,7 +40,7 @@ export default async function BlogPage({ params }: Props) {
         {featured && (
           <Link
             href={lp(`/blog/${featured.slug}`)}
-            className="group grid overflow-hidden rounded-3xl bg-surface ring-1 ring-sand-line transition hover:ring-ocean/35 md:grid-cols-2"
+            className="group grid overflow-hidden bg-surface ring-1 ring-sand-line transition hover:shadow-[8px_8px_0_rgba(42,122,74,0.12)] md:grid-cols-2"
           >
             <div className="relative min-h-[260px] md:min-h-[360px]">
               <Image
@@ -57,7 +57,7 @@ export default async function BlogPage({ params }: Props) {
                 {featured.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full bg-sky-soft px-2.5 py-1 text-xs font-medium text-ocean-deep"
+                    className="bg-sky-soft px-2.5 py-1 text-xs font-medium text-ocean-deep"
                   >
                     {tag}
                   </span>
@@ -85,7 +85,7 @@ export default async function BlogPage({ params }: Props) {
             <Link
               key={post.slug}
               href={lp(`/blog/${post.slug}`)}
-              className="group flex flex-col overflow-hidden rounded-2xl bg-surface shadow-[0_8px_30px_rgba(18,58,92,0.05)] ring-1 ring-sand-line transition hover:-translate-y-1 hover:ring-ocean/30"
+              className="group flex flex-col overflow-hidden bg-surface shadow-[4px_4px_0_rgba(16,36,24,0.06)] ring-1 ring-sand-line transition hover:-translate-y-1"
             >
               <div className="relative aspect-[16/10]">
                 <Image
@@ -101,7 +101,7 @@ export default async function BlogPage({ params }: Props) {
                   {post.tags.slice(0, 2).map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full bg-sky-soft px-2 py-0.5 text-[11px] font-medium text-ocean-deep"
+                      className="bg-sky-soft px-2 py-0.5 text-[11px] font-medium text-ocean-deep"
                     >
                       {tag}
                     </span>

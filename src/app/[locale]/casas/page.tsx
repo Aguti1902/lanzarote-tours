@@ -34,7 +34,7 @@ export default async function CasasPage({ params }: Props) {
       />
 
       <section className="mx-auto max-w-6xl px-4 py-14 md:px-6">
-        <div className="grid gap-8 overflow-hidden rounded-lg bg-white ring-1 ring-sand-line md:grid-cols-2">
+        <div className="grid gap-8 overflow-hidden bg-surface ring-1 ring-sand-line md:grid-cols-2">
           <div className="relative min-h-[280px]">
             <Image
               src={settings.aboutImageSecondary}
@@ -45,7 +45,7 @@ export default async function CasasPage({ params }: Props) {
             />
           </div>
           <div className="flex flex-col justify-center p-6 md:p-10">
-            <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-ocean/10 text-ocean">
+            <div className="mb-3 inline-flex h-10 w-10 items-center justify-center bg-ocean/10 text-ocean">
               <Home className="h-5 w-5" />
             </div>
             <h2 className="text-3xl font-bold text-ink">

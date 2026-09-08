@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, ShoppingCart, User, X } from "lucide-react";
+import { Menu, ShoppingBag, UserRound, X } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
 import { useLocale } from "@/components/LocaleProvider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -35,38 +35,45 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 text-white transition-all duration-300 ${
-        scrolled
-          ? "bg-header/95 shadow-[0_10px_40px_rgba(23,28,38,0.28)] backdrop-blur-xl"
-          : "bg-header"
+      className={`sticky top-0 z-50 border-b border-sand-line bg-surface/95 text-ink backdrop-blur-xl transition-shadow duration-300 ${
+        scrolled ? "shadow-[0_12px_32px_rgba(16,36,24,0.08)]" : ""
       }`}
     >
+      <div className="hidden border-b border-sand-line bg-bg-deep text-white sm:block">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] uppercase md:px-6">
+          <p className="text-white/70">Lanzarote · grupos pequeños · solo en español</p>
+          <a href="tel:+34646080585" className="text-white/85 hover:text-white">
+            +34 646 08 05 85
+          </a>
+        </div>
+      </div>
+
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
         <Link
           href={href("/")}
-          className="relative block h-11 w-[150px] shrink-0 transition hover:opacity-90 md:h-12 md:w-[175px]"
+          className="logo-plate relative block h-12 w-[158px] shrink-0 px-2 py-1.5 transition hover:opacity-90 md:h-[52px] md:w-[176px]"
         >
           <Image
             src="/images/brand/logo.png"
             alt="Lanzarote Experience Tours"
             fill
-            className="object-contain object-left"
+            className="object-contain object-left p-1.5"
             priority
-            sizes="175px"
+            sizes="176px"
           />
         </Link>
 
-        <nav className="hidden items-center gap-0.5 lg:flex">
+        <nav className="hidden items-center gap-1 lg:flex">
           {links.map((link) => {
             const active = pathname.includes(link.path);
             return (
               <Link
                 key={link.path}
                 href={link.href}
-                className={`rounded-full px-3.5 py-2 text-[13px] font-semibold tracking-wide uppercase transition ${
+                className={`px-3 py-2 text-[13px] font-semibold tracking-wide transition ${
                   active
                     ? "bg-ocean text-white"
-                    : "text-white/80 hover:bg-white/10 hover:text-white"
+                    : "text-ink/75 hover:bg-sky-soft hover:text-ink"
                 }`}
               >
                 {link.label}
@@ -75,34 +82,34 @@ export function Header() {
           })}
         </nav>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1">
           <div className="hidden sm:block">
-            <LanguageSwitcher />
+            <LanguageSwitcher tone="light" />
           </div>
           <Link
             href={href("/gestionar-reserva")}
-            className="rounded-full p-2.5 text-white/90 transition hover:bg-white/10"
+            className="p-2.5 text-ink/80 transition hover:bg-sky-soft hover:text-ink"
             title={dict.nav.manageBooking}
             aria-label={dict.nav.manageBooking}
           >
-            <User className="h-5 w-5" />
+            <UserRound className="h-5 w-5" />
           </Link>
           <Link
             href={href("/carrito")}
-            className="relative rounded-full p-2.5 text-white/90 transition hover:bg-white/10"
+            className="relative p-2.5 text-ink/80 transition hover:bg-sky-soft hover:text-ink"
             title={dict.nav.cart}
             aria-label={dict.nav.cart}
           >
-            <ShoppingCart className="h-5 w-5" />
+            <ShoppingBag className="h-5 w-5" />
             {count > 0 && (
-              <span className="absolute top-0.5 right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-ocean px-1 text-[10px] font-bold">
+              <span className="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center bg-ocean px-1 text-[10px] font-bold text-white">
                 {count}
               </span>
             )}
           </Link>
           <button
             type="button"
-            className="rounded-full p-2.5 text-white lg:hidden"
+            className="p-2.5 text-ink lg:hidden"
             aria-label={open ? "Close" : "Menu"}
             onClick={() => setOpen((v) => !v)}
           >
@@ -112,17 +119,17 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="border-t border-white/10 bg-bg-deep px-4 py-4 lg:hidden">
+        <div className="border-t border-sand-line bg-surface px-4 py-4 lg:hidden">
           <div className="mb-3">
-            <LanguageSwitcher />
+            <LanguageSwitcher tone="light" />
           </div>
-          <nav className="flex flex-col gap-1">
+          <nav className="flex flex-col">
             {links.map((link) => (
               <Link
                 key={link.path}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-3 text-base font-semibold uppercase tracking-wide text-white hover:bg-white/10"
+                className="border-b border-sand-line px-1 py-3 text-base font-semibold text-ink"
               >
                 {link.label}
               </Link>
@@ -130,7 +137,7 @@ export function Header() {
             <Link
               href={href("/contacto")}
               onClick={() => setOpen(false)}
-              className="rounded-lg px-3 py-3 text-base font-semibold uppercase tracking-wide text-white hover:bg-white/10"
+              className="px-1 py-3 text-base font-semibold text-ocean-deep"
             >
               {dict.nav.contact}
             </Link>

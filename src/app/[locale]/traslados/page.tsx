@@ -44,7 +44,7 @@ export default async function TrasladosPage({ params }: Props) {
           {chips.map((label) => (
             <div
               key={label}
-              className="rounded-lg bg-ocean px-5 py-4 text-center text-sm font-bold text-white"
+              className="bg-ocean px-5 py-4 text-center text-sm font-bold tracking-wide text-white uppercase"
             >
               {label}
             </div>
