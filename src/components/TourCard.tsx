@@ -1,61 +1,48 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Clock, Star, Users } from "lucide-react";
+import { ArrowRight, Clock, Star, Users } from "lucide-react";
 import type { Tour } from "@/types";
 import { formatPrice, groupSizeLabel } from "@/lib/format";
-import { isFlatPriceTour } from "@/lib/tour-pricing";
-import { useLocale } from "@/components/LocaleProvider";
 
 export function TourCard({ tour }: { tour: Tour }) {
-  const { dict, href, locale } = useLocale();
-  const flat = isFlatPriceTour(tour);
-
   return (
     <Link
-      href={href(`/excursiones/${tour.slug}`)}
-      className="card-lift group flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_10px_36px_rgba(23,28,38,0.06)] ring-1 ring-sand-line"
+      href={`/excursiones/${tour.slug}`}
+      className="group flex flex-col overflow-hidden rounded-2xl bg-surface shadow-[0_8px_30px_rgba(20,61,40,0.06)] ring-1 ring-sand-line transition hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(47,122,74,0.14)] hover:ring-ocean/30"
     >
-      <div className="relative aspect-[5/4] overflow-hidden">
+      <div className="relative aspect-[16/9] overflow-hidden">
         <Image
           src={tour.image}
           alt={tour.title}
           fill
-          className="object-cover transition duration-500 group-hover:scale-[1.03]"
-          sizes="(max-width: 768px) 100vw, 33vw"
-          quality={70}
+          className="object-cover transition duration-700 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, 50vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-bg-deep/35 via-transparent to-transparent" />
         {tour.groupSize && (
-          <span className="absolute top-3 left-3 rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold tracking-wide text-ocean-deep uppercase shadow-sm">
-            {groupSizeLabel(tour.groupSize, locale)}
+          <span className="absolute top-3 left-3 rounded-md bg-white/95 px-2.5 py-1 text-xs font-semibold text-ocean-deep shadow-sm">
+            {groupSizeLabel(tour.groupSize)}
           </span>
         )}
-        <div className="absolute right-3 bottom-3 left-3 flex items-end justify-between gap-3">
-          <h3 className="font-display text-xl font-extrabold tracking-tight text-white drop-shadow md:text-2xl">
-            {tour.shortTitle}
-          </h3>
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ocean text-white transition group-hover:bg-white group-hover:text-ocean">
-            <ArrowUpRight className="h-4 w-4" />
-          </span>
-        </div>
       </div>
 
-      <div className="flex flex-1 flex-col p-5">
+      <div className="flex flex-1 flex-col p-5 md:p-6">
         <div className="mb-2 flex items-center gap-2 text-sm">
-          <span className="inline-flex items-center gap-1 font-bold text-ink">
+          <span className="inline-flex items-center gap-1 font-semibold text-ink">
             <Star className="h-3.5 w-3.5 fill-rating text-rating" />
             {tour.rating.toFixed(1)}
           </span>
-          <span className="text-ink-muted">({tour.reviewCount})</span>
+          <span className="text-ink-muted">({tour.reviewCount} opiniones)</span>
         </div>
 
-        <p className="line-clamp-2 text-sm leading-relaxed text-ink-muted">
+        <h3 className="font-display text-xl leading-snug text-ink transition group-hover:text-ocean md:text-2xl">
+          {tour.shortTitle}
+        </h3>
+        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-ink-muted md:text-[15px]">
           {tour.summary}
         </p>
 
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-ink-muted">
+        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-ink-muted">
           <span className="inline-flex items-center gap-1 rounded-full bg-sky-soft px-2.5 py-1">
             <Clock className="h-3.5 w-3.5 text-ocean" />
             {tour.duration}
@@ -63,22 +50,21 @@ export function TourCard({ tour }: { tour: Tour }) {
           {tour.maxGroup && (
             <span className="inline-flex items-center gap-1 rounded-full bg-sky-soft px-2.5 py-1">
               <Users className="h-3.5 w-3.5 text-ocean" />
-              {dict.common.max} {tour.maxGroup}
+              Máx. {tour.maxGroup}
             </span>
           )}
         </div>
 
         <div className="mt-auto flex items-end justify-between border-t border-sand-line pt-4">
           <div>
-            <p className="text-[11px] font-semibold tracking-wide text-ink-muted uppercase">
-              {flat ? dict.booking.flatPrice : dict.common.from}
-            </p>
-            <p className="font-display text-2xl font-extrabold text-ocean">
+            <p className="text-xs text-ink-muted">Desde</p>
+            <p className="text-2xl font-bold text-ocean-deep">
               {formatPrice(tour.priceAdult)}
             </p>
           </div>
-          <span className="text-sm font-bold text-ink transition group-hover:text-ocean">
-            {dict.common.book}
+          <span className="inline-flex items-center gap-1 rounded-md bg-ocean px-3 py-2 text-sm font-semibold text-white transition group-hover:bg-ocean-deep">
+            Ver
+            <ArrowRight className="h-3.5 w-3.5" />
           </span>
         </div>
       </div>

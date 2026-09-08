@@ -1,50 +1,26 @@
-import { cache } from "react";
+import { promises as fs } from "fs";
+import path from "path";
 import type {
   BlogPost,
-  CruiseCall,
-  CruisesData,
-  PageContentBlock,
-  PageFaqItem,
   SiteSettings,
   Tour,
   TransferDestination,
   TransfersData,
 } from "@/types";
-import {
-  DEFAULT_EXCURSIONS_BLOCKS,
-  DEFAULT_EXCURSIONS_BLOCKS_INTRO,
-  DEFAULT_EXCURSIONS_BLOCKS_TITLE,
-  DEFAULT_EXCURSIONS_FAQ_TITLE,
-  DEFAULT_EXCURSIONS_FAQS,
-  DEFAULT_TRANSFER_FAQ_TITLE,
-  DEFAULT_TRANSFER_FAQS,
-} from "@/lib/page-content-defaults";
-import { expandPackedFaqs } from "@/lib/faq-normalize";
-import {
-  readCmsJson,
-  readCmsJsonFresh,
-  readLocalCmsJson,
-  writeCmsJson,
-} from "@/lib/supabase/cms-store";
-import { getBlogPostLocale, withBlogLocaleTag } from "@/lib/blog-locale";
-import { tourMatchesSlug } from "@/i18n/tour-slugs";
-import { SETTINGS_STRING_KEYS } from "@/lib/settings-i18n";
-import {
-  looksLikePastedWebHtml,
-  pastedWebHtmlToCleanHtml,
-} from "@/lib/sanitize-html";
+
+const dataDir = path.join(process.cwd(), "src/data");
 
 async function readJson<T>(file: string): Promise<T> {
-  return readCmsJson<T>(file);
-}
-
-/** Lectura fresca para mutaciones del admin (evita RMW sobre datos viejos). */
-async function readJsonFresh<T>(file: string): Promise<T> {
-  return readCmsJsonFresh<T>(file);
+  const raw = await fs.readFile(path.join(dataDir, file), "utf-8");
+  return JSON.parse(raw) as T;
 }
 
 async function writeJson(file: string, data: unknown): Promise<void> {
-  await writeCmsJson(file, data);
+  await fs.writeFile(
+    path.join(dataDir, file),
+    JSON.stringify(data, null, 2) + "\n",
+    "utf-8"
+  );
 }
 
 function slugify(value: string): string {
@@ -58,40 +34,13 @@ function slugify(value: string): string {
 
 /* ── Tours ── */
 
-function isTourActive(tour: Tour): boolean {
-  return tour.active !== false;
-}
-
-function tourPriority(tour: Tour): number {
-  const n = Number(tour.priority);
-  return Number.isFinite(n) ? n : Number.MAX_SAFE_INTEGER;
-}
-
-/** Orden del panel: campo «Prioridad del tour» (menor = primero). */
-export function sortToursByPanelOrder(tours: Tour[]): Tour[] {
-  return tours
-    .map((tour, index) => ({ tour, index }))
-    .sort((a, b) => {
-      const byPriority = tourPriority(a.tour) - tourPriority(b.tour);
-      if (byPriority !== 0) return byPriority;
-      return a.index - b.index;
-    })
-    .map(({ tour }) => tour);
-}
-
-/** Todas las excursiones (incluye inactivas). Uso admin / API. */
-export const getTours = cache(async (): Promise<Tour[]> => {
-  return sortToursByPanelOrder(await readJson<Tour[]>("tours.json"));
-});
-
-/** Solo excursiones activas para la web pública. */
-export async function getPublicTours(): Promise<Tour[]> {
-  return (await getTours()).filter(isTourActive);
+export async function getTours(): Promise<Tour[]> {
+  return readJson<Tour[]>("tours.json");
 }
 
 export async function getTourBySlug(slug: string): Promise<Tour | undefined> {
-  const tours = await getPublicTours();
-  return tours.find((t) => tourMatchesSlug(t, slug));
+  const tours = await getTours();
+  return tours.find((t) => t.slug === slug);
 }
 
 export async function getTourById(id: string): Promise<Tour | undefined> {
@@ -100,11 +49,11 @@ export async function getTourById(id: string): Promise<Tour | undefined> {
 }
 
 export async function getFeaturedTours(): Promise<Tour[]> {
-  return (await getPublicTours()).filter((t) => t.featured);
+  return (await getTours()).filter((t) => t.featured);
 }
 
 export async function getCruiseTours(): Promise<Tour[]> {
-  return (await getPublicTours()).filter((t) => t.cruiseFriendly);
+  return (await getTours()).filter((t) => t.cruiseFriendly);
 }
 
 export async function saveTours(tours: Tour[]): Promise<void> {
@@ -112,38 +61,18 @@ export async function saveTours(tours: Tour[]): Promise<void> {
 }
 
 export async function upsertTour(tour: Tour): Promise<Tour> {
-  const tours = await readJsonFresh<Tour[]>("tours.json");
+  const tours = await getTours();
   const idx = tours.findIndex((t) => t.id === tour.id);
   if (idx === -1) tours.push(tour);
   else tours[idx] = tour;
-  await saveTours(sortToursByPanelOrder(tours));
+  await saveTours(tours);
   return tour;
-}
-
-/** Reordena el listado y reescribe `priority` 1..n según el panel. */
-export async function reorderTours(ids: string[]): Promise<Tour[]> {
-  const tours = await readJsonFresh<Tour[]>("tours.json");
-  const byId = new Map(tours.map((t) => [t.id, t]));
-  const ordered: Tour[] = [];
-  const seen = new Set<string>();
-  for (const id of ids) {
-    const tour = byId.get(id);
-    if (!tour || seen.has(id)) continue;
-    seen.add(id);
-    ordered.push({ ...tour, priority: ordered.length + 1 });
-  }
-  for (const tour of tours) {
-    if (seen.has(tour.id)) continue;
-    ordered.push({ ...tour, priority: ordered.length + 1 });
-  }
-  await saveTours(ordered);
-  return ordered;
 }
 
 export async function createTour(
   input: Partial<Tour> & Pick<Tour, "title" | "shortTitle" | "category">
 ): Promise<Tour> {
-  const tours = await readJsonFresh<Tour[]>("tours.json");
+  const tours = await getTours();
   const baseSlug = slugify(input.slug || input.shortTitle || input.title);
   let slug = baseSlug;
   let n = 2;
@@ -151,30 +80,6 @@ export async function createTour(
     slug = `${baseSlug}-${n++}`;
   }
   const id = slug;
-  const emptyDays = () => Array(7).fill(false) as boolean[];
-  const defaultSchedule: Tour["schedule"] = {
-    "Playa Blanca": {
-      morning: emptyDays(),
-      afternoon: emptyDays(),
-      evening: emptyDays(),
-    },
-    "Puerto del Carmen": {
-      morning: emptyDays(),
-      afternoon: emptyDays(),
-      evening: emptyDays(),
-    },
-    "Costa Teguise": {
-      morning: emptyDays(),
-      afternoon: emptyDays(),
-      evening: emptyDays(),
-    },
-    Arrecife: {
-      morning: emptyDays(),
-      afternoon: emptyDays(),
-      evening: emptyDays(),
-    },
-  };
-
   const tour: Tour = {
     id,
     slug,
@@ -186,10 +91,6 @@ export async function createTour(
     durationHours: input.durationHours ?? 5,
     priceAdult: input.priceAdult ?? 0,
     priceChild: input.priceChild ?? 0,
-    priceBaby: input.priceBaby ?? 0,
-    priceAdultOffer: input.priceAdultOffer ?? input.priceAdult ?? 0,
-    priceChildOffer: input.priceChildOffer ?? input.priceChild ?? 0,
-    priceBabyOffer: input.priceBabyOffer ?? input.priceBaby ?? 0,
     currency: "EUR",
     rating: input.rating ?? 9.0,
     reviewCount: input.reviewCount ?? 0,
@@ -206,39 +107,22 @@ export async function createTour(
     recommendations: input.recommendations || [],
     cancellationPolicy:
       input.cancellationPolicy ||
-      "Cancelación gratuita hasta 48 horas antes de la recogida.",
-    maxGroup: input.maxGroup ?? 14,
-    languages: input.languages || ["Español"],
+      "En caso de cancelación con menos de 24 horas antes del tour, no se realizará devolución del importe abonado.",
+    maxGroup: input.maxGroup,
+    languages: input.languages || ["Español", "Inglés", "Alemán"],
     allowPayOnDay: input.allowPayOnDay ?? input.groupSize === "large",
     allowCard: input.allowCard ?? true,
     allowBizum: input.allowBizum ?? true,
     cruiseFriendly: input.cruiseFriendly ?? true,
     featured: input.featured ?? false,
-    active: input.active ?? true,
-    island: input.island || "Lanzarote",
-    isNew: input.isNew ?? false,
-    bookingMethod: input.bookingMethod || "online",
-    smallGroup: input.smallGroup ?? input.groupSize === "small",
-    mixLanguages: input.mixLanguages ?? false,
-    priority: input.priority ?? 1,
-    activityType: input.activityType || "Visitas Guiadas",
-    isPrivateActivity:
-      input.isPrivateActivity ?? input.category === "private",
-    paxPerPrice: input.paxPerPrice ?? 0,
-    youtubeUrl: input.youtubeUrl || "",
-    mapUrl: input.mapUrl || "",
-    schedule: input.schedule || defaultSchedule,
-    blockedDates: input.blockedDates || [],
-    seo: input.seo || { title: "", description: "", keywords: "" },
-    translations: input.translations || { en: {}, de: {} },
   };
   tours.push(tour);
-  await saveTours(sortToursByPanelOrder(tours));
+  await saveTours(tours);
   return tour;
 }
 
 export async function deleteTour(id: string): Promise<boolean> {
-  const tours = await readJsonFresh<Tour[]>("tours.json");
+  const tours = await getTours();
   const next = tours.filter((t) => t.id !== id);
   if (next.length === tours.length) return false;
   await saveTours(next);
@@ -247,37 +131,9 @@ export async function deleteTour(id: string): Promise<boolean> {
 
 /* ── Transfers ── */
 
-/** Textos antiguos del CMS en vivo antes del copy actualizado. */
-function transfersHighlightsLookLegacy(highlights: string[] | undefined): boolean {
-  if (!highlights?.length) return true;
-  return highlights.some((h) =>
-    /Vehículo climatizado|Seguimiento de vuelos|Tarifa fija: sin sorpresas|Disponible aeropuerto|Recibimiento en terminal con cartel con su nombre|Air-conditioned vehicle(?!s)|Flight tracking(?! &)|Airport\s*→\s*hotel/i.test(
-      h
-    )
-  );
+export async function getTransfersData(): Promise<TransfersData> {
+  return readJson<TransfersData>("transfers.json");
 }
-
-/**
- * Si el CMS aún tiene el copy viejo, usa el seed del deploy (src/data).
- * No pisa ediciones nuevas del admin que ya no coincidan con el legado.
- */
-async function withTransferHighlightSeed(
-  data: TransfersData
-): Promise<TransfersData> {
-  if (!transfersHighlightsLookLegacy(data.highlights)) return data;
-  try {
-    const seed = await readLocalCmsJson<TransfersData>("transfers.json");
-    if (!seed.highlights?.length) return data;
-    return { ...data, highlights: seed.highlights };
-  } catch {
-    return data;
-  }
-}
-
-export const getTransfersData = cache(async (): Promise<TransfersData> => {
-  const data = await readJson<TransfersData>("transfers.json");
-  return withTransferHighlightSeed(data);
-});
 
 export async function getTransferDestinations(): Promise<TransferDestination[]> {
   return (await getTransfersData()).destinations;
@@ -290,7 +146,7 @@ export async function saveTransfersData(data: TransfersData): Promise<void> {
 export async function upsertTransfer(
   dest: TransferDestination
 ): Promise<TransferDestination> {
-  const data = await readJsonFresh<TransfersData>("transfers.json");
+  const data = await getTransfersData();
   const idx = data.destinations.findIndex((d) => d.id === dest.id);
   if (idx === -1) data.destinations.push(dest);
   else data.destinations[idx] = dest;
@@ -301,7 +157,7 @@ export async function upsertTransfer(
 export async function createTransfer(
   input: Partial<TransferDestination> & Pick<TransferDestination, "name">
 ): Promise<TransferDestination> {
-  const data = await readJsonFresh<TransfersData>("transfers.json");
+  const data = await getTransfersData();
   const baseSlug = slugify(input.slug || input.name);
   let slug = baseSlug;
   let n = 2;
@@ -314,7 +170,6 @@ export async function createTransfer(
     slug,
     priceOneWay: input.priceOneWay ?? 0,
     priceReturn: input.priceReturn ?? 0,
-    priceExtraPerson: input.priceExtraPerson ?? 10,
     duration: input.duration || "30 min",
     distance: input.distance || "",
   };
@@ -324,7 +179,7 @@ export async function createTransfer(
 }
 
 export async function deleteTransfer(id: string): Promise<boolean> {
-  const data = await readJsonFresh<TransfersData>("transfers.json");
+  const data = await getTransfersData();
   const next = data.destinations.filter((d) => d.id !== id);
   if (next.length === data.destinations.length) return false;
   data.destinations = next;
@@ -335,7 +190,7 @@ export async function deleteTransfer(id: string): Promise<boolean> {
 export async function updateTransferHighlights(
   highlights: string[]
 ): Promise<string[]> {
-  const data = await readJsonFresh<TransfersData>("transfers.json");
+  const data = await getTransfersData();
   data.highlights = highlights;
   await saveTransfersData(data);
   return highlights;
@@ -343,9 +198,9 @@ export async function updateTransferHighlights(
 
 /* ── Blog ── */
 
-export const getBlogPosts = cache(async (): Promise<BlogPost[]> => {
+export async function getBlogPosts(): Promise<BlogPost[]> {
   return readJson<BlogPost[]>("blog.json");
-});
+}
 
 export async function getPostBySlug(slug: string): Promise<BlogPost | undefined> {
   return (await getBlogPosts()).find((p) => p.slug === slug);
@@ -356,29 +211,24 @@ export async function saveBlogPosts(posts: BlogPost[]): Promise<void> {
 }
 
 export async function upsertBlogPost(post: BlogPost): Promise<BlogPost> {
-  const posts = await readJsonFresh<BlogPost[]>("blog.json");
-  const normalized: BlogPost = {
-    ...post,
-    tags: withBlogLocaleTag(post.tags, getBlogPostLocale(post)),
-  };
-  const idx = posts.findIndex((p) => p.slug === normalized.slug);
-  if (idx === -1) posts.unshift(normalized);
-  else posts[idx] = normalized;
+  const posts = await getBlogPosts();
+  const idx = posts.findIndex((p) => p.slug === post.slug);
+  if (idx === -1) posts.unshift(post);
+  else posts[idx] = post;
   await saveBlogPosts(posts);
-  return normalized;
+  return post;
 }
 
 export async function createBlogPost(
   input: Partial<BlogPost> & Pick<BlogPost, "title" | "excerpt" | "content">
 ): Promise<BlogPost> {
-  const posts = await readJsonFresh<BlogPost[]>("blog.json");
+  const posts = await getBlogPosts();
   const baseSlug = slugify(input.slug || input.title);
   let slug = baseSlug;
   let n = 2;
   while (posts.some((p) => p.slug === slug)) {
     slug = `${baseSlug}-${n++}`;
   }
-  const locale = getBlogPostLocale({ tags: input.tags || [] });
   const post: BlogPost = {
     slug,
     title: input.title,
@@ -386,8 +236,8 @@ export async function createBlogPost(
     content: input.content,
     image: input.image || "/images/blog/cruise.jpg",
     date: input.date || new Date().toISOString().slice(0, 10),
-    author: input.author || "Equipo Lanzarote Experience Tours",
-    tags: withBlogLocaleTag(input.tags || [], locale),
+    author: input.author || "Equipo Lanzarote Tours",
+    tags: input.tags || [],
   };
   posts.unshift(post);
   await saveBlogPosts(posts);
@@ -395,285 +245,53 @@ export async function createBlogPost(
 }
 
 export async function deleteBlogPost(slug: string): Promise<boolean> {
-  const posts = await readJsonFresh<BlogPost[]>("blog.json");
+  const posts = await getBlogPosts();
   const next = posts.filter((p) => p.slug !== slug);
   if (next.length === posts.length) return false;
   await saveBlogPosts(next);
   return true;
 }
 
-/* ── Cruises (port calls) ── */
-
-const defaultCruisesData: CruisesData = {
-  season: "2026-2027",
-  port: "Puerto de Los Mármoles, Lanzarote",
-  source: "",
-  updatedAt: new Date().toISOString().slice(0, 10),
-  calls: [],
-};
-
-function sortCruiseCalls(calls: CruiseCall[]): CruiseCall[] {
-  return [...calls].sort((a, b) => {
-    const byDate = a.date.localeCompare(b.date);
-    if (byDate !== 0) return byDate;
-    return a.arrivalTime.localeCompare(b.arrivalTime);
-  });
-}
-
-export const getCruisesData = cache(async (): Promise<CruisesData> => {
-  try {
-    const stored = await readJson<Partial<CruisesData>>("cruises.json");
-    return {
-      ...defaultCruisesData,
-      ...stored,
-      calls: sortCruiseCalls(stored.calls || []),
-    };
-  } catch {
-    return defaultCruisesData;
-  }
-});
-
-export async function getCruiseCalls(options?: {
-  publishedOnly?: boolean;
-  fromDate?: string;
-}): Promise<CruiseCall[]> {
-  const data = await getCruisesData();
-  let calls = data.calls;
-  if (options?.publishedOnly) {
-    calls = calls.filter((c) => c.published);
-  }
-  if (options?.fromDate) {
-    calls = calls.filter((c) => c.date >= options.fromDate!);
-  }
-  return calls;
-}
-
-export async function saveCruisesData(data: CruisesData): Promise<void> {
-  await writeJson("cruises.json", {
-    ...data,
-    calls: sortCruiseCalls(data.calls),
-    updatedAt: new Date().toISOString().slice(0, 10),
-  });
-}
-
-async function loadCruisesDataFresh(): Promise<CruisesData> {
-  try {
-    const stored = await readJsonFresh<Partial<CruisesData>>("cruises.json");
-    return {
-      ...defaultCruisesData,
-      ...stored,
-      calls: sortCruiseCalls(stored.calls || []),
-    };
-  } catch {
-    return defaultCruisesData;
-  }
-}
-
-export async function upsertCruiseCall(call: CruiseCall): Promise<CruiseCall> {
-  const data = await loadCruisesDataFresh();
-  const idx = data.calls.findIndex((c) => c.id === call.id);
-  if (idx === -1) data.calls.push(call);
-  else data.calls[idx] = call;
-  await saveCruisesData(data);
-  return call;
-}
-
-export async function createCruiseCall(
-  input: Partial<CruiseCall> &
-    Pick<CruiseCall, "date" | "shipName" | "company">
-): Promise<CruiseCall> {
-  const data = await loadCruisesDataFresh();
-  const base = slugify(
-    `${input.date}-${input.shipName}-${input.shipCode || "ship"}`
-  );
-  let id = base;
-  let n = 2;
-  while (data.calls.some((c) => c.id === id)) {
-    id = `${base}-${n++}`;
-  }
-  const call: CruiseCall = {
-    id,
-    date: input.date,
-    port: input.port || data.port || "Puerto de Los Mármoles, Lanzarote",
-    company: input.company,
-    shipCode: input.shipCode || "",
-    shipName: input.shipName,
-    arrivalTime: input.arrivalTime || "08:00",
-    departureTime: input.departureTime || "18:00",
-    season: input.season || data.season || "2026-2027",
-    published: input.published ?? true,
-    notes: input.notes || "",
-  };
-  data.calls.push(call);
-  await saveCruisesData(data);
-  return call;
-}
-
-export async function deleteCruiseCall(id: string): Promise<boolean> {
-  const data = await loadCruisesDataFresh();
-  const next = data.calls.filter((c) => c.id !== id);
-  if (next.length === data.calls.length) return false;
-  data.calls = next;
-  await saveCruisesData(data);
-  return true;
-}
-
 /* ── Settings ── */
 
 const defaultSettings: SiteSettings = {
-  brandName: "Lanzarote Experience Tours",
-  tagline: "LET us guide you",
+  brandName: "Lanzarote Tours",
+  tagline: "Excursiones & traslados",
   phone: "+34 646 08 05 85",
-  email: "support@lanzaroteexperiencetours.com",
-  hours: "Contacto 24 / 7",
-  homeHeadline: "Lanzarote Experience Tours",
-  homeSubheadline: "LET us guide you",
-  homeHeroImage: "/images/home/timanfaya-familia.jpg",
-  homeHeroPosition: "50% 42%",
-  aboutTitle: "Lanzarote Experience Tours",
+  email: "hola@lanzarotetours.com",
+  hours: "Lunes–Domingo · 8:00–20:00",
+  homeHeadline: "Excursiones y traslados con guía local en Lanzarote",
+  homeSubheadline:
+    "Empresa familiar. Descubre Timanfaya, César Manrique, La Graciosa y más, o reserva tu traslado privado desde el aeropuerto.",
+  homeHeroImage: "/images/heroes/home.jpg",
+  aboutTitle: "Quiénes somos",
   aboutLead:
-    "LET es una empresa familiar local que ofrece visitas guiadas en Lanzarote.",
+    "Somos una empresa familiar de Lanzarote que organiza excursiones y traslados.",
   aboutText: "",
-  aboutImage: "/images/home/amigas-volcan.jpg",
-  aboutImageSecondary: "/images/home/camellos.jpg",
-  aboutHeroPosition: "45% 35%",
+  aboutMission: "",
+  aboutVision: "",
+  aboutImage: "/images/heroes/about.jpg",
+  aboutImageSecondary: "/images/heroes/about-2.jpg",
   aboutValues: "",
   aboutPromise: "",
-  excursionsTitle: "Actividades y excursiones guiadas en Lanzarote",
+  excursionsTitle: "Excursiones en Lanzarote",
   excursionsIntro: "",
-  excursionsText: "",
   excursionsHeroImage: "/images/heroes/excursions.jpg",
-  excursionsHeroPosition: "28% 42%",
-  blogTitle: "Blog",
+  blogTitle: "Descubre Lanzarote",
   blogIntro: "",
-  blogText: "",
   blogHeroImage: "/images/heroes/blog.jpg",
-  blogHeroPosition: "50% 40%",
-  cruiseHeadline: "Excursiones para cruceros en las Islas Canarias",
+  cruiseHeadline: "Escala en Lanzarote: te recogemos en el puerto",
   cruiseIntro: "",
-  cruiseText: "",
-  cruiseHeroImage: "/images/home/cruceros.jpg",
-  cruiseHeroPosition: "50% 45%",
-  transferTitle: "Traslados privados aeropuerto ↔ hotel",
+  cruiseHeroImage: "/images/heroes/cruise.jpg",
   transferIntro: "",
-  transferText: "",
-  transferHeroImage: "/images/home/traslados.jpg",
-  transferHeroPosition: "50% 45%",
-  housesHeroImage: "/images/heroes/casas-vacacionales.jpg",
-  housesHeroPosition: "50% 45%",
-  contactHeroImage: "/images/home/amigas-volcan.jpg",
-  contactHeroPosition: "45% 35%",
-  companyLegalName: "Lanzarote Experience Tours S.L.U.",
-  companyTaxId: "",
-  companyAddress: "",
-  taxRate: 7,
-  bannerEs:
-    "Excursiones personalizadas · Empresa familiar de Lanzarote · Gracias por apoyar el comercio local · Grupos reducidos",
-  bannerEn: "",
-  bannerDe: "",
-  excursionsFaqTitle: DEFAULT_EXCURSIONS_FAQ_TITLE,
-  excursionsFaqs: DEFAULT_EXCURSIONS_FAQS,
-  excursionsBlocksTitle: DEFAULT_EXCURSIONS_BLOCKS_TITLE,
-  excursionsBlocksIntro: DEFAULT_EXCURSIONS_BLOCKS_INTRO,
-  excursionsBlocks: DEFAULT_EXCURSIONS_BLOCKS,
-  transferFaqTitle: DEFAULT_TRANSFER_FAQ_TITLE,
-  transferFaqs: DEFAULT_TRANSFER_FAQS,
-  transferBlocksTitle: "",
-  transferBlocksIntro: "",
-  transferBlocks: [],
-  aboutFaqTitle: "",
-  aboutFaqs: [],
-  aboutBlocksTitle: "",
-  aboutBlocksIntro: "",
-  aboutBlocks: [],
-  blogFaqTitle: "",
-  blogFaqs: [],
-  blogBlocksTitle: "",
-  blogBlocksIntro: "",
-  blogBlocks: [],
-  cruiseFaqTitle: "",
-  cruiseFaqs: [],
-  cruiseBlocksTitle: "",
-  cruiseBlocksIntro: "",
-  cruiseBlocks: [],
-  housesFaqTitle: "",
-  housesFaqs: [],
-  housesBlocksTitle: "",
-  housesBlocksIntro: "",
-  housesBlocks: [],
-  contactFaqTitle: "",
-  contactFaqs: [],
-  contactBlocksTitle: "",
-  contactBlocksIntro: "",
-  contactBlocks: [],
+  transferHeroImage: "/images/heroes/transfer.jpg",
 };
 
-function coalesceFaqs(
-  stored: PageFaqItem[] | undefined,
-  fallback: PageFaqItem[]
-): PageFaqItem[] {
-  const base = stored === undefined ? fallback : stored;
-  return expandPackedFaqs(base);
-}
-
-function coalesceBlocks(
-  stored: PageContentBlock[] | undefined,
-  fallback: PageContentBlock[]
-): PageContentBlock[] {
-  return stored === undefined ? fallback : stored;
-}
-
-function scrubSettingsHtml(settings: SiteSettings): SiteSettings {
-  const next = { ...settings };
-  for (const key of SETTINGS_STRING_KEYS) {
-    const value = next[key];
-    if (typeof value === "string" && looksLikePastedWebHtml(value)) {
-      (next as Record<string, unknown>)[key] = pastedWebHtmlToCleanHtml(value);
-    }
-  }
-  return next;
-}
-
-export const getSettings = cache(async (): Promise<SiteSettings> => {
+export async function getSettings(): Promise<SiteSettings> {
   const stored = await readJson<Partial<SiteSettings>>("settings.json");
-  return scrubSettingsHtml({
-    ...defaultSettings,
-    ...stored,
-    // Si el CMS aún no tiene estos campos, usar el contenido de producción.
-    excursionsFaqTitle:
-      stored.excursionsFaqTitle ?? defaultSettings.excursionsFaqTitle,
-    excursionsFaqs: coalesceFaqs(
-      stored.excursionsFaqs,
-      defaultSettings.excursionsFaqs || []
-    ),
-    excursionsBlocksTitle:
-      stored.excursionsBlocksTitle ?? defaultSettings.excursionsBlocksTitle,
-    excursionsBlocksIntro:
-      stored.excursionsBlocksIntro ?? defaultSettings.excursionsBlocksIntro,
-    excursionsBlocks: coalesceBlocks(
-      stored.excursionsBlocks,
-      defaultSettings.excursionsBlocks || []
-    ),
-    transferFaqTitle:
-      stored.transferFaqTitle ?? defaultSettings.transferFaqTitle,
-    transferFaqs: coalesceFaqs(
-      stored.transferFaqs,
-      defaultSettings.transferFaqs || []
-    ),
-    transferBlocks: coalesceBlocks(stored.transferBlocks, []),
-    aboutFaqs: coalesceFaqs(stored.aboutFaqs, []),
-    aboutBlocks: coalesceBlocks(stored.aboutBlocks, []),
-    blogFaqs: coalesceFaqs(stored.blogFaqs, []),
-    blogBlocks: coalesceBlocks(stored.blogBlocks, []),
-    cruiseFaqs: coalesceFaqs(stored.cruiseFaqs, []),
-    cruiseBlocks: coalesceBlocks(stored.cruiseBlocks, []),
-    housesFaqs: coalesceFaqs(stored.housesFaqs, []),
-    housesBlocks: coalesceBlocks(stored.housesBlocks, []),
-    contactFaqs: coalesceFaqs(stored.contactFaqs, []),
-    contactBlocks: coalesceBlocks(stored.contactBlocks, []),
-  });
-});
+  return { ...defaultSettings, ...stored };
+}
 
 export async function saveSettings(settings: SiteSettings): Promise<void> {
-  await writeJson("settings.json", scrubSettingsHtml(settings));
+  await writeJson("settings.json", settings);
 }

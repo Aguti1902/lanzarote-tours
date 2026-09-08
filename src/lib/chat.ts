@@ -1,8 +1,6 @@
 import {
-  getCruiseCalls,
-  getCruisesData,
   getSettings,
-  getPublicTours,
+  getTours,
   getTransfersData,
 } from "@/lib/content";
 import { formatPrice, groupSizeLabel } from "@/lib/format";
@@ -20,45 +18,30 @@ function normalize(text: string): string {
 }
 
 async function buildKnowledge(): Promise<string> {
-  const [tours, transfers, settings, cruiseData, cruiseCalls] = await Promise.all([
-    getPublicTours(),
+  const [tours, transfers, settings] = await Promise.all([
+    getTours(),
     getTransfersData(),
     getSettings(),
-    getCruisesData(),
-    getCruiseCalls({ publishedOnly: true }),
   ]);
 
   const tourLines = tours
     .map((t) => {
       const group = t.groupSize ? groupSizeLabel(t.groupSize) : t.category;
       const pay = [
-        t.allowCard && "tarjeta 100% online",
-        t.allowBizum && "Bizum 100% online",
-        t.allowCard && "20% tarjeta + resto efectivo",
+        t.allowCard && "tarjeta",
+        t.allowBizum && "Bizum",
         t.allowPayOnDay && "pago el día del tour",
       ]
         .filter(Boolean)
         .join(", ");
-      return `- ${t.shortTitle} (${group}): ${
-        t.category === "private" || t.isPrivateActivity
-          ? `${formatPrice(t.priceAdult)} precio cerrado (grupo completo)`
-          : `${formatPrice(t.priceAdult)} adulto`
-      }, ${t.duration}. Pagos: ${pay}. URL: /excursiones/${t.slug}. ${t.summary}`;
+      return `- ${t.shortTitle} (${group}): ${formatPrice(t.priceAdult)}${t.category === "private" ? "/hora" : " adulto"}, ${t.duration}. Pagos: ${pay}. URL: /excursiones/${t.slug}. ${t.summary}`;
     })
     .join("\n");
 
   const transferLines = transfers.destinations
     .map(
       (d) =>
-        `- Aeropuerto ↔ ${d.name}: ida ${formatPrice(d.priceOneWay)}, ida y vuelta ${formatPrice(d.priceReturn)} (hasta 4 pasajeros); persona extra ${formatPrice(d.priceExtraPerson ?? 10)} (${d.duration})`
-    )
-    .join("\n");
-
-  const upcomingCruises = cruiseCalls
-    .slice(0, 40)
-    .map(
-      (c) =>
-        `- ${c.date} ${c.shipName} (${c.company}): ${c.arrivalTime}-${c.departureTime}`
+        `- Aeropuerto ↔ ${d.name}: ida ${formatPrice(d.priceOneWay)}, ida y vuelta ${formatPrice(d.priceReturn)} (${d.duration})`
     )
     .join("\n");
 
@@ -74,21 +57,20 @@ ${tourLines}
 TRASLADOS PRIVADOS (recibimiento con cartel):
 ${transferLines}
 Ventajas: ${transfers.highlights.join("; ")}
+Cancelación traslados: gratis hasta 24 h (devolución 100%). Sillas bebé gratis. Bicicletas +10 €/ud.
 
 CRUCERISTAS:
 ${settings.cruiseHeadline}
 ${settings.cruiseIntro}
-Calendario de escalas temporada ${cruiseData.season} en ${cruiseData.port} (${cruiseCalls.length} escalas).
-Próximas / ejemplo de escalas:
-${upcomingCruises}
-URL cruceros: /excursiones-cruceros
-URL calendario escalas Lanzarote: /cruceristas
+Recogida también en Puerto de Cruceros.
 
 INFO CLAVE:
-- Grupo reducido: máx. 8 personas, pago anticipado con tarjeta o Bizum.
-- Grupo grande: hasta 20 personas, tarjeta, Bizum o pago el día del tour.
-- Tour privado y minibus a disposición disponibles.
-- Cancelación gratuita habitualmente hasta 48h antes.
+- Grupo pequeño: máx. 8 personas.
+- En bus: hasta 50 personas, mejor precio, pago también el día del tour.
+- Pagos: PayPal, Stripe, transferencia, Bizum y efectivo.
+- Idiomas: español, inglés y/o alemán.
+- Cancelación excursiones: con menos de 24 h no hay reembolso.
+- Privada a la carta: 100 €/h hasta 10 personas · 150 €/h hasta 50.
 `.trim();
 }
 
@@ -99,90 +81,90 @@ function localReply(message: string, knowledge: string): string {
     /hola|buenas|hey|hello|buenos dias|buenas tardes|saludos/.test(q) &&
     q.length < 40
   ) {
-    return "¡Hola! Soy el asistente de Lanzarote Experience Tours. Puedo ayudarte con excursiones (Ruta Sur, Grand Tour, privados), traslados al aeropuerto, precios, pagos y opciones para cruceristas. ¿Qué te interesa?";
+    return "¡Hola! Soy el asistente de Lanzarote Tours. Puedo ayudarte con excursiones (Sur y Timanfaya, Grand Tour, Manrique, La Graciosa), traslados al aeropuerto, precios y cruceristas. ¿Qué te interesa?";
   }
 
   if (/gracias|thank/.test(q)) {
-    return "¡De nada! Si quieres, te ayudo a elegir entre grupo reducido, grupo grande, tour privado o un traslado. También puedes reservar desde la web.";
+    return "¡De nada! Si quieres, te ayudo a elegir entre grupo pequeño, en bus, tour privado o un traslado. También puedes reservar desde la web.";
   }
 
-  if (/crucero|crucerista|barco|escala|puerto|calendario/.test(q)) {
-    return "Si llegas en crucero a Lanzarote (Puerto de Los Mármoles), te recogemos en el puerto y adaptamos horarios a tu escala. En /excursiones-cruceros elige naviera, barco y salida para ver el itinerario completo y las excursiones. En /cruceristas está el calendario de escalas 2026-2027. Dime fecha o nombre del barco y te indico qué hay ese día.";
+  if (/crucero|crucerista|barco|escala|puerto/.test(q)) {
+    return "Si llegas en crucero, te recogemos en el Puerto de Cruceros (también en otras zonas). Las rutas Sur y Grand Tour están en grupo pequeño o en bus, y hay privada a la carta. Mira /cruceristas o dime cuántas horas tienes en tierra.";
   }
 
-  if (/traslad|aeropuerto|taxi|recogida|transfer|playa blanca|puerto del carmen|costa teguise|arrecife|puerto calero/.test(q)) {
+  if (/traslad|aeropuerto|taxi|recogida|transfer|playa blanca|puerto del carmen|costa teguise|arrecife|puerto calero|playa honda/.test(q)) {
     const lines = knowledge
       .split("\n")
       .filter((l) => l.includes("Aeropuerto ↔"))
       .join("\n");
-    return `Traslados 100% privados, con cartel con tu nombre en la terminal.\n\n${lines}\n\nPuedes reservar en /traslados. ¿A qué zona vas?`;
+    return `Traslados 100% privados, con cartel con tu nombre. Cancelación gratis hasta 24 h. Sillas de bebé gratis.\n\n${lines}\n\nReserva en /traslados. ¿A qué zona vas?`;
   }
 
-  if (/pago|bizum|tarjeta|efectivo|cobro/.test(q)) {
-    return "En **grupo grande** puedes pagar con tarjeta, Bizum o el día del tour. En **grupo reducido**, privado y minibus se confirma normalmente con tarjeta o Bizum. Los traslados admiten tarjeta, Bizum o pago al conductor.";
+  if (/pago|bizum|tarjeta|efectivo|cobro|paypal|stripe|transferencia/.test(q)) {
+    return "Aceptamos **PayPal, Stripe (tarjeta), transferencia, Bizum y efectivo**. En bus también puedes pagar el día del tour. Los traslados admiten tarjeta o PayPal.";
   }
 
-  if (/grupo reducido|pequeño|intimo|intim/.test(q)) {
-    return "El **grupo reducido** es máximo 8 personas: más cercanía con el guía y ritmo flexible. Tenemos Ruta Sur y Grand Tour en este formato. Precio un poco más alto que el grupo grande, con pago anticipado (tarjeta/Bizum). ¿Quieres media jornada (Ruta Sur) o día completo (Grand Tour)?";
+  if (/grupo (pequeno|reducido)|intimo|intim/.test(q)) {
+    return "El **grupo pequeño** es máximo 8 personas: más cercanía con el guía. Sur y Timanfaya desde 85 €; Grand Tour desde 125 €. ¿Media jornada o día completo?";
   }
 
-  if (/grupo grande|barato|econom|precio bajo|masivo/.test(q)) {
-    return "El **grupo grande** (hasta 20 personas) ofrece el mismo itinerario a mejor precio. Puedes pagar con tarjeta, Bizum o el día del tour. Ideal si priorizas el precio. ¿Ruta Sur (~5 h) o Grand Tour (~9 h)?";
+  if (/grupo grande|en bus|barato|econom|precio bajo|masivo|50/.test(q)) {
+    return "La opción **en bus** (hasta 50 personas) ofrece el mismo itinerario a mejor precio: Sur y Timanfaya 45 €, Grand Tour 85 €. ¿Cuál prefieres?";
   }
 
-  if (/privado|exclusiv|a medida|familia/.test(q)) {
-    return "El **tour privado** incluye minibus y guía oficial en exclusiva (desde ~5 h, hasta 10 pasajeros). También puedes alquilar solo el **minibus a disposición** con conductor y elegir tú el recorrido — con acceso preferente en Timanfaya. ¿Prefieres con guía o solo vehículo?";
+  if (/privado|exclusiv|a la carta|a medida|familia/.test(q)) {
+    return "La **excursión privada a la carta** es 100 €/hora (hasta 10 personas) o 150 €/hora (hasta 50), con guía oficial. Itinerario flexible. ¿Cuántas horas y personas?";
+  }
+
+  if (/manrique|mirador|fundacion/.test(q)) {
+    return "El **Tour César Manrique** visita Timanfaya, Fundación César Manrique, Monumento al Campesino, Jardín de Cactus, Mirador del Río y Jameos del Agua. Detalle en /excursiones/excursion-cesar-manrique.";
+  }
+
+  if (/graciosa|catamaran|maritim|sail|kayak|snorkel/.test(q)) {
+    return "Tenemos **I Love Graciosa** (ferry + catamarán, paella, barra libre, kayak/snorkel), **La Graciosa Sail**, **a tu aire** y **Costa a Costa**. Mira la sección marítimas en /excursiones.";
   }
 
   if (/timanfaya|ruta sur|sur|volcan|montanas del fuego|geria|golfo/.test(q)) {
-    return "La **Ruta Sur** visita Timanfaya, El Golfo, panorámica de Salinas y La Geria (~5 h). Está en grupo reducido y grupo grande. Entradas a Timanfaya incluidas. ¿La quieres más íntima (reducido) o más económica (grande)?";
+    return "La **Excursión Sur y Timanfaya** visita Timanfaya, El Diablo, Ruta de los Volcanes, El Golfo, Hervideros, Salinas, camellos y La Geria. Grupo pequeño 85 € · en bus 45 €.";
   }
 
-  if (/grand tour|dia completo|jameos|cactus|completo/.test(q)) {
-    return "El **Grand Tour** es el día completo (~9 h): Timanfaya, El Golfo, La Geria, Jameos del Agua y Jardín de Cactus, con entradas incluidas. Disponible en grupo reducido y grupo grande. Perfecto si quieres ver lo esencial de la isla en un solo día.";
+  if (/grand tour|dia completo|jameos|cactus|cueva|completo/.test(q)) {
+    return "El **Grand Tour** combina sur, centro y norte: Timanfaya, Jardín de Cactus, Jameos, Cueva de los Verdes, La Geria, Hervideros y El Golfo. Grupo pequeño 125 € · en bus 85 €.";
   }
 
   if (/precio|cuanto|cuesta|tarif|euro|€/.test(q)) {
     const tourBits = knowledge
       .split("\n")
-      .filter((l) => l.startsWith("- ") && l.includes("adulto"))
-      .slice(0, 6)
+      .filter((l) => l.startsWith("- ") && (l.includes("adulto") || l.includes("/hora")))
+      .slice(0, 8)
       .join("\n");
-    return `Estos son precios orientativos actuales:\n\n${tourBits}\n\nPara traslados, pregunta por tu zona o ve a /traslados. ¿Quieres que te compare grupo reducido vs grande?`;
+    return `Precios orientativos:\n\n${tourBits}\n\nTraslados en /traslados. ¿Comparo grupo pequeño vs bus?`;
   }
 
   if (/cancel|reembol|anular/.test(q)) {
-    return "En la mayoría de servicios la cancelación es gratuita hasta 48 horas antes de la recogida. Con menos de 48 h normalmente no hay reembolso. Si me dices qué servicio has reservado, te concreto mejor.";
+    return "En **excursiones**, con menos de 24 h antes no hay reembolso. En **traslados**, si cancelas con al menos 24 h te devolvemos el 100%.";
   }
 
   if (/contacto|telefono|llamar|email|correo|whatsapp|horario/.test(q)) {
-    const phone = knowledge.match(/Teléfono: (.+)/)?.[1] || "+34 600 000 000";
-    const email = knowledge.match(/Email: (.+)/)?.[1] || "hola@lanzarotetravels.com";
+    const phone = knowledge.match(/Teléfono: (.+)/)?.[1] || "+34 646 08 05 85";
+    const email = knowledge.match(/Email: (.+)/)?.[1] || "hola@lanzarotetours.com";
     const hours = knowledge.match(/Horario: (.+)/)?.[1] || "Lunes–Domingo · 8:00–20:00";
-    return `Puedes contactarnos en ${phone} o ${email}. Horario: ${hours}. También puedes reservar online desde la web.`;
+    return `Puedes contactarnos en ${phone} o ${email}. Horario: ${hours}. También puedes reservar online.`;
   }
 
   if (/reserva|reservar|book|contratar/.test(q)) {
-    return "Puedes reservar online desde cada ficha de excursión o en /traslados. Elige fecha, personas y método de pago. Si me dices fecha, zona de hotel o si vienes en crucero, te oriento hacia la mejor opción.";
+    return "Puedes reservar online desde cada ficha de excursión o en /traslados. Indica fecha, personas y método de pago. Si me dices zona de hotel o si vienes en crucero, te oriento.";
   }
 
-  return "Puedo ayudarte con:\n• Excursiones (Ruta Sur, Grand Tour, privado, minibus)\n• Grupo reducido vs grupo grande\n• Traslados aeropuerto\n• Precios y formas de pago\n• Escalas de crucero\n\nPregúntame, por ejemplo: «¿Cuánto cuesta el Grand Tour en grupo grande?» o «Traslado a Playa Blanca».";
+  return "Puedo ayudarte con:\n• Excursiones (Sur, Grand Tour, Manrique, Graciosa, privada)\n• Grupo pequeño vs en bus\n• Traslados aeropuerto\n• Precios y formas de pago\n• Escalas de crucero\n\nEjemplo: «¿Cuánto cuesta el Grand Tour en bus?»";
 }
-
-const langName: Record<string, string> = {
-  es: "español",
-  en: "English",
-  de: "Deutsch",
-};
 
 async function openaiReply(
   messages: ChatMessage[],
-  knowledge: string,
-  locale: string
+  knowledge: string
 ): Promise<string | null> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) return null;
-  const language = langName[locale] || "español";
 
   try {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -197,9 +179,9 @@ async function openaiReply(
         messages: [
           {
             role: "system",
-            content: `You are the booking assistant for Lanzarote Experience Tours. Reply in ${language}, briefly, clearly and kindly (max 120 words unless listing prices). Use only this company information. If unsure, invite the user to contact us or book on the website. Do not invent prices missing from the context. Include internal links when helpful (/${locale}/excursions or /${locale}/excursiones, /${locale}/airport-transfers or /${locale}/traslados-aeropuerto-lanzarote, /${locale}/shore-excursions or /${locale}/excursiones-cruceros, /${locale}/cruise-passengers or /${locale}/cruceristas). Use the URL slug language matching ${locale}.
+            content: `Eres el asistente de reservas de Lanzarote Tours (empresa familiar, color de marca verde). Responde en español, breve y amable (máx. 120 palabras salvo listas de precios). Usa solo esta información. No inventes precios. Enlaces útiles: /excursiones, /traslados, /cruceristas.
 
-CONTEXT:
+CONTEXTO:
 ${knowledge}`,
           },
           ...messages.slice(-10).map((m) => ({
@@ -218,26 +200,20 @@ ${knowledge}`,
   }
 }
 
-export async function answerChat(
-  messages: ChatMessage[],
-  locale = "es"
-): Promise<{
+export async function answerChat(messages: ChatMessage[]): Promise<{
   reply: string;
   mode: "openai" | "local";
 }> {
   const lastUser = [...messages].reverse().find((m) => m.role === "user");
   if (!lastUser?.content?.trim()) {
-    const empty =
-      locale === "en"
-        ? "Tell me how I can help: excursions, transfers or cruises."
-        : locale === "de"
-          ? "Sagen Sie mir, womit ich helfen kann: Ausflüge, Transfers oder Kreuzfahrten."
-          : "Cuéntame en qué puedo ayudarte: excursiones, traslados o cruceros.";
-    return { reply: empty, mode: "local" };
+    return {
+      reply: "Cuéntame en qué puedo ayudarte: excursiones, traslados o cruceros.",
+      mode: "local",
+    };
   }
 
   const knowledge = await buildKnowledge();
-  const ai = await openaiReply(messages, knowledge, locale);
+  const ai = await openaiReply(messages, knowledge);
   if (ai) return { reply: ai, mode: "openai" };
 
   return {

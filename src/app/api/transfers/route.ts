@@ -7,7 +7,6 @@ import {
   upsertTransfer,
 } from "@/lib/content";
 import type { TransferDestination } from "@/types";
-import { requireAdmin } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -17,9 +16,6 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const denied = await requireAdmin(request);
-  if (denied) return denied;
-
   try {
     const body = await request.json();
     if (body.action === "highlights") {
@@ -37,9 +33,6 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const denied = await requireAdmin(request);
-  if (denied) return denied;
-
   try {
     const body = (await request.json()) as TransferDestination;
     if (!body.id || !body.name) {
@@ -53,9 +46,6 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const denied = await requireAdmin(request);
-  if (denied) return denied;
-
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");

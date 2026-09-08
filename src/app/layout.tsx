@@ -1,42 +1,27 @@
 import type { Metadata } from "next";
-import { Outfit, Syne } from "next/font/google";
-import { AppLoadingProvider } from "@/components/AppLoadingProvider";
-import { CartProvider } from "@/components/CartProvider";
+import { Fraunces, Manrope } from "next/font/google";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { AIChat } from "@/components/AIChat";
 import "./globals.css";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "swap",
 });
 
-const syne = Syne({
-  variable: "--font-syne",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["700", "800"],
-  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Lanzarote Experience Tours - Visitas guiadas en Lanzarote",
-    template: "%s | Lanzarote Experience Tours",
+    default: "Lanzarote Tours | Excursiones y traslados",
+    template: "%s | Lanzarote Tours",
   },
   description:
-    "Somos Lanzarote Experience Tours, una empresa familiar y local. Organizamos visitas guiadas en Lanzarote sin intermediarios, en Español y en grupos reducidos (máx 14 personas).",
-  other: {
-    "theme-color": "#2a7a4a",
-  },
-  icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
-  },
-  manifest: "/site.webmanifest",
+    "Empresa familiar de Lanzarote: excursiones con guía local (Timanfaya, Grand Tour, César Manrique, La Graciosa) y traslados privados desde el aeropuerto.",
 };
 
 export default function RootLayout({
@@ -45,11 +30,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${outfit.variable} ${syne.variable} h-full`}>
-      <body className="flex min-h-full flex-col font-sans antialiased">
-        <AppLoadingProvider>
-          <CartProvider>{children}</CartProvider>
-        </AppLoadingProvider>
+    <html lang="es" className={`${manrope.variable} ${fraunces.variable} h-full`}>
+      <body className="flex min-h-full flex-col antialiased">
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
+        <AIChat />
       </body>
     </html>
   );

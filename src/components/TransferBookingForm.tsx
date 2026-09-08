@@ -1,17 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useLocale } from "@/components/LocaleProvider";
-import { TRANSFER_DIRECTION_EVENT } from "@/components/TransferRouteChips";
 import { formatPrice } from "@/lib/format";
-import { minBookableDateIso, isServiceDateWithinLeadTime } from "@/lib/booking-lead-time";
-import {
-  calcTransferTotal,
-  TRANSFER_INCLUDED_PAX,
-  transferExtraPassengers,
-  type TransferDirection,
-} from "@/lib/transfer-price";
 import type { PaymentMethod, TransferDestination } from "@/types";
 
 const inputClass =
@@ -23,15 +14,11 @@ export function TransferBookingForm({
   destinations: TransferDestination[];
 }) {
   const router = useRouter();
-  const { dict, href, locale } = useLocale();
   const [destination, setDestination] = useState(destinations[0]?.id || "");
-  const [direction, setDirection] = useState<TransferDirection>(
-    "airport_to_hotel"
-  );
+  const [direction, setDirection] = useState<
+    "airport_to_hotel" | "hotel_to_airport" | "return"
+  >("airport_to_hotel");
   const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [returnDate, setReturnDate] = useState("");
-  const [returnTime, setReturnTime] = useState("");
   const [adults, setAdults] = useState(2);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [name, setName] = useState("");
@@ -42,41 +29,16 @@ export function TransferBookingForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    function onDirection(e: Event) {
-      const detail = (e as CustomEvent<{ direction?: TransferDirection }>).detail;
-      const next = detail?.direction;
-      if (
-        next === "airport_to_hotel" ||
-        next === "hotel_to_airport" ||
-        next === "return"
-      ) {
-        setDirection(next);
-      }
-    }
-    window.addEventListener(TRANSFER_DIRECTION_EVENT, onDirection);
-    return () =>
-      window.removeEventListener(TRANSFER_DIRECTION_EVENT, onDirection);
-  }, []);
-
-  const dest =
-    destinations.find((d) => d.id === destination) || destinations[0];
-  const minDate = minBookableDateIso();
+  const dest = destinations.find((d) => d.id === destination) || destinations[0];
   const total = useMemo(() => {
     if (!dest) return 0;
-    return calcTransferTotal({
-      destination: dest,
-      direction,
-      passengers: adults,
-    });
-  }, [dest, direction, adults]);
-
-  const extraPax = transferExtraPassengers(adults);
+    return direction === "return" ? dest.priceReturn : dest.priceOneWay;
+  }, [dest, direction]);
 
   if (!dest) {
     return (
       <p className="rounded-xl bg-surface p-6 text-ink-muted ring-1 ring-sand-line">
-        —
+        No hay destinos de traslado configurados.
       </p>
     );
   }
@@ -84,68 +46,40 @@ export function TransferBookingForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
-    if (!date || !time || !name || !email || !phone || !hotel) {
-      setError(dict.booking.fillRequired);
-      return;
-    }
-    if (!isServiceDateWithinLeadTime(date, time)) {
-      setError(dict.booking.minLeadTime);
-      return;
-    }
-    if (direction === "return" && (!returnDate || !returnTime)) {
-      setError(dict.booking.fillRequired);
-      return;
-    }
-    if (
-      direction === "return" &&
-      returnDate &&
-      !isServiceDateWithinLeadTime(returnDate, returnTime)
-    ) {
-      setError(dict.booking.minLeadTime);
+    if (!date || !name || !email || !phone || !hotel) {
+      setError("Completa los campos obligatorios.");
       return;
     }
     setLoading(true);
     try {
       const dirLabel =
         direction === "airport_to_hotel"
-          ? `Airport → ${dest.name}`
+          ? `Aeropuerto → ${dest.name}`
           : direction === "hotel_to_airport"
-            ? `${dest.name} → Airport`
-            : `Round trip Airport ↔ ${dest.name}`;
+            ? `${dest.name} → Aeropuerto`
+            : `Ida y vuelta Aeropuerto ↔ ${dest.name}`;
 
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "transfer",
-          tourTitle: `Transfer ${dirLabel}`,
+          tourTitle: `Traslado ${dirLabel}`,
           date,
-          time,
           adults,
           children: 0,
           totalPrice: total,
           paymentMethod,
+          paymentStatus: paymentMethod === "pay_on_day" ? "pay_on_day" : "paid",
           customer: { name, email, phone, hotel, flightNumber },
-          transfer: {
-            destination: dest.name,
-            destinationId: dest.id,
-            direction,
-            time,
-            returnDate: direction === "return" ? returnDate : undefined,
-            returnTime: direction === "return" ? returnTime : undefined,
-          },
-          locale,
+          transfer: { destination: dest.name, direction },
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Error");
-      if (data.checkoutUrl) {
-        window.location.href = data.checkoutUrl;
-        return;
-      }
-      router.push(`${href("/reserva/confirmacion")}?id=${data.booking.id}`);
+      if (!res.ok) throw new Error(data.error || "Error al reservar");
+      router.push(`/reserva/confirmacion?id=${data.booking.id}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Error");
+      setError(err instanceof Error ? err.message : "Error al reservar");
     } finally {
       setLoading(false);
     }
@@ -153,18 +87,17 @@ export function TransferBookingForm({
 
   return (
     <form
-      id="reservar-traslado"
       onSubmit={handleSubmit}
-      className="rounded-xl bg-surface p-6 ring-1 ring-sand-line scroll-mt-24"
+      className="rounded-xl bg-surface p-6 ring-1 ring-sand-line"
     >
-      <h3 className="font-display text-2xl text-ink">{dict.transferForm.title}</h3>
-      <p className="mt-1 text-sm text-ink-muted">{dict.transferForm.subtitle}</p>
+      <h3 className="font-display text-2xl text-ink">Reservar traslado</h3>
+      <p className="mt-1 text-sm text-ink-muted">
+        Privado · recibimiento con cartel con tu nombre
+      </p>
 
       <div className="mt-6 grid gap-4 md:grid-cols-2">
         <label className="block md:col-span-2">
-          <span className="mb-1 block text-sm font-medium">
-            {dict.transferForm.destination}
-          </span>
+          <span className="mb-1 block text-sm font-medium">Destino *</span>
           <select
             className={inputClass}
             value={destination}
@@ -172,91 +105,45 @@ export function TransferBookingForm({
           >
             {destinations.map((d) => (
               <option key={d.id} value={d.id}>
-                {d.name} — {dict.common.from} {formatPrice(d.priceOneWay)}
+                {d.name} — desde {formatPrice(d.priceOneWay)}
               </option>
             ))}
           </select>
         </label>
 
         <label className="block md:col-span-2">
-          <span className="mb-1 block text-sm font-medium">
-            {dict.transferForm.route}
-          </span>
+          <span className="mb-1 block text-sm font-medium">Trayecto *</span>
           <select
             className={inputClass}
             value={direction}
             onChange={(e) =>
-              setDirection(e.target.value as TransferDirection)
+              setDirection(
+                e.target.value as
+                  | "airport_to_hotel"
+                  | "hotel_to_airport"
+                  | "return"
+              )
             }
           >
-            <option value="airport_to_hotel">
-              {dict.transfers.airportHotel}
-            </option>
-            <option value="hotel_to_airport">
-              {dict.transfers.hotelAirport}
-            </option>
-            <option value="return">{dict.transfers.roundTrip}</option>
+            <option value="airport_to_hotel">Aeropuerto → Hotel</option>
+            <option value="hotel_to_airport">Hotel → Aeropuerto</option>
+            <option value="return">Ida y vuelta</option>
           </select>
         </label>
 
         <label className="block">
-          <span className="mb-1 block text-sm font-medium">
-            {dict.booking.date}
-          </span>
+          <span className="mb-1 block text-sm font-medium">Fecha *</span>
           <input
             type="date"
             className={inputClass}
             value={date}
-            min={minDate}
+            min={new Date().toISOString().slice(0, 10)}
             onChange={(e) => setDate(e.target.value)}
             required
           />
         </label>
         <label className="block">
-          <span className="mb-1 block text-sm font-medium">
-            {dict.transferForm.time}
-          </span>
-          <input
-            type="time"
-            className={inputClass}
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            required
-          />
-        </label>
-        {direction === "return" && (
-          <>
-            <label className="block">
-              <span className="mb-1 block text-sm font-medium">
-                {dict.transferForm.returnDate}
-              </span>
-              <input
-                type="date"
-                className={inputClass}
-                value={returnDate}
-                min={date && date > minDate ? date : minDate}
-                onChange={(e) => setReturnDate(e.target.value)}
-                required
-              />
-            </label>
-            <label className="block">
-              <span className="mb-1 block text-sm font-medium">
-                {dict.transferForm.returnTime}
-              </span>
-              <input
-                type="time"
-                className={inputClass}
-                value={returnTime}
-                onChange={(e) => setReturnTime(e.target.value)}
-                required
-              />
-            </label>
-          </>
-        )}
-        <label className="block">
-          <span className="mb-1 block text-sm font-medium">
-            {dict.transferForm.passengers}
-          </span>
+          <span className="mb-1 block text-sm font-medium">Pasajeros</span>
           <input
             type="number"
             min={1}
@@ -267,9 +154,7 @@ export function TransferBookingForm({
           />
         </label>
         <label className="block">
-          <span className="mb-1 block text-sm font-medium">
-            {dict.booking.name}
-          </span>
+          <span className="mb-1 block text-sm font-medium">Nombre *</span>
           <input
             className={inputClass}
             value={name}
@@ -278,9 +163,7 @@ export function TransferBookingForm({
           />
         </label>
         <label className="block">
-          <span className="mb-1 block text-sm font-medium">
-            {dict.common.email} *
-          </span>
+          <span className="mb-1 block text-sm font-medium">Email *</span>
           <input
             type="email"
             className={inputClass}
@@ -290,9 +173,7 @@ export function TransferBookingForm({
           />
         </label>
         <label className="block">
-          <span className="mb-1 block text-sm font-medium">
-            {dict.common.phone} *
-          </span>
+          <span className="mb-1 block text-sm font-medium">Teléfono *</span>
           <input
             type="tel"
             className={inputClass}
@@ -302,9 +183,7 @@ export function TransferBookingForm({
           />
         </label>
         <label className="block">
-          <span className="mb-1 block text-sm font-medium">
-            {dict.transferForm.flight}
-          </span>
+          <span className="mb-1 block text-sm font-medium">Nº de vuelo</span>
           <input
             className={inputClass}
             value={flightNumber}
@@ -313,7 +192,7 @@ export function TransferBookingForm({
         </label>
         <label className="block md:col-span-2">
           <span className="mb-1 block text-sm font-medium">
-            {dict.transferForm.hotelAddress}
+            Hotel / dirección *
           </span>
           <input
             className={inputClass}
@@ -323,47 +202,32 @@ export function TransferBookingForm({
           />
         </label>
         <label className="block md:col-span-2">
-          <span className="mb-1 block text-sm font-medium">
-            {dict.transferForm.payment}
-          </span>
-          <div className="flex items-center gap-2 rounded-lg border border-ocean bg-sky-soft/60 px-3 py-2.5 text-sm font-semibold text-ocean">
-            {dict.booking.card}
-          </div>
+          <span className="mb-1 block text-sm font-medium">Pago</span>
+          <select
+            className={inputClass}
+            value={paymentMethod}
+            onChange={(e) =>
+              setPaymentMethod(e.target.value as PaymentMethod)
+            }
+          >
+            <option value="card">Tarjeta</option>
+            <option value="bizum">Bizum</option>
+            <option value="pay_on_day">Pago al conductor</option>
+          </select>
         </label>
       </div>
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-sand-line pt-4">
         <div>
-          <p className="text-sm text-ink-muted">{dict.common.total}</p>
+          <p className="text-sm text-ink-muted">Total estimado</p>
           <p className="text-3xl font-bold">{formatPrice(total)}</p>
-          <p className="mt-1 text-xs text-ink-muted">
-            {dict.transfers.priceIncludes.replace(
-              "{n}",
-              String(TRANSFER_INCLUDED_PAX)
-            )}
-          </p>
-          {extraPax > 0 && (
-            <p className="mt-1 text-xs text-ink-muted">
-              {dict.transfers.extraPerson}: +
-              {formatPrice(
-                extraPax *
-                  (dest.priceExtraPerson ?? 10) *
-                  (direction === "return" ? 2 : 1)
-              )}{" "}
-              ({extraPax} × {formatPrice(dest.priceExtraPerson ?? 10)}
-              {direction === "return" ? " × 2" : ""})
-            </p>
-          )}
-          <p className="mt-1 text-xs font-medium text-ocean">
-            {dict.booking.card}
-          </p>
         </div>
         <button
           type="submit"
           disabled={loading}
           className="rounded-md bg-ocean px-8 py-3 font-semibold text-white hover:bg-ocean-deep disabled:opacity-60"
         >
-          {loading ? dict.common.processing : dict.transferForm.confirm}
+          {loading ? "Procesando…" : "Confirmar traslado"}
         </button>
       </div>
       {error && <p className="mt-3 text-sm text-coral">{error}</p>}

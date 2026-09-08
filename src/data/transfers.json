@@ -4,169 +4,122 @@
       "id": "playa-blanca",
       "name": "Playa Blanca",
       "slug": "playa-blanca",
-      "priceOneWay": 80,
-      "priceReturn": 160,
-      "priceExtraPerson": 10,
+      "priceOneWay": 55,
+      "priceReturn": 100,
       "duration": "35–45 min",
       "distance": "≈ 35 km"
-    },
-    {
-      "id": "puerto-del-carmen",
-      "name": "Puerto Del Carmen",
-      "slug": "puerto-del-carmen",
-      "priceOneWay": 50,
-      "priceReturn": 100,
-      "priceExtraPerson": 10,
-      "duration": "20–30 min",
-      "distance": "≈ 18 km"
-    },
-    {
-      "id": "costa-teguise",
-      "name": "Costa Teguise",
-      "slug": "costa-teguise",
-      "priceOneWay": 50,
-      "priceReturn": 100,
-      "priceExtraPerson": 10,
-      "duration": "20–25 min",
-      "distance": "≈ 15 km"
     },
     {
       "id": "puerto-calero",
       "name": "Puerto Calero",
       "slug": "puerto-calero",
-      "priceOneWay": 60,
-      "priceReturn": 120,
-      "priceExtraPerson": 8,
+      "priceOneWay": 45,
+      "priceReturn": 85,
       "duration": "25–35 min",
       "distance": "≈ 25 km"
+    },
+    {
+      "id": "puerto-del-carmen",
+      "name": "Puerto del Carmen",
+      "slug": "puerto-del-carmen",
+      "priceOneWay": 40,
+      "priceReturn": 75,
+      "duration": "20–30 min",
+      "distance": "≈ 18 km"
     },
     {
       "id": "arrecife",
       "name": "Arrecife",
       "slug": "arrecife",
       "priceOneWay": 30,
-      "priceReturn": 60,
-      "priceExtraPerson": 10,
+      "priceReturn": 55,
       "duration": "10–15 min",
       "distance": "≈ 6 km"
     },
     {
-      "id": "la-santa",
-      "name": "La Santa",
-      "slug": "la-santa",
-      "priceOneWay": 80,
-      "priceReturn": 160,
-      "priceExtraPerson": 10,
-      "duration": "30–40 min",
-      "distance": "≈ 28 km"
-    },
-    {
-      "id": "charco-del-palo",
-      "name": "Charco del Palo",
-      "slug": "charco-del-palo",
-      "priceOneWay": 70,
-      "priceReturn": 140,
-      "priceExtraPerson": 10,
-      "duration": "35–45 min",
-      "distance": "≈ 32 km"
-    },
-    {
-      "id": "haria",
-      "name": "Haría",
-      "slug": "haria",
-      "priceOneWay": 90,
-      "priceReturn": 180,
-      "priceExtraPerson": 10,
-      "duration": "40–50 min",
-      "distance": "≈ 35 km"
-    },
-    {
-      "id": "orzola",
-      "name": "Órzola",
-      "slug": "orzola",
-      "priceOneWay": 70,
-      "priceReturn": 140,
-      "priceExtraPerson": 10,
-      "duration": "45–55 min",
-      "distance": "≈ 40 km"
-    },
-    {
-      "id": "famara",
-      "name": "Famara",
-      "slug": "famara",
-      "priceOneWay": 70,
-      "priceReturn": 140,
-      "priceExtraPerson": 10,
-      "duration": "30–40 min",
-      "distance": "≈ 28 km"
-    },
-    {
-      "id": "yaiza",
-      "name": "Yaiza",
-      "slug": "yaiza",
-      "priceOneWay": 55,
-      "priceReturn": 110,
-      "priceExtraPerson": 10,
-      "duration": "30–40 min",
-      "distance": "≈ 30 km"
-    },
-    {
-      "id": "tias",
-      "name": "Tias",
-      "slug": "tias",
-      "priceOneWay": 35,
-      "priceReturn": 70,
-      "priceExtraPerson": 10,
-      "duration": "20–30 min",
-      "distance": "≈ 16 km"
+      "id": "costa-teguise",
+      "name": "Costa Teguise",
+      "slug": "costa-teguise",
+      "priceOneWay": 40,
+      "priceReturn": 75,
+      "duration": "20–25 min",
+      "distance": "≈ 15 km"
     },
     {
       "id": "playa-honda",
       "name": "Playa Honda",
       "slug": "playa-honda",
       "priceOneWay": 25,
-      "priceReturn": 50,
-      "priceExtraPerson": 10,
-      "duration": "10–15 min",
-      "distance": "≈ 5 km"
-    },
-    {
-      "id": "puerto-de-los-marmoles",
-      "name": "Puerto de Los Mármoles",
-      "slug": "puerto-de-los-marmoles",
-      "priceOneWay": 30,
-      "priceReturn": 60,
-      "priceExtraPerson": 10,
-      "duration": "",
-      "distance": ""
-    },
-    {
-      "id": "punta-mujeres",
-      "name": "Punta Mujeres",
-      "slug": "punta-mujeres",
-      "priceOneWay": 70,
-      "priceReturn": 140,
-      "priceExtraPerson": 10,
-      "duration": "40–50 min",
-      "distance": "≈ 34 km"
-    },
-    {
-      "id": "pabellon-de-tias",
-      "name": "Pabellon de Tias",
-      "slug": "pabellon-de-tias",
-      "priceOneWay": 85,
-      "priceReturn": 170,
-      "priceExtraPerson": 0,
-      "duration": "",
-      "distance": ""
+      "priceReturn": 45,
+      "duration": "5–10 min",
+      "distance": "≈ 3 km"
     }
   ],
   "highlights": [
     "Servicio 100% privado",
-    "Bienvenida personalizada con cartel con tu nombre en la terminal",
-    "Vehículos cómodos y climatizados",
-    "Monitoreo de vuelos en tiempo real y adaptación de la recogida",
-    "Precios fijos garantizados, sin sorpresas ocultas",
-    "Disponible para trayectos de ida, vuelta o ida y vuelta"
-  ]
+    "Recibimiento en terminal con cartel con tu nombre",
+    "Seguimiento de vuelos (espera hasta 60 min tras aterrizaje)",
+    "Cancelación gratis hasta 24 h: devolución del 100%",
+    "Equipaje y sillas para bebés sin coste extra",
+    "Pago seguro con tarjeta o PayPal"
+  ],
+  "faqs": [
+    {
+      "q": "¿Dónde estará mi chófer?",
+      "a": "Una vez que haya recogido su equipaje, pasa al hall de llegadas donde estará esperando su conductor con un cartel con su nombre para llevarle a su alojamiento."
+    },
+    {
+      "q": "¿Realizan traslados a diferentes lugares en Lanzarote?",
+      "a": "Podemos llevarte a cualquier lugar de la isla. Si tu destino no está en la lista de rutas habituales, contáctanos por correo electrónico."
+    },
+    {
+      "q": "¿Qué pasa si no puedo encontrar el conductor?",
+      "a": "Llámanos al número de emergencia que figura en la confirmación de tu reserva y te guiaremos hasta encontrarlo."
+    },
+    {
+      "q": "¿Qué sucede si mi vuelo se retrasa?",
+      "a": "Indica tu número de vuelo al reservar. El chófer seguirá el estado del vuelo y te esperará hasta 60 minutos después de la hora de aterrizaje."
+    },
+    {
+      "q": "¿Cuándo es recomendable reservar mi traslado?",
+      "a": "Tan pronto conozcas los detalles de tu vuelo."
+    },
+    {
+      "q": "¿Cómo recuperar un objeto olvidado en el vehículo?",
+      "a": "Comunícate lo antes posible al número de emergencia de la confirmación de tu reserva."
+    },
+    {
+      "q": "¿Cuál es el precio de las sillas para bebés y niños?",
+      "a": "Ofrecemos sillas y alzadores de forma gratuita según la edad. Todos los niños, incluidos los bebés, deben reservarse como pasajeros."
+    },
+    {
+      "q": "¿Tienen transporte adaptado para sillas de ruedas?",
+      "a": "Actualmente no disponemos de traslados para pasajeros que no puedan subir escaleras; estamos en proceso de incorporar vehículos adaptados."
+    },
+    {
+      "q": "¿Cuánto equipaje puedo llevar?",
+      "a": "Por lo general, una maleta mediana y un equipaje de mano por persona. Si llevas más, avísanos para confirmar espacio o un vehículo más grande."
+    },
+    {
+      "q": "¿Aceptan equipaje especial?",
+      "a": "Las bicicletas tienen un coste adicional de 10 € por unidad y trayecto, a pagar en efectivo al conductor."
+    },
+    {
+      "q": "¿Es seguro el pago online?",
+      "a": "Sí. Puedes pagar con tarjeta o PayPal. Nuestros proveedores usan protocolos avanzados de seguridad."
+    },
+    {
+      "q": "¿Cómo funciona la política de cancelación?",
+      "a": "Si cancelas con al menos 24 horas de antelación, te devolvemos el 100% de lo pagado."
+    }
+  ],
+  "airport": {
+    "name": "Aeropuerto César Manrique-Lanzarote",
+    "address": "Playa Honda, 35509 – Lanzarote",
+    "phone": "+34 913 21 10 00",
+    "hours": "De 05:00 a 01:00 horas",
+    "passengers": "8.212.943 pasajeros en 2023",
+    "mapsUrl": "https://www.google.com/maps/place/Aeropuerto+de+Lanzarote/@28.950438,-13.605777,16z",
+    "intro": "El aeropuerto de Lanzarote es un importante punto de llegada para miles de pasajeros. Evita las colas de taxis y autobuses públicos reservando un traslado privado: te llevamos cómodo y rápido a tu destino desde el momento en que aterrizas."
+  }
 }

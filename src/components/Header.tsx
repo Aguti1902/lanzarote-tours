@@ -1,89 +1,69 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, ShoppingCart, User, X } from "lucide-react";
-import { useCart } from "@/components/CartProvider";
-import { useLocale } from "@/components/LocaleProvider";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { internalPathFromPathname } from "@/i18n/path";
+import { Menu, X, Phone } from "lucide-react";
+
+const links = [
+  { href: "/", label: "Inicio" },
+  { href: "/excursiones", label: "Excursiones" },
+  { href: "/cruceristas", label: "Cruceristas" },
+  { href: "/traslados", label: "Traslados" },
+  { href: "/sobre-nosotros", label: "Sobre nosotros" },
+  { href: "/blog", label: "Blog" },
+];
 
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const { count } = useCart();
-  const { dict, href } = useLocale();
-  const internalPath = internalPathFromPathname(pathname);
-
-  const links = [
-    { href: href("/sobre-nosotros"), path: "/sobre-nosotros", label: dict.nav.about },
-    { href: href("/excursiones"), path: "/excursiones", label: dict.nav.excursions },
-    { href: href("/traslados"), path: "/traslados-aeropuerto-lanzarote", label: dict.nav.transfers },
-    {
-      href: href("/excursiones-cruceros"),
-      path: "/excursiones-cruceros",
-      label: dict.nav.cruises,
-    },
-    { href: href("/casas"), path: "/casas", label: dict.nav.houses },
-    { href: href("/contacto"), path: "/contacto", label: dict.nav.contact },
-  ];
+  const [brand, setBrand] = useState("Lanzarote Tours");
+  const [tagline, setTagline] = useState("Excursiones & traslados");
+  const [phone, setPhone] = useState("+34 646 08 05 85");
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    fetch("/api/settings")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.settings) {
+          setBrand(d.settings.brandName);
+          setTagline(d.settings.tagline);
+          setPhone(d.settings.phone);
+        }
+      })
+      .catch(() => undefined);
   }, []);
 
   if (pathname.startsWith("/admin")) return null;
 
+  const telHref = `tel:${phone.replace(/\s/g, "")}`;
+
   return (
-    <header
-      className={`sticky top-0 z-50 text-white transition-all duration-300 ${
-        scrolled
-          ? "bg-ocean/95 shadow-[0_10px_40px_rgba(16,36,24,0.28)] backdrop-blur-xl"
-          : "bg-ocean"
-      }`}
-    >
+    <header className="sticky top-0 z-50 border-b border-sand-line/80 bg-surface/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
-        <Link
-          href={href("/")}
-          className="relative block h-11 w-[150px] shrink-0 transition hover:opacity-90 md:h-12 md:w-[175px]"
-        >
-          <Image
-            src="/images/brand/logo.png"
-            alt="Lanzarote Experience Tours"
-            fill
-            className="object-contain object-left"
-            sizes="175px"
-          />
+        <Link href="/" className="group flex flex-col leading-none">
+          <span className="font-display text-xl text-ink md:text-2xl">
+            {brand}
+          </span>
+          <span className="mt-0.5 text-[11px] tracking-[0.14em] text-ocean uppercase">
+            {tagline}
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-0.5 lg:flex">
+        <nav className="hidden items-center gap-1 lg:flex">
           {links.map((link) => {
-            const isCruiseNav = link.path === "/excursiones-cruceros";
-            const isExcursionsNav = link.path === "/excursiones";
-            const active = isCruiseNav
-              ? internalPath.startsWith("/excursiones-cruceros") ||
-                internalPath.startsWith("/crucero/") ||
-                internalPath.startsWith("/cruceristas")
-              : isExcursionsNav
-                ? internalPath.startsWith("/excursiones") &&
-                  !internalPath.startsWith("/excursiones-cruceros")
-                : internalPath === link.path ||
-                  internalPath.startsWith(`${link.path}/`);
+            const active =
+              link.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(link.href);
             return (
               <Link
-                key={link.path}
+                key={link.href}
                 href={link.href}
-                prefetch={link.path === "/excursiones-cruceros" ? false : undefined}
-                className={`rounded-full px-3.5 py-2 text-[13px] font-semibold tracking-wide uppercase transition ${
+                className={`rounded-md px-3 py-2 text-sm transition ${
                   active
-                    ? "bg-white text-ocean"
-                    : "text-white/90 hover:bg-white/15 hover:text-white"
+                    ? "bg-ocean/10 font-semibold text-ocean-deep"
+                    : "text-ink-muted hover:bg-bg hover:text-ink"
                 }`}
               >
                 {link.label}
@@ -92,58 +72,52 @@ export function Header() {
           })}
         </nav>
 
-        <div className="flex items-center gap-1.5">
-          <div className="hidden sm:block">
-            <LanguageSwitcher />
-          </div>
+        <div className="hidden items-center gap-3 md:flex">
+          <a
+            href={telHref}
+            className="inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ocean"
+          >
+            <Phone className="h-4 w-4" />
+            {phone}
+          </a>
           <Link
-            href={href("/gestionar-reserva")}
-            className="rounded-full p-2.5 text-white/95 transition hover:bg-white/15"
-            title={dict.nav.manageBooking}
-            aria-label={dict.nav.manageBooking}
+            href="/excursiones"
+            className="rounded-md bg-ocean px-4 py-2 text-sm font-semibold text-white transition hover:bg-ocean-deep"
           >
-            <User className="h-5 w-5" />
+            Reservar
           </Link>
-          <Link
-            href={href("/carrito")}
-            className="relative rounded-full p-2.5 text-white/95 transition hover:bg-white/15"
-            title={dict.nav.cart}
-            aria-label={dict.nav.cart}
-          >
-            <ShoppingCart className="h-5 w-5" />
-            {count > 0 && (
-              <span className="absolute top-0.5 right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold text-ocean">
-                {count}
-              </span>
-            )}
-          </Link>
-          <button
-            type="button"
-            className="rounded-full p-2.5 text-white lg:hidden"
-            aria-label={open ? dict.common.close : dict.common.menu}
-            onClick={() => setOpen((v) => !v)}
-          >
-            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
         </div>
+
+        <button
+          type="button"
+          className="rounded-md p-2 text-ink lg:hidden"
+          aria-label={open ? "Cerrar menú" : "Abrir menú"}
+          onClick={() => setOpen((v) => !v)}
+        >
+          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
       </div>
 
       {open && (
-        <div className="border-t border-white/20 bg-ocean-deep px-4 py-4 lg:hidden">
-          <div className="mb-3">
-            <LanguageSwitcher />
-          </div>
+        <div className="border-t border-sand-line bg-surface px-4 py-4 lg:hidden">
           <nav className="flex flex-col gap-1">
             {links.map((link) => (
               <Link
-                key={link.path}
+                key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-3 text-base font-semibold uppercase tracking-wide text-white hover:bg-white/10"
+                className="rounded-md px-3 py-3 text-base text-ink hover:bg-bg"
               >
                 {link.label}
               </Link>
             ))}
+            <Link
+              href="/excursiones"
+              onClick={() => setOpen(false)}
+              className="mt-2 rounded-md bg-ocean px-4 py-3 text-center font-semibold text-white"
+            >
+              Reservar ahora
+            </Link>
           </nav>
         </div>
       )}
