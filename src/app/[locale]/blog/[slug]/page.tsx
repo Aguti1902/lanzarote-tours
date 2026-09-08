@@ -4,50 +4,80 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { getBlogPosts, getPostBySlug } from "@/lib/content";
+import {
+  filterBlogPostsByLocale,
+  getBlogPostLocale,
+  getBlogTopicTags,
+} from "@/lib/blog-locale";
 import { formatDate } from "@/lib/format";
+import {
+  localizeBlogPost,
+  localizeBlogPosts,
+} from "@/lib/localize-content";
+import { getDictionary } from "@/i18n/dictionaries";
 import { resolveLocale } from "@/i18n/get-locale";
 import { localePath } from "@/i18n/path";
+import { RichContent } from "@/components/RichContent";
+import {
+  looksLikeHtml,
+  sanitizeContentHtml,
+  RICH_CONTENT_CLASS,
+} from "@/lib/sanitize-html";
 
-export const dynamic = "force-dynamic";
+/** ISR: HTML/RSC cacheados; CMS se refresca ~cada 60s o al guardar. */
+export const revalidate = 300;
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const post = await getPostBySlug(slug);
-  if (!post) return { title: "Blog" };
+  const { slug, locale: raw } = await params;
+  const locale = resolveLocale(raw);
+  const dict = await getDictionary(locale);
+  const base = await getPostBySlug(slug);
+  if (!base || getBlogPostLocale(base) !== locale) {
+    return { title: dict.blog.eyebrow };
+  }
+  const post = await localizeBlogPost(base, locale);
   return { title: post.title, description: post.excerpt };
 }
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug, locale: raw } = await params;
   const locale = resolveLocale(raw);
-  const post = await getPostBySlug(slug);
-  if (!post) notFound();
+  const dict = await getDictionary(locale);
+  const base = await getPostBySlug(slug);
+  if (!base) notFound();
+  if (getBlogPostLocale(base) !== locale) notFound();
 
-  const all = await getBlogPosts();
+  const post = await localizeBlogPost(base, locale);
+  const all = await getBlogPosts().then(async (posts) =>
+    localizeBlogPosts(filterBlogPostsByLocale(posts, locale), locale)
+  );
   const related = all.filter((p) => p.slug !== post.slug).slice(0, 2);
-  const paragraphs = post.content.split("\n\n");
   const lp = (path: string) => localePath(locale, path);
+  const topicTags = getBlogTopicTags(post.tags);
+  const excerptHtml = looksLikeHtml(post.excerpt)
+    ? sanitizeContentHtml(post.excerpt)
+    : "";
 
   return (
     <article>
-      <div className="relative h-[48vh] min-h-[300px] bg-bg-deep">
+      <div className="relative min-h-[40vh] bg-bg-deep">
         <Image
           src={post.image}
           alt={post.title}
           fill
-          className="object-cover"
+          className="photo-vivid object-cover"
           priority
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-bg-deep via-bg-deep/40 to-bg-deep/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/15 to-black/5" />
         <div className="absolute inset-x-0 bottom-0 mx-auto max-w-3xl px-4 pb-10 md:px-6">
           <div className="flex flex-wrap gap-2">
-            {post.tags.map((tag) => (
+            {topicTags.map((tag) => (
               <span
                 key={tag}
-                className="bg-white/15 px-2.5 py-1 text-xs font-medium text-white backdrop-blur"
+                className="rounded-full bg-white/15 px-2.5 py-1 text-xs font-medium text-white backdrop-blur"
               >
                 {tag}
               </span>
@@ -57,7 +87,7 @@ export default async function BlogPostPage({ params }: Props) {
             {post.title}
           </h1>
           <p className="mt-3 text-sm text-white/75">
-            {formatDate(post.date)} · {post.author}
+            {formatDate(post.date, locale)} · {post.author}
           </p>
         </div>
       </div>
@@ -68,30 +98,27 @@ export default async function BlogPostPage({ params }: Props) {
           className="inline-flex items-center gap-2 text-sm font-medium text-ocean hover:text-ocean-deep"
         >
           <ArrowLeft className="h-4 w-4" />
-          Blog
+          {dict.blog.eyebrow}
         </Link>
-        <p className="mt-8 text-lg leading-relaxed text-ink-muted">
-          {post.excerpt}
-        </p>
+        {excerptHtml ? (
+          <div
+            className={`${RICH_CONTENT_CLASS} mt-8 text-lg`}
+            dangerouslySetInnerHTML={{ __html: excerptHtml }}
+          />
+        ) : (
+          <p className="mt-8 text-lg leading-relaxed text-ink-muted">
+            {post.excerpt}
+          </p>
+        )}
         <div className="prose-blog mt-8">
-          {paragraphs.map((block, i) => {
-            if (block.startsWith("**") && block.endsWith("**")) {
-              return (
-                <h2 key={i} className="mt-8 mb-2 font-display text-2xl text-ink">
-                  {block.replace(/\*\*/g, "")}
-                </h2>
-              );
-            }
-            const html = block.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-            return <p key={i} dangerouslySetInnerHTML={{ __html: html }} />;
-          })}
+          <RichContent text={post.content} className="text-base" />
         </div>
       </div>
 
       {related.length > 0 && (
         <section className="border-t border-sand-line bg-sky-soft/50 py-14">
           <div className="mx-auto max-w-6xl px-4 md:px-6">
-            <h2 className="font-display text-2xl text-ink">También te puede interesar</h2>
+            <h2 className="font-display text-2xl text-ink">{dict.blog.related}</h2>
             <div className="mt-6 grid gap-6 md:grid-cols-2">
               {related.map((item) => (
                 <Link
@@ -109,7 +136,9 @@ export default async function BlogPostPage({ params }: Props) {
                     />
                   </div>
                   <div className="p-4">
-                    <p className="text-xs text-ink-muted">{formatDate(item.date)}</p>
+                    <p className="text-xs text-ink-muted">
+                      {formatDate(item.date, locale)}
+                    </p>
                     <h3 className="mt-1 font-display text-lg group-hover:text-ocean">
                       {item.title}
                     </h3>

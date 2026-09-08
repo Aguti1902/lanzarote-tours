@@ -2,27 +2,28 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ShoppingCart, Trash2 } from "lucide-react";
+import { CreditCard, Percent, ShoppingCart, Trash2, Wallet } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
 import { useLocale } from "@/components/LocaleProvider";
 import { formatPrice } from "@/lib/format";
 import type { PaymentMethod } from "@/types";
-import { splitPaymentAmounts } from "@/lib/payments";
+import { isServiceDateWithinLeadTime } from "@/lib/booking-lead-time";
+import { expectedOnlineCharge, splitPaymentAmounts } from "@/lib/payments";
 
 const inputClass =
   "w-full rounded border border-sand-line bg-white px-3 py-2.5 text-sm outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20";
 
 export default function CarritoPage() {
   const { items, removeItem, clear } = useCart();
-  const { dict, href } = useLocale();
+  const { dict, href, locale } = useLocale();
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [hotel, setHotel] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("deposit_10");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -30,15 +31,41 @@ export default function CarritoPage() {
     () => items.reduce((sum, item) => sum + item.totalPrice, 0),
     [items]
   );
-  const split = useMemo(
-    () => splitPaymentAmounts(total, paymentMethod),
-    [total, paymentMethod]
+  const split = useMemo(() => {
+    const base = splitPaymentAmounts(total, paymentMethod);
+    return {
+      ...base,
+      amountDueOnline: expectedOnlineCharge(total, paymentMethod),
+    };
+  }, [total, paymentMethod]);
+
+  const hasCruiseItem = items.some(
+    (item) => item.source === "cruise" || Boolean(item.cruiseShip)
   );
+
+  useEffect(() => {
+    if (hasCruiseItem && paymentMethod === "pay_on_day") {
+      setPaymentMethod("card");
+    }
+  }, [hasCruiseItem, paymentMethod]);
 
   async function handleCheckout(e: FormEvent) {
     e.preventDefault();
     if (!items.length) return;
     setError("");
+    if (hasCruiseItem && paymentMethod === "pay_on_day") {
+      setError(
+        "En excursiones de crucero no está disponible el pago el día del tour."
+      );
+      return;
+    }
+    const tooSoon = items.find(
+      (item) => !isServiceDateWithinLeadTime(item.date, item.time)
+    );
+    if (tooSoon) {
+      setError(dict.booking.minLeadTime);
+      return;
+    }
     setLoading(true);
     try {
       const createdIds: string[] = [];
@@ -51,17 +78,53 @@ export default function CarritoPage() {
             tourId: item.tourId,
             tourTitle: item.title,
             date: item.date,
+            time: item.time,
             adults: item.adults,
             children: item.children,
             totalPrice: item.totalPrice,
             paymentMethod,
-            customer: { name, email, phone, hotel },
+            locale,
+            source: item.source || (item.cruiseShip ? "cruise" : undefined),
+            // Evitar N checkouts: el carrito crea un checkout combinado después
+            skipStripeCheckout: true,
+            customer: {
+              name,
+              email,
+              phone,
+              hotel,
+              cruiseShip: item.cruiseShip,
+              notes: item.notes,
+            },
           }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Error");
         createdIds.push(data.booking.id);
       }
+
+      if (
+        paymentMethod === "card" ||
+        paymentMethod === "bizum" ||
+        paymentMethod === "deposit_20" ||
+        paymentMethod === "deposit_10"
+      ) {
+        const payRes = await fetch("/api/payments/stripe/checkout-bookings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            bookingIds: createdIds,
+            locale,
+            origin: window.location.origin,
+          }),
+        });
+        const payData = await payRes.json().catch(() => ({}));
+        if (payRes.ok && payData.checkoutUrl) {
+          clear();
+          window.location.href = payData.checkoutUrl;
+          return;
+        }
+      }
+
       clear();
       router.push(`${href("/reserva/confirmacion")}?id=${createdIds[0]}`);
     } catch (err) {
@@ -79,7 +142,7 @@ export default function CarritoPage() {
       </div>
 
       {items.length === 0 ? (
-        <div className="rounded-none bg-surface p-10 text-center ring-1 ring-sand-line">
+        <div className="rounded-lg bg-white p-10 text-center ring-1 ring-sand-line">
           <p className="text-ink-muted">{dict.cart.empty}</p>
           <Link href={href("/excursiones")} className="btn-primary mt-6 inline-flex">
             {dict.cart.seeExcursions}
@@ -91,7 +154,7 @@ export default function CarritoPage() {
             {items.map((item) => (
               <li
                 key={item.id}
-                className="flex gap-4 bg-surface p-4 ring-1 ring-sand-line"
+                className="flex gap-4 rounded-lg bg-white p-4 ring-1 ring-sand-line"
               >
                 <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded">
                   <Image
@@ -105,11 +168,32 @@ export default function CarritoPage() {
                 <div className="min-w-0 flex-1">
                   <h2 className="truncate font-bold text-ink">{item.title}</h2>
                   <p className="mt-1 text-sm text-ink-muted">
-                    {item.date} · {item.adults} {dict.common.adults}
-                    {item.children > 0
-                      ? `, ${item.children} ${dict.common.children}`
-                      : ""}
+                    {item.date} ·{" "}
+                    {item.pricingMode === "flat"
+                      ? `${item.adults} ${
+                          item.adults === 1
+                            ? dict.cruises.passengerSingular
+                            : dict.cruises.passengerPlural
+                        }`
+                      : item.source === "cruise"
+                        ? `${item.adults} ${
+                            item.adults === 1
+                              ? dict.cruises.passengerSingular
+                              : dict.cruises.passengerPlural
+                          }`
+                        : `${item.adults} ${dict.common.adults}${
+                            item.children > 0
+                              ? `, ${item.children} ${dict.common.children}`
+                              : ""
+                          }`}
                   </p>
+                  {item.cruiseShip && (
+                    <p className="mt-1 text-xs text-ink-muted">
+                      {item.cruiseShip}
+                      {item.cruiseCompany ? ` · ${item.cruiseCompany}` : ""}
+                      {item.portName ? ` · ${item.portName}` : ""}
+                    </p>
+                  )}
                   <p className="mt-2 font-bold text-ocean">
                     {formatPrice(item.totalPrice)}
                   </p>
@@ -126,14 +210,15 @@ export default function CarritoPage() {
             ))}
           </ul>
 
-          <aside className="h-fit border-t-4 border-ocean bg-surface p-6 ring-1 ring-sand-line">
+          <aside className="h-fit rounded-lg bg-white p-6 ring-1 ring-sand-line">
             <p className="text-sm text-ink-muted">{dict.common.total}</p>
             <p className="text-3xl font-bold text-ocean-deep">
               {formatPrice(total)}
             </p>
-            {paymentMethod === "deposit_10" && (
+            {(paymentMethod === "deposit_20" ||
+              paymentMethod === "deposit_10") && (
               <p className="mt-1 text-xs text-ink-muted">
-                {dict.cart.now} {formatPrice(split.amountPaidCard)} ·{" "}
+                {dict.cart.now} {formatPrice(split.amountDueOnline)} ·{" "}
                 {dict.cart.cashDay} {formatPrice(split.amountDueCash)}
               </p>
             )}
@@ -166,18 +251,56 @@ export default function CarritoPage() {
                 value={hotel}
                 onChange={(e) => setHotel(e.target.value)}
               />
-              <select
-                className={inputClass}
-                value={paymentMethod}
-                onChange={(e) =>
-                  setPaymentMethod(e.target.value as PaymentMethod)
-                }
-              >
-                <option value="deposit_10">{dict.booking.deposit}</option>
-                <option value="card">{dict.booking.card}</option>
-                <option value="bizum">{dict.booking.bizum}</option>
-                <option value="pay_on_day">{dict.booking.payOnDay}</option>
-              </select>
+              <div>
+                <p className="mb-2 text-sm font-medium text-ink">
+                  {dict.booking.paymentMethod}
+                </p>
+                <div className="grid gap-2">
+                  {(
+                    [
+                      {
+                        id: "card" as const,
+                        label: dict.booking.card,
+                        icon: <CreditCard className="h-4 w-4 shrink-0" />,
+                        show: true,
+                      },
+                      {
+                        id: "deposit_20" as const,
+                        label: dict.booking.deposit,
+                        icon: <Percent className="h-4 w-4 shrink-0" />,
+                        show: true,
+                      },
+                      {
+                        id: "pay_on_day" as const,
+                        label: dict.booking.payOnDay,
+                        icon: <Wallet className="h-4 w-4 shrink-0" />,
+                        show: !hasCruiseItem,
+                      },
+                    ] as const
+                  )
+                    .filter((m) => m.show)
+                    .map((m) => (
+                      <label
+                        key={m.id}
+                        className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition ${
+                          paymentMethod === m.id
+                            ? "border-ocean bg-sky-soft/60 font-semibold text-ocean"
+                            : "border-sand-line bg-white text-ink-muted hover:border-ocean/40"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          className="sr-only"
+                          name="cart-payment-method"
+                          checked={paymentMethod === m.id}
+                          onChange={() => setPaymentMethod(m.id)}
+                        />
+                        {m.icon}
+                        <span className="leading-snug">{m.label}</span>
+                      </label>
+                    ))}
+                </div>
+              </div>
               {error && <p className="text-sm text-red-600">{error}</p>}
               <button
                 type="submit"

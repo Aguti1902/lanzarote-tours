@@ -4,10 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, ShoppingBag, UserRound, X } from "lucide-react";
+import { Menu, ShoppingCart, User, X } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
 import { useLocale } from "@/components/LocaleProvider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { internalPathFromPathname } from "@/i18n/path";
 
 export function Header() {
   const pathname = usePathname();
@@ -15,13 +16,19 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const { count } = useCart();
   const { dict, href } = useLocale();
+  const internalPath = internalPathFromPathname(pathname);
 
   const links = [
     { href: href("/sobre-nosotros"), path: "/sobre-nosotros", label: dict.nav.about },
     { href: href("/excursiones"), path: "/excursiones", label: dict.nav.excursions },
-    { href: href("/traslados"), path: "/traslados", label: dict.nav.transfers },
-    { href: href("/cruceristas"), path: "/cruceristas", label: dict.nav.cruises },
+    { href: href("/traslados"), path: "/traslados-aeropuerto-lanzarote", label: dict.nav.transfers },
+    {
+      href: href("/excursiones-cruceros"),
+      path: "/excursiones-cruceros",
+      label: dict.nav.cruises,
+    },
     { href: href("/casas"), path: "/casas", label: dict.nav.houses },
+    { href: href("/contacto"), path: "/contacto", label: dict.nav.contact },
   ];
 
   useEffect(() => {
@@ -58,18 +65,28 @@ export function Header() {
             alt="Lanzarote Experience Tours"
             fill
             className="object-contain object-left p-1.5"
-            priority
             sizes="176px"
           />
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-0.5 lg:flex">
           {links.map((link) => {
-            const active = pathname.includes(link.path);
+            const isCruiseNav = link.path === "/excursiones-cruceros";
+            const isExcursionsNav = link.path === "/excursiones";
+            const active = isCruiseNav
+              ? internalPath.startsWith("/excursiones-cruceros") ||
+                internalPath.startsWith("/crucero/") ||
+                internalPath.startsWith("/cruceristas")
+              : isExcursionsNav
+                ? internalPath.startsWith("/excursiones") &&
+                  !internalPath.startsWith("/excursiones-cruceros")
+                : internalPath === link.path ||
+                  internalPath.startsWith(`${link.path}/`);
             return (
               <Link
                 key={link.path}
                 href={link.href}
+                prefetch={link.path === "/excursiones-cruceros" ? false : undefined}
                 className={`px-3 py-2 text-[13px] font-semibold tracking-wide transition ${
                   active
                     ? "bg-ocean text-white"
@@ -92,7 +109,7 @@ export function Header() {
             title={dict.nav.manageBooking}
             aria-label={dict.nav.manageBooking}
           >
-            <UserRound className="h-5 w-5" />
+            <User className="h-5 w-5" />
           </Link>
           <Link
             href={href("/carrito")}
@@ -100,7 +117,7 @@ export function Header() {
             title={dict.nav.cart}
             aria-label={dict.nav.cart}
           >
-            <ShoppingBag className="h-5 w-5" />
+            <ShoppingCart className="h-5 w-5" />
             {count > 0 && (
               <span className="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center bg-ocean px-1 text-[10px] font-bold text-white">
                 {count}
@@ -110,7 +127,7 @@ export function Header() {
           <button
             type="button"
             className="p-2.5 text-ink lg:hidden"
-            aria-label={open ? "Close" : "Menu"}
+            aria-label={open ? dict.common.close : dict.common.menu}
             onClick={() => setOpen((v) => !v)}
           >
             {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -134,13 +151,6 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href={href("/contacto")}
-              onClick={() => setOpen(false)}
-              className="px-1 py-3 text-base font-semibold text-ocean-deep"
-            >
-              {dict.nav.contact}
-            </Link>
           </nav>
         </div>
       )}

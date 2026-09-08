@@ -1,22 +1,44 @@
-import { promises as fs } from "fs";
-import path from "path";
 import type { Booking, Invoice } from "@/types";
-import { getSettings } from "@/lib/content";
 import { updateBooking } from "@/lib/bookings";
+import { readCmsJson, writeCmsJson } from "@/lib/supabase/cms-store";
 
-const dataPath = path.join(process.cwd(), "src/data/invoices.json");
+/** IGIC Canarias — fijo al 7% en facturas y abonos. */
+export const IGIC_RATE = 7;
+
+export function splitIgic(
+  grossTotal: number,
+  taxRate: number = IGIC_RATE
+): { subtotal: number; taxAmount: number; total: number; taxRate: number } {
+  const total = Math.round(Math.abs(grossTotal) * 100) / 100;
+  const sign = grossTotal < 0 ? -1 : 1;
+  if (taxRate <= 0 || total === 0) {
+    return {
+      subtotal: sign * total,
+      taxAmount: 0,
+      total: sign * total,
+      taxRate,
+    };
+  }
+  const subtotal = Math.round((total / (1 + taxRate / 100)) * 100) / 100;
+  const taxAmount = Math.round((total - subtotal) * 100) / 100;
+  return {
+    subtotal: sign * subtotal,
+    taxAmount: sign * taxAmount,
+    total: sign * total,
+    taxRate,
+  };
+}
 
 export async function getInvoices(): Promise<Invoice[]> {
   try {
-    const raw = await fs.readFile(dataPath, "utf-8");
-    return JSON.parse(raw) as Invoice[];
+    return await readCmsJson<Invoice[]>("invoices.json");
   } catch {
     return [];
   }
 }
 
 export async function saveInvoices(invoices: Invoice[]): Promise<void> {
-  await fs.writeFile(dataPath, JSON.stringify(invoices, null, 2) + "\n", "utf-8");
+  await writeCmsJson("invoices.json", invoices);
 }
 
 export async function getInvoiceById(id: string): Promise<Invoice | undefined> {
@@ -29,11 +51,28 @@ export async function getInvoicesByBooking(
   return (await getInvoices()).filter((i) => i.bookingId === bookingId);
 }
 
-function nextNumber(invoices: Invoice[], year: number): number {
-  const nums = invoices
-    .filter((i) => i.id.includes(`-${year}-`))
-    .map((i) => i.number);
-  return (nums.length ? Math.max(...nums) : 0) + 1;
+/**
+ * Continúa el ciclo de numeración de la web antigua (último importado ~75991).
+ * Un solo contador global para facturas y abonos.
+ */
+export function nextInvoiceNumber(invoices: Invoice[]): number {
+  let max = 0;
+  for (const inv of invoices) {
+    const n = Number(inv.number);
+    if (Number.isFinite(n) && n > max) max = n;
+    // Por si algún id legacy no tiene number coherente: FAC-75991 / ABO-75992
+    const m = String(inv.id).match(/^(?:FAC|ABO)-(\d+)$/i);
+    if (m) {
+      const fromId = Number(m[1]);
+      if (fromId > max) max = fromId;
+    }
+  }
+  return max + 1;
+}
+
+function formatInvoiceId(type: Invoice["type"], number: number): string {
+  const prefix = type === "credit_note" ? "ABO" : "FAC";
+  return `${prefix}-${number}`;
 }
 
 export async function createInvoiceForBooking(
@@ -46,19 +85,33 @@ export async function createInvoiceForBooking(
   );
   if (already) return already;
 
-  const settings = await getSettings();
-  const taxRate = settings.taxRate ?? 0;
+  const taxRate = IGIC_RATE;
   const invoices = await getInvoices();
-  const year = new Date().getFullYear();
-  const number = nextNumber(invoices, year);
-  const id = `FAC-${year}-${String(number).padStart(4, "0")}`;
+  const number = nextInvoiceNumber(invoices);
+  const id = formatInvoiceId("invoice", number);
 
   const amountTotal = booking.amountTotal ?? booking.totalPrice;
-  const subtotal =
-    taxRate > 0
-      ? Math.round((amountTotal / (1 + taxRate / 100)) * 100) / 100
-      : amountTotal;
-  const taxAmount = Math.round((amountTotal - subtotal) * 100) / 100;
+  const { subtotal, taxAmount, total } = splitIgic(amountTotal, taxRate);
+  const paidCard = Number(booking.amountPaidCard) || 0;
+  const paidCash = Number(booking.amountPaidCash) || 0;
+  const dueCash = Number(booking.amountDueCash) || 0;
+  const paidTotal = Math.round((paidCard + paidCash) * 100) / 100;
+
+  let paymentNotes = notes;
+  if (!paymentNotes) {
+    if (
+      booking.paymentMethod === "deposit_20" ||
+      booking.paymentMethod === "deposit_10"
+    ) {
+      paymentNotes = `Depósito ${booking.paymentMethod === "deposit_20" ? "20" : "10"}% tarjeta: ${paidCard.toFixed(2)}€. Pendiente efectivo: ${dueCash.toFixed(2)}€.`;
+    } else if (booking.paymentMethod === "pay_on_day") {
+      paymentNotes = `Pago el día del servicio. Cobrado: ${paidTotal.toFixed(2)}€. Pendiente: ${dueCash.toFixed(2)}€.`;
+    } else if (paidTotal < amountTotal) {
+      paymentNotes = `Cobrado: ${paidTotal.toFixed(2)}€. Pendiente: ${(Math.round((amountTotal - paidTotal) * 100) / 100).toFixed(2)}€.`;
+    } else {
+      paymentNotes = `Pagado: ${paidTotal.toFixed(2)}€.`;
+    }
+  }
 
   const invoice: Invoice = {
     id,
@@ -83,12 +136,8 @@ export async function createInvoiceForBooking(
     subtotal,
     taxRate,
     taxAmount,
-    total: amountTotal,
-    notes:
-      notes ||
-      (booking.paymentMethod === "deposit_10"
-        ? `Depósito 10% tarjeta: ${booking.amountPaidCard}€. Pendiente efectivo: ${booking.amountDueCash}€.`
-        : undefined),
+    total,
+    notes: paymentNotes,
     status: "issued",
   };
 
@@ -98,44 +147,96 @@ export async function createInvoiceForBooking(
   return invoice;
 }
 
+/**
+ * Emite factura en negativo (abono) cuando hay que devolver dinero.
+ * Si existe factura emitida, la anula completa; si no, crea abono por el importe a devolver.
+ */
 export async function createCreditNoteForBooking(
-  booking: Booking
+  booking: Booking,
+  options?: { refundAmount?: number }
 ): Promise<Invoice | null> {
   const related = (await getInvoicesByBooking(booking.id)).find(
     (i) => i.type === "invoice" && i.status === "issued"
   );
-  if (!related) return null;
 
   const already = (await getInvoicesByBooking(booking.id)).find(
-    (i) => i.type === "credit_note" && i.relatedInvoiceId === related.id
+    (i) => i.type === "credit_note" && i.status === "issued"
   );
   if (already) return already;
 
-  const invoices = await getInvoices();
-  const year = new Date().getFullYear();
-  const number = nextNumber(invoices, year);
-  const id = `ABO-${year}-${String(number).padStart(4, "0")}`;
+  const paid =
+    Math.round(
+      ((booking.amountPaidCard || 0) + (booking.amountPaidCash || 0)) * 100
+    ) / 100;
+  const refundAmount =
+    options?.refundAmount != null
+      ? Math.round(Math.abs(options.refundAmount) * 100) / 100
+      : paid;
 
-  const credit: Invoice = {
-    id,
-    number,
-    type: "credit_note",
-    bookingId: booking.id,
-    createdAt: new Date().toISOString(),
-    customer: related.customer,
-    lines: related.lines.map((l) => ({
-      ...l,
-      unitPrice: -Math.abs(l.unitPrice),
-      total: -Math.abs(l.total),
-    })),
-    subtotal: -Math.abs(related.subtotal),
-    taxRate: related.taxRate,
-    taxAmount: -Math.abs(related.taxAmount),
-    total: -Math.abs(related.total),
-    relatedInvoiceId: related.id,
-    notes: `Abono por cancelación de reserva ${booking.id}. Anula ${related.id}.`,
-    status: "issued",
-  };
+  if (refundAmount <= 0 && !related) return null;
+
+  const invoices = await getInvoices();
+  const number = nextInvoiceNumber(invoices);
+  const id = formatInvoiceId("credit_note", number);
+
+  let credit: Invoice;
+
+  if (related) {
+    // Anulación contable completa de la factura (totales en negativo, IGIC 7%).
+    const reversed = splitIgic(-Math.abs(related.total), IGIC_RATE);
+    credit = {
+      id,
+      number,
+      type: "credit_note",
+      bookingId: booking.id,
+      createdAt: new Date().toISOString(),
+      customer: related.customer,
+      lines: [
+        {
+          description: `Abono — ${related.lines[0]?.description || booking.tourTitle}`,
+          qty: 1,
+          unitPrice: reversed.subtotal,
+          total: reversed.subtotal,
+        },
+      ],
+      subtotal: reversed.subtotal,
+      taxRate: IGIC_RATE,
+      taxAmount: reversed.taxAmount,
+      total: reversed.total,
+      relatedInvoiceId: related.id,
+      notes: `Abono por cancelación de reserva ${booking.id}. Anula ${related.id}. Devolución: ${refundAmount.toFixed(2)} €.`,
+      status: "issued",
+    };
+  } else {
+    const reversed = splitIgic(-refundAmount, IGIC_RATE);
+    credit = {
+      id,
+      number,
+      type: "credit_note",
+      bookingId: booking.id,
+      createdAt: new Date().toISOString(),
+      customer: {
+        name: booking.customer.name,
+        email: booking.customer.email,
+        phone: booking.customer.phone,
+        taxId: booking.customer.taxId,
+      },
+      lines: [
+        {
+          description: `Abono / devolución — ${booking.tourTitle}`,
+          qty: 1,
+          unitPrice: reversed.subtotal,
+          total: reversed.subtotal,
+        },
+      ],
+      subtotal: reversed.subtotal,
+      taxRate: IGIC_RATE,
+      taxAmount: reversed.taxAmount,
+      total: reversed.total,
+      notes: `Abono por cancelación de reserva ${booking.id}. Devolución: ${refundAmount.toFixed(2)} €.`,
+      status: "issued",
+    };
+  }
 
   invoices.unshift(credit);
   await saveInvoices(invoices);

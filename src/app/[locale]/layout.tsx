@@ -1,11 +1,14 @@
 import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { ContactWidget } from "@/components/ContactWidget";
-import { AIChat } from "@/components/AIChat";
+import { FloatingHelpLazy } from "@/components/FloatingHelpLazy";
+import { TripadvisorBadge } from "@/components/TripadvisorBadge";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import { getDictionary } from "@/i18n/dictionaries";
 import { isLocale, locales, type Locale } from "@/i18n/config";
+import { getTripadvisorMeta } from "@/lib/reviews";
+
+export const revalidate = 300;
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -21,16 +24,25 @@ export default async function LocaleLayout({
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
   const locale = raw as Locale;
-  const dict = await getDictionary(locale);
+  const [dict, tripadvisor] = await Promise.all([
+    getDictionary(locale),
+    getTripadvisorMeta(),
+  ]);
 
   return (
     <LocaleProvider locale={locale} dict={dict}>
-      <div lang={locale} className="flex min-h-full flex-1 flex-col">
+      <div lang={locale} className="site-public flex min-h-full flex-1 flex-col">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
-        <AIChat />
-        <ContactWidget />
+        <TripadvisorBadge
+          url={tripadvisor.url}
+          rating={tripadvisor.rating}
+          reviewCount={tripadvisor.reviewCount}
+          label={dict.tripadvisorBadge.aria}
+          reviewsLabel={dict.tripadvisorBadge.reviews}
+        />
+        <FloatingHelpLazy />
       </div>
     </LocaleProvider>
   );

@@ -1,13 +1,38 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Leaf, Bus, Languages, ShieldCheck, Users } from "lucide-react";
+import dynamic from "next/dynamic";
+import {
+  ArrowRight,
+  Building2,
+  Bus,
+  Globe2,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import { TourCard } from "@/components/TourCard";
 import { getFeaturedTours, getSettings } from "@/lib/content";
+import {
+  getFeaturedReviews,
+  getTripadvisorMeta,
+} from "@/lib/reviews";
+import {
+  localizeSettings,
+  localizeTours,
+} from "@/lib/localize-content";
 import { getDictionary } from "@/i18n/dictionaries";
 import { resolveLocale } from "@/i18n/get-locale";
 import { localePath } from "@/i18n/path";
+import { RichContent } from "@/components/RichContent";
 
-export const dynamic = "force-dynamic";
+const ReviewsSection = dynamic(() =>
+  import("@/components/ReviewsSection").then((m) => m.ReviewsSection)
+);
+const HomeIslandVideo = dynamic(() =>
+  import("@/components/HomeIslandVideo").then((m) => m.HomeIslandVideo)
+);
+
+/** ISR: HTML/RSC cacheados; CMS se refresca ~cada 60s o al guardar. */
+export const revalidate = 300;
 
 const awards = [
   { src: "/images/awards/turismo-seguro.jpg", alt: "Turismo Seguro frente al COVID-19" },
@@ -21,21 +46,33 @@ const awards = [
   { src: "/images/awards/tripadvisor-excellence.svg", alt: "Tripadvisor Excellence" },
 ];
 
-const advantageIcons = [ShieldCheck, Bus, Users, Languages, Leaf];
+const advantageIcons: LucideIcon[] = [
+  Bus,
+  Users,
+  Globe2,
+  Building2,
+];
 
 type Props = { params: Promise<{ locale: string }> };
 
 export default async function HomePage({ params }: Props) {
   const { locale: raw } = await params;
   const locale = resolveLocale(raw);
-  const [featured, settings, dict] = await Promise.all([
-    getFeaturedTours(),
-    getSettings(),
-    getDictionary(locale),
+  const dict = await getDictionary(locale);
+  const [featured, settings, reviews, tripadvisor] = await Promise.all([
+    getFeaturedTours().then((tours) => localizeTours(tours, locale)),
+    getSettings().then((s) => localizeSettings(s, locale)),
+    getFeaturedReviews(locale, 10),
+    getTripadvisorMeta(),
   ]);
 
-  const awardLoop = [...awards, ...awards];
   const lp = (path: string) => localePath(locale, path);
+  const bannerText =
+    (locale === "en"
+      ? settings.bannerEn
+      : locale === "de"
+        ? settings.bannerDe
+        : settings.bannerEs) || dict.home.marquee;
 
   return (
     <>
@@ -43,10 +80,10 @@ export default async function HomePage({ params }: Props) {
         <div className="grid min-h-[86vh] lg:grid-cols-[1.05fr_0.95fr]">
           <div className="relative z-10 flex flex-col justify-center px-4 py-16 md:px-10 lg:px-16">
             <p className="animate-fade-up section-kicker !text-[#cfe8d4]">
-              {dict.home.heroKicker}
+              {dict.home.toursKicker}
             </p>
             <h1 className="animate-fade-up-delay mt-5 max-w-xl font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.98] text-white">
-              {settings.homeHeadline}
+              {settings.homeHeadline || settings.brandName}
             </h1>
             <p className="animate-fade-up-delay mt-5 max-w-md text-lg leading-relaxed text-white/80 md:text-xl">
               {settings.tagline}
@@ -56,7 +93,7 @@ export default async function HomePage({ params }: Props) {
                 {dict.home.ctaOffers}
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href={lp("/cruceristas")} className="btn-ghost">
+              <Link href={lp("/excursiones-cruceros")} className="btn-ghost">
                 {dict.home.ctaCruise}
               </Link>
             </div>
@@ -67,74 +104,76 @@ export default async function HomePage({ params }: Props) {
               alt="Lanzarote"
               fill
               priority
+              fetchPriority="high"
+              quality={70}
               className="hero-image object-cover"
               sizes="(max-width:1024px) 100vw, 50vw"
+              style={{
+                objectPosition: settings.homeHeroPosition || "50% 42%",
+              }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-bg-deep via-transparent to-transparent lg:bg-gradient-to-l lg:from-transparent lg:via-transparent lg:to-bg-deep/40" />
-            <div className="absolute right-4 bottom-4 left-4 border-l-4 border-ocean bg-surface/95 p-4 text-ink shadow-[6px_6px_0_rgba(16,36,24,0.2)] md:right-8 md:bottom-8 md:left-auto md:max-w-sm">
-              <p className="text-[11px] font-bold tracking-[0.18em] text-ocean-deep uppercase">
-                {dict.home.heroCardKicker}
-              </p>
-              <p className="mt-2 font-display text-xl leading-snug">
-                {dict.home.heroCardTitle}
-              </p>
-            </div>
           </div>
         </div>
 
         <div className="overflow-hidden border-t border-white/10 bg-ocean py-2.5 text-sm text-white">
-          <div className="marquee-track gap-12 px-4">
-            {[0, 1].map((i) => (
-              <p key={i} className="shrink-0 whitespace-nowrap tracking-wide">
-                {dict.home.marquee}
-              </p>
-            ))}
+          <div className="flex items-center gap-3 px-4">
+            <span className="sr-only">{dict.common.info}</span>
+            <div className="min-w-0 flex-1 overflow-hidden">
+              <div className="marquee-track gap-16">
+                {[0, 1].map((i) => (
+                  <p
+                    key={i}
+                    className="shrink-0 whitespace-nowrap text-sm font-medium tracking-wide md:text-base"
+                  >
+                    {bannerText}
+                  </p>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="overflow-hidden border-b border-sand-line bg-surface py-8">
-        <div className="marquee-track items-center gap-10 px-4 md:gap-14">
-          {awardLoop.map((award, i) => (
+      <section className="border-b border-sand-line bg-white py-8 md:py-10">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-8 gap-y-6 px-4 md:justify-between md:gap-x-4 md:px-6">
+          {awards.map((award) => (
             <div
-              key={`${award.src}-${i}`}
-              className="relative h-12 w-24 shrink-0 opacity-70 grayscale transition hover:opacity-100 hover:grayscale-0 md:h-14 md:w-28"
+              key={award.src}
+              className="relative h-14 w-[4.75rem] shrink-0 sm:h-16 sm:w-24 md:w-[6.5rem]"
             >
               <Image
                 src={award.src}
                 alt={award.alt}
                 fill
                 className="object-contain"
-                sizes="112px"
+                sizes="104px"
               />
             </div>
           ))}
         </div>
       </section>
 
-      <section className="py-14 md:py-16">
+      <section className="bg-[#f7f7f7] py-12 md:py-14">
         <div className="mx-auto max-w-6xl px-4 md:px-6">
-          <ol className="grid gap-px bg-sand-line sm:grid-cols-2 lg:grid-cols-5">
-            {dict.home.advantages.map((label, index) => {
+          <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            {dict.home.advantages.map((item, index) => {
               const Icon = advantageIcons[index] || Users;
               return (
                 <li
-                  key={label}
-                  className="bg-surface p-5"
+                  key={item.text}
+                  className="flex flex-col items-center text-center"
                 >
-                  <span className="mb-4 flex h-11 w-11 items-center justify-center bg-ocean text-white">
-                    <Icon className="h-5 w-5" />
+                  <span className="mb-4 flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full border-[1.5px] border-ocean text-ocean">
+                    <Icon className="h-8 w-8" strokeWidth={1.6} />
                   </span>
-                  <p className="text-[11px] font-bold tracking-[0.16em] text-ocean-deep uppercase">
-                    0{index + 1}
-                  </p>
-                  <p className="mt-2 text-sm font-semibold leading-snug text-ink">
-                    {label}
+                  <p className="max-w-[12rem] text-sm leading-snug text-ink">
+                    {item.text}
                   </p>
                 </li>
               );
             })}
-          </ol>
+          </ul>
         </div>
       </section>
 
@@ -146,7 +185,7 @@ export default async function HomePage({ params }: Props) {
           </div>
           <Link
             href={lp("/excursiones")}
-            className="inline-flex items-center gap-1 text-sm font-bold tracking-wide text-ocean-deep uppercase hover:text-ocean"
+            className="inline-flex items-center gap-1 text-sm font-bold text-ocean hover:text-ocean-deep"
           >
             {dict.common.seeAll} <ArrowRight className="h-4 w-4" />
           </Link>
@@ -158,69 +197,66 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl gap-6 px-4 py-8 md:grid-cols-2 md:px-6 md:py-12">
-        <article className="relative min-h-[360px] overflow-hidden text-white">
-          <Image
-            src="/images/home/traslados.jpg"
-            alt=""
-            fill
-            className="object-cover"
-            sizes="(max-width:768px) 100vw, 50vw"
-          />
-          <div className="absolute inset-0 bg-bg-deep/70" />
-          <div className="relative z-10 flex h-full min-h-[360px] flex-col justify-end p-8">
-            <p className="text-[11px] font-bold tracking-[0.2em] text-[#cfe8d4] uppercase">
-              {dict.home.transfersKicker}
-            </p>
-            <h2 className="mt-3 max-w-sm font-display text-3xl md:text-4xl">
-              {dict.home.transfersTitle}
-            </h2>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-white/80">
-              {settings.transferIntro}
-            </p>
-            <Link href={lp("/traslados")} className="btn-primary mt-6 w-fit">
-              {dict.home.transfersCta}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </article>
-        <article className="relative min-h-[360px] overflow-hidden text-white">
-          <Image
-            src="/images/home/cruceros.jpg"
-            alt=""
-            fill
-            className="object-cover"
-            sizes="(max-width:768px) 100vw, 50vw"
-          />
-          <div className="absolute inset-0 bg-ocean-deep/75" />
-          <div className="relative z-10 flex h-full min-h-[360px] flex-col justify-end p-8">
-            <p className="text-[11px] font-bold tracking-[0.2em] text-[#cfe8d4] uppercase">
-              {dict.home.cruisesKicker}
-            </p>
-            <h2 className="mt-3 max-w-sm font-display text-3xl md:text-4xl">
-              {dict.home.cruisesTitle}
-            </h2>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-white/80">
-              {settings.cruiseIntro}
-            </p>
-            <Link href={lp("/cruceristas")} className="btn-primary mt-6 w-fit">
-              {dict.home.cruisesCta}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </article>
+      <section className="band-dark mt-8 min-h-[380px]">
+        <Image
+          src="/images/home/traslados.jpg"
+          alt=""
+          fill
+          className="photo-vivid object-cover"
+          sizes="100vw"
+        />
+        <div className="relative z-10 mx-auto flex min-h-[380px] max-w-6xl flex-col justify-center px-4 py-16 md:px-6">
+          <p className="text-sm font-bold tracking-[0.18em] text-[#ffb59f] uppercase">
+            {dict.home.transfersKicker}
+          </p>
+          <h2 className="text-hero-shadow mt-3 max-w-xl font-display text-4xl font-extrabold tracking-tight md:text-5xl">
+            {dict.home.transfersTitle}
+          </h2>
+          <p className="text-hero-shadow mt-4 max-w-lg text-base leading-relaxed text-white">
+            {settings.transferIntro}
+          </p>
+          <Link href={lp("/traslados")} className="btn-primary mt-8 w-fit">
+            {dict.home.transfersCta}
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </section>
 
-      <section className="py-16 md:py-24">
+      <section className="band-dark band-dark-end min-h-[380px]">
+        <Image
+          src="/images/home/cruceros.jpg"
+          alt=""
+          fill
+          className="photo-vivid object-cover"
+          sizes="100vw"
+        />
+        <div className="relative z-10 mx-auto flex min-h-[380px] max-w-6xl flex-col justify-center px-4 py-16 md:items-end md:px-6 md:text-right">
+          <p className="text-sm font-bold tracking-[0.18em] text-[#ffb59f] uppercase">
+            {dict.home.cruisesKicker}
+          </p>
+          <h2 className="text-hero-shadow mt-3 max-w-xl font-display text-4xl font-extrabold tracking-tight md:text-5xl">
+            {dict.home.cruisesTitle}
+          </h2>
+          <p className="text-hero-shadow mt-4 max-w-lg text-base leading-relaxed text-white">
+            {settings.cruiseIntro}
+          </p>
+          <Link href={lp("/excursiones-cruceros")} className="btn-primary mt-8 w-fit">
+            {dict.home.cruisesCta}
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
+
+      <section className="bg-gradient-to-b from-white via-[#fff8f2] to-sky-soft/60 py-20 md:py-24">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 md:grid-cols-2 md:px-6">
           <div className="relative">
-            <div className="absolute -top-4 -left-4 h-full w-full bg-ocean" />
-            <div className="relative aspect-[4/5] overflow-hidden">
+            <div className="absolute -inset-3 rounded-[2rem] bg-ocean/15 blur-2xl" />
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] shadow-[0_24px_60px_rgba(235,72,35,0.16)] ring-1 ring-white/60">
               <Image
                 src={settings.aboutImage}
                 alt="LET"
                 fill
-                className="object-cover"
+                className="photo-vivid object-cover"
                 sizes="(max-width:768px) 100vw, 50vw"
               />
             </div>
@@ -228,12 +264,15 @@ export default async function HomePage({ params }: Props) {
           <div>
             <p className="section-kicker">{dict.home.agencyKicker}</p>
             <h2 className="section-title mt-3">{dict.home.agencyTitle}</h2>
-            <p className="mt-5 text-base leading-relaxed text-ink-muted">
-              {settings.aboutLead}
-            </p>
-            <p className="mt-4 text-base leading-relaxed text-ink-muted">
-              {dict.home.agencyBody}
-            </p>
+            <RichContent
+              text={settings.aboutLead}
+              className="mt-5 max-w-none !space-y-4"
+            />
+            {dict.home.agencyBody ? (
+              <p className="mt-4 text-base leading-relaxed text-ink-muted">
+                {dict.home.agencyBody}
+              </p>
+            ) : null}
             <Link href={lp("/sobre-nosotros")} className="btn-primary mt-8">
               {dict.home.agencyCta}
               <ArrowRight className="h-4 w-4" />
@@ -242,24 +281,32 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
-      <section className="border-t border-sand-line bg-surface py-16 md:py-24">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 md:grid-cols-[0.9fr_1.1fr] md:px-6">
-          <div className="relative mx-auto aspect-square w-full max-w-sm">
-            <Image
-              src="/images/home/lanzarote-mi-amor.png"
-              alt="Lanzarote"
-              fill
-              className="object-contain drop-shadow-xl"
-              sizes="400px"
-            />
-          </div>
+      <ReviewsSection
+        reviews={reviews}
+        tripadvisor={tripadvisor}
+        copy={{
+          kicker: dict.home.reviewsKicker,
+          title: dict.home.reviewsTitle,
+          subtitle: dict.home.reviewsSubtitle,
+          basedOn: dict.home.reviewsBasedOn,
+          cta: dict.home.reviewsCta,
+          traveler: dict.home.reviewsTraveler,
+        }}
+      />
+
+      <section className="border-t border-sand-line bg-gradient-to-b from-sky-soft/70 to-white py-20 md:py-24">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 md:grid-cols-[1.15fr_0.85fr] md:px-6">
+          <HomeIslandVideo title={dict.home.islandTitle} />
           <div>
             <p className="section-kicker">{dict.home.islandKicker}</p>
             <h2 className="section-title mt-3">{dict.home.islandTitle}</h2>
             <p className="mt-5 text-base leading-relaxed text-ink-muted">
               {dict.home.islandBody}
             </p>
-            <Link href={lp("/excursiones")} className="btn-ghost-dark mt-8">
+            <Link
+              href={lp("/excursiones")}
+              className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-ocean hover:text-ocean-deep"
+            >
               {dict.home.islandCta}
               <ArrowRight className="h-4 w-4" />
             </Link>

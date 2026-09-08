@@ -15,8 +15,8 @@ export function Footer() {
   return (
     <footer className="mt-auto bg-bg-deep text-white">
       <div className="h-1.5 bg-ocean" />
-      <div className="mx-auto max-w-6xl px-4 py-16 md:px-6">
-        <div className="grid gap-12 md:grid-cols-[1.25fr_1fr_1fr]">
+      <div className="mx-auto max-w-6xl px-4 py-14 md:px-6">
+        <div className="grid gap-12 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>
             <div className="relative mb-5 h-14 w-[180px]">
               <Image
@@ -30,13 +30,11 @@ export function Footer() {
             <p className="max-w-sm text-sm leading-relaxed text-white/65">
               {dict.footer.blurb}
             </p>
-            <p className="mt-5 font-display text-2xl italic text-[#cfe8d4]">
-              {dict.footer.tagline}
-            </p>
+            <p className="mt-4 font-display text-lg text-ocean">{dict.footer.tagline}</p>
           </div>
 
           <div>
-            <p className="text-[11px] font-bold tracking-[0.2em] text-white/45 uppercase">
+            <p className="text-xs font-bold tracking-[0.16em] text-white/45 uppercase">
               {dict.footer.explore}
             </p>
             <ul className="mt-4 space-y-2.5 text-sm text-white/75">
@@ -51,13 +49,21 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href={href("/cruceristas")} className="transition hover:text-white">
+                <Link
+                  href={href("/excursiones-cruceros")}
+                  className="transition hover:text-white"
+                >
                   {dict.nav.cruises}
                 </Link>
               </li>
               <li>
                 <Link href={href("/casas")} className="transition hover:text-white">
                   {dict.nav.houses}
+                </Link>
+              </li>
+              <li>
+                <Link href={href("/blog")} className="transition hover:text-white">
+                  {dict.nav.blog}
                 </Link>
               </li>
               <li>
@@ -70,11 +76,27 @@ export function Footer() {
                   {dict.nav.contact}
                 </Link>
               </li>
+              <li>
+                <Link
+                  href={href("/gestionar-reserva")}
+                  className="transition hover:text-white"
+                >
+                  {dict.nav.manageBooking}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={href("/cancelar-reserva")}
+                  className="transition hover:text-white"
+                >
+                  {dict.cancel.title}
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
-            <p className="text-[11px] font-bold tracking-[0.2em] text-white/45 uppercase">
+            <p className="text-xs font-bold tracking-[0.16em] text-white/45 uppercase">
               {dict.footer.contact247}
             </p>
             <ul className="mt-4 space-y-3 text-sm text-white/85">
@@ -83,8 +105,8 @@ export function Footer() {
                   href="tel:+34646080585"
                   className="inline-flex items-center gap-2 transition hover:text-white"
                 >
-                  <span className="flex h-8 w-8 items-center justify-center bg-ocean/25">
-                    <Phone className="h-3.5 w-3.5 text-[#cfe8d4]" />
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ocean/20">
+                    <Phone className="h-3.5 w-3.5 text-ocean" />
                   </span>
                   +34 646 08 05 85
                 </a>
@@ -94,14 +116,14 @@ export function Footer() {
                   href="mailto:support@lanzaroteexperiencetours.com"
                   className="inline-flex items-center gap-2 transition hover:text-white"
                 >
-                  <span className="flex h-8 w-8 items-center justify-center bg-ocean/25">
-                    <Mail className="h-3.5 w-3.5 text-[#cfe8d4]" />
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ocean/20">
+                    <Mail className="h-3.5 w-3.5 text-ocean" />
                   </span>
                   support@lanzaroteexperiencetours.com
                 </a>
               </li>
             </ul>
-            <p className="mt-5 text-xs text-white/45">Agencia Nº: I-AV-0002407.1</p>
+            <p className="mt-5 text-xs text-white/45">{dict.footer.agencyLicense}</p>
           </div>
         </div>
 
@@ -127,9 +149,6 @@ export function Footer() {
             >
               {dict.footer.terms}
             </a>
-            <Link href="/admin" className="hover:text-white/70">
-              Admin
-            </Link>
           </div>
         </div>
       </div>

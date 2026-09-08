@@ -2,44 +2,46 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { locales, localeLabels, type Locale } from "@/i18n/config";
+import { switchLocalePath } from "@/i18n/path";
 import { useLocale } from "@/components/LocaleProvider";
+import { useAppLoadingOptional } from "@/components/AppLoadingProvider";
 
 export function LanguageSwitcher({
   tone = "dark",
 }: {
   tone?: "dark" | "light";
 }) {
-  const { locale } = useLocale();
+  const { locale, dict } = useLocale();
   const pathname = usePathname();
   const router = useRouter();
+  const loading = useAppLoadingOptional();
 
   function switchTo(next: Locale) {
     if (next === locale) return;
-    const parts = pathname.split("/");
-    if (parts[1] && locales.includes(parts[1] as Locale)) {
-      parts[1] = next;
-    } else {
-      parts.splice(1, 0, next);
-    }
-    const target = parts.join("/") || `/${next}`;
+    const search =
+      typeof window !== "undefined" ? window.location.search : "";
+    const target = switchLocalePath(pathname, next, search);
     document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=31536000`;
+    loading?.startLanguageSwitch(next, locale);
+    router.prefetch(target);
     router.push(target);
+    router.refresh();
   }
 
   const light = tone === "light";
 
   return (
     <label className="relative inline-flex items-center">
-      <span className="sr-only">Language</span>
+      <span className="sr-only">{dict.common.language}</span>
       <select
         value={locale}
         onChange={(e) => switchTo(e.target.value as Locale)}
         className={`cursor-pointer appearance-none py-1.5 pr-7 pl-3 text-xs font-bold outline-none ${
           light
             ? "border border-sand-line bg-white text-ink hover:bg-sky-soft"
-            : "border border-white/20 bg-white/10 text-white hover:bg-white/15"
+            : "rounded-full border border-white/20 bg-white/10 text-white hover:bg-white/15"
         }`}
-        aria-label="Language"
+        aria-label={dict.common.language}
       >
         {locales.map((code) => (
           <option key={code} value={code} className="text-ink">

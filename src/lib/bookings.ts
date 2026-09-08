@@ -1,9 +1,12 @@
-import { promises as fs } from "fs";
-import path from "path";
 import type { Booking, BookingStatus, CashStatus } from "@/types";
+import { buildBookingId } from "@/lib/booking-ids";
 import { splitPaymentAmounts } from "@/lib/payments";
-
-const dataPath = path.join(process.cwd(), "src/data/bookings.json");
+import {
+  readCmsJson,
+  readLocalCmsJson,
+  writeCmsJson,
+} from "@/lib/supabase/cms-store";
+import { isSupabaseConfigured, warnSupabaseFallback } from "@/lib/supabase/client";
 
 function normalizeBooking(b: Booking): Booking {
   const total = b.amountTotal ?? b.totalPrice ?? 0;
@@ -19,14 +22,97 @@ function normalizeBooking(b: Booking): Booking {
   };
 }
 
+/** Localizadores de la web antigua (R31105028, CR28060278, …). */
+export function isLegacyLocator(id: string): boolean {
+  return /^(R|CR|T)\d{5,}/i.test(id) || /-i\d+$/i.test(id);
+}
+
+function countLegacy(list: Booking[]): number {
+  return list.filter((b) => isLegacyLocator(b.id)).length;
+}
+
+let cmsSyncInFlight: Promise<void> | null = null;
+
+/**
+ * Prefer Storage as source of truth once it has bookings.
+ * Only seed from the deploy JSON when remote is empty (first migration).
+ */
+async function resolveBookingsList(): Promise<Booking[]> {
+  const local = await readLocalCmsJson<Booking[]>("bookings.json");
+
+  if (!isSupabaseConfigured()) {
+    return local;
+  }
+
+  let remote: Booking[] = [];
+  try {
+    remote = await readCmsJson<Booking[]>("bookings.json");
+    if (!Array.isArray(remote)) remote = [];
+  } catch (error) {
+    warnSupabaseFallback("bookings-resolve", error as Error);
+    return local;
+  }
+
+  if (remote.length > 0) {
+    return remote;
+  }
+
+  if (local.length > 0 && !cmsSyncInFlight) {
+    cmsSyncInFlight = writeCmsJson("bookings.json", local)
+      .then(() => {
+        console.info(
+          `[bookings] Semilla inicial: ${local.length} reservas del deploy → Supabase Storage`
+        );
+      })
+      .catch((error) => {
+        cmsSyncInFlight = null;
+        warnSupabaseFallback("bookings-cms-sync", error as Error);
+      });
+  }
+
+  return local;
+}
+
 export async function getBookings(): Promise<Booking[]> {
-  const raw = await fs.readFile(dataPath, "utf-8");
-  const list = JSON.parse(raw) as Booking[];
+  const list = await resolveBookingsList();
   return list.map(normalizeBooking);
 }
 
 export async function saveBookings(bookings: Booking[]): Promise<void> {
-  await fs.writeFile(dataPath, JSON.stringify(bookings, null, 2), "utf-8");
+  await writeCmsJson("bookings.json", bookings);
+}
+
+/** Fuerza subir el bookings.json del deploy a Supabase Storage. */
+/**
+ * @deprecated Peligroso: pisaba bookings.json del panel con el bundle del deploy.
+ * Desactivado a propósito. Conservado solo por compatibilidad de imports.
+ */
+export async function syncBookingsFromDeploy(): Promise<{
+  local: number;
+  legacy: number;
+  synced: boolean;
+}> {
+  const local = await readLocalCmsJson<Booking[]>("bookings.json");
+  const legacy = countLegacy(local);
+  return { local: local.length, legacy, synced: false };
+}
+
+/** Fusiona por id (idempotente). Sustituye existentes y añade nuevas. */
+export async function upsertBookings(
+  incoming: Booking[]
+): Promise<{ upserted: number; total: number }> {
+  const normalized = incoming.map(normalizeBooking);
+  if (!normalized.length) {
+    return { upserted: 0, total: (await getBookings()).length };
+  }
+  const existing = await getBookings();
+  const map = new Map(existing.map((b) => [b.id, b]));
+  for (const b of normalized) map.set(b.id, b);
+  const merged = [...map.values()].sort((a, b) =>
+    a.createdAt < b.createdAt ? 1 : -1
+  );
+  await saveBookings(merged);
+  return { upserted: normalized.length, total: merged.length };
 }
 
 export async function addBooking(
@@ -40,6 +126,7 @@ export async function addBooking(
     | "amountDueCash"
     | "amountPaidCash"
     | "cashStatus"
+    | "paymentStatus"
   > & {
     status?: BookingStatus;
     amountTotal?: number;
@@ -47,14 +134,24 @@ export async function addBooking(
     amountDueCash?: number;
     amountPaidCash?: number;
     cashStatus?: CashStatus;
+    paymentStatus?: Booking["paymentStatus"];
   }
 ): Promise<Booking> {
   const bookings = await getBookings();
-  const id = `BK-${1000 + bookings.length + 1}`;
+  const id = buildBookingId(bookings, booking);
   const split = splitPaymentAmounts(booking.totalPrice, booking.paymentMethod);
+  const forcedUnpaid =
+    booking.paymentStatus === "unpaid" &&
+    booking.paymentMethod !== "pay_on_day";
   const created: Booking = {
     ...booking,
     ...split,
+    ...(forcedUnpaid
+      ? {
+          paymentStatus: "unpaid" as const,
+          amountPaidCard: 0,
+        }
+      : {}),
     amountPaidCash: booking.amountPaidCash ?? 0,
     id,
     createdAt: new Date().toISOString(),
@@ -106,12 +203,20 @@ export async function markCashCollected(id: string): Promise<Booking | null> {
 }
 
 export function getCashPending(bookings: Booking[]): Booking[] {
-  return bookings.filter(
-    (b) =>
-      b.status !== "cancelled" &&
-      b.cashStatus === "pending" &&
-      (b.amountDueCash ?? 0) > 0
-  );
+  const today = new Date().toISOString().slice(0, 10);
+  return bookings.filter((b) => {
+    if (b.status === "cancelled") return false;
+    if (b.cashStatus !== "pending") return false;
+    if ((b.amountDueCash ?? 0) <= 0) return false;
+    const day = (b.date || "").slice(0, 10);
+    // Solo cobros reales por cobrar: fecha de servicio válida y no pasada
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return false;
+    if (day < "2018-01-01") return false;
+    if (day < today) return false;
+    const email = (b.customer?.email || "").toLowerCase();
+    if (email === "testing@example.com") return false;
+    return true;
+  });
 }
 
 export function getStats(bookings: Booking[]) {
@@ -136,6 +241,7 @@ export function getStats(bookings: Booking[]) {
     card: active.filter((b) => b.paymentMethod === "card").length,
     bizum: active.filter((b) => b.paymentMethod === "bizum").length,
     pay_on_day: active.filter((b) => b.paymentMethod === "pay_on_day").length,
+    deposit_20: active.filter((b) => b.paymentMethod === "deposit_20").length,
     deposit_10: active.filter((b) => b.paymentMethod === "deposit_10").length,
   };
   const upcoming = active

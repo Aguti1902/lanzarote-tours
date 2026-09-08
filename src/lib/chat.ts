@@ -1,6 +1,8 @@
 import {
+  getCruiseCalls,
+  getCruisesData,
   getSettings,
-  getTours,
+  getPublicTours,
   getTransfersData,
 } from "@/lib/content";
 import { formatPrice, groupSizeLabel } from "@/lib/format";
@@ -18,31 +20,45 @@ function normalize(text: string): string {
 }
 
 async function buildKnowledge(): Promise<string> {
-  const [tours, transfers, settings] = await Promise.all([
-    getTours(),
+  const [tours, transfers, settings, cruiseData, cruiseCalls] = await Promise.all([
+    getPublicTours(),
     getTransfersData(),
     getSettings(),
+    getCruisesData(),
+    getCruiseCalls({ publishedOnly: true }),
   ]);
 
   const tourLines = tours
     .map((t) => {
       const group = t.groupSize ? groupSizeLabel(t.groupSize) : t.category;
       const pay = [
-        t.allowCard && "tarjeta",
-        t.allowBizum && "Bizum",
-        t.allowCard && "10% tarjeta + resto efectivo",
+        t.allowCard && "tarjeta 100% online",
+        t.allowBizum && "Bizum 100% online",
+        t.allowCard && "20% tarjeta + resto efectivo",
         t.allowPayOnDay && "pago el día del tour",
       ]
         .filter(Boolean)
         .join(", ");
-      return `- ${t.shortTitle} (${group}): ${formatPrice(t.priceAdult)} adulto, ${t.duration}. Pagos: ${pay}. URL: /excursiones/${t.slug}. ${t.summary}`;
+      return `- ${t.shortTitle} (${group}): ${
+        t.category === "private" || t.isPrivateActivity
+          ? `${formatPrice(t.priceAdult)} precio cerrado (grupo completo)`
+          : `${formatPrice(t.priceAdult)} adulto`
+      }, ${t.duration}. Pagos: ${pay}. URL: /excursiones/${t.slug}. ${t.summary}`;
     })
     .join("\n");
 
   const transferLines = transfers.destinations
     .map(
       (d) =>
-        `- Aeropuerto ↔ ${d.name}: ida ${formatPrice(d.priceOneWay)}, ida y vuelta ${formatPrice(d.priceReturn)} (${d.duration})`
+        `- Aeropuerto ↔ ${d.name}: ida ${formatPrice(d.priceOneWay)}, ida y vuelta ${formatPrice(d.priceReturn)} (hasta 4 pasajeros); persona extra ${formatPrice(d.priceExtraPerson ?? 10)} (${d.duration})`
+    )
+    .join("\n");
+
+  const upcomingCruises = cruiseCalls
+    .slice(0, 40)
+    .map(
+      (c) =>
+        `- ${c.date} ${c.shipName} (${c.company}): ${c.arrivalTime}-${c.departureTime}`
     )
     .join("\n");
 
@@ -62,6 +78,11 @@ Ventajas: ${transfers.highlights.join("; ")}
 CRUCERISTAS:
 ${settings.cruiseHeadline}
 ${settings.cruiseIntro}
+Calendario de escalas temporada ${cruiseData.season} en ${cruiseData.port} (${cruiseCalls.length} escalas).
+Próximas / ejemplo de escalas:
+${upcomingCruises}
+URL cruceros: /excursiones-cruceros
+URL calendario escalas Lanzarote: /cruceristas
 
 INFO CLAVE:
 - Grupo reducido: máx. 8 personas, pago anticipado con tarjeta o Bizum.
@@ -85,8 +106,8 @@ function localReply(message: string, knowledge: string): string {
     return "¡De nada! Si quieres, te ayudo a elegir entre grupo reducido, grupo grande, tour privado o un traslado. También puedes reservar desde la web.";
   }
 
-  if (/crucero|crucerista|barco|escala|puerto/.test(q)) {
-    return "Si llegas en crucero, te recogemos en el puerto y adaptamos horarios a tu escala. Las mismas rutas (Ruta Sur o Grand Tour) están en grupo reducido o grande, y también hay tour privado o minibus. Mira la página /cruceristas o dime cuántas horas tienes en tierra y te recomiendo una opción.";
+  if (/crucero|crucerista|barco|escala|puerto|calendario/.test(q)) {
+    return "Si llegas en crucero a Lanzarote (Puerto de Los Mármoles), te recogemos en el puerto y adaptamos horarios a tu escala. En /excursiones-cruceros elige naviera, barco y salida para ver el itinerario completo y las excursiones. En /cruceristas está el calendario de escalas 2026-2027. Dime fecha o nombre del barco y te indico qué hay ese día.";
   }
 
   if (/traslad|aeropuerto|taxi|recogida|transfer|playa blanca|puerto del carmen|costa teguise|arrecife|puerto calero/.test(q)) {
@@ -176,7 +197,7 @@ async function openaiReply(
         messages: [
           {
             role: "system",
-            content: `You are the booking assistant for Lanzarote Experience Tours. Reply in ${language}, briefly, clearly and kindly (max 120 words unless listing prices). Use only this company information. If unsure, invite the user to contact us or book on the website. Do not invent prices missing from the context. Include internal links when helpful (/${locale}/excursiones, /${locale}/traslados, /${locale}/cruceristas).
+            content: `You are the booking assistant for Lanzarote Experience Tours. Reply in ${language}, briefly, clearly and kindly (max 120 words unless listing prices). Use only this company information. If unsure, invite the user to contact us or book on the website. Do not invent prices missing from the context. Include internal links when helpful (/${locale}/excursions or /${locale}/excursiones, /${locale}/airport-transfers or /${locale}/traslados-aeropuerto-lanzarote, /${locale}/shore-excursions or /${locale}/excursiones-cruceros, /${locale}/cruise-passengers or /${locale}/cruceristas). Use the URL slug language matching ${locale}.
 
 CONTEXT:
 ${knowledge}`,

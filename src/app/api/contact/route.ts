@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
+import { readCmsJson, writeCmsJson } from "@/lib/supabase/cms-store";
+import { notifyContactMessage } from "@/lib/notify";
+import { sendContactAutoReply } from "@/lib/customer-emails";
 
 type ContactMessage = {
   id: string;
@@ -11,12 +12,9 @@ type ContactMessage = {
   message: string;
 };
 
-const dataPath = path.join(process.cwd(), "src/data/messages.json");
-
 async function getMessages(): Promise<ContactMessage[]> {
   try {
-    const raw = await fs.readFile(dataPath, "utf-8");
-    return JSON.parse(raw) as ContactMessage[];
+    return await readCmsJson<ContactMessage[]>("messages.json");
   } catch {
     return [];
   }
@@ -47,7 +45,19 @@ export async function POST(request: Request) {
       message,
     };
     messages.unshift(entry);
-    await fs.writeFile(dataPath, JSON.stringify(messages, null, 2) + "\n", "utf-8");
+    await writeCmsJson("messages.json", messages);
+
+    // No bloqueamos la respuesta si el correo falla
+    void notifyContactMessage(entry).catch((err) => {
+      console.error("[contact] notify failed", err);
+    });
+    void sendContactAutoReply({
+      name: entry.name,
+      email: entry.email,
+      locale: typeof body.locale === "string" ? body.locale : undefined,
+    }).catch((err) => {
+      console.error("[contact] auto-reply failed", err);
+    });
 
     return NextResponse.json({ ok: true, message: entry }, { status: 201 });
   } catch {

@@ -1,25 +1,34 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import type { Booking } from "@/types";
-import { formatPrice } from "@/lib/format";
+import {
+  bookingReturnDate,
+  bookingReturnTime,
+  bookingServiceTime,
+} from "@/lib/booking-time";
+import { formatDateShort, formatPrice } from "@/lib/format";
 import { PageHero } from "@/components/PageHero";
 import { useLocale } from "@/components/LocaleProvider";
+import { useSettingsHero } from "@/hooks/useSettingsHero";
 
 const inputClass =
   "w-full rounded border border-sand-line bg-white px-3 py-2.5 text-sm outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20";
 
-export default function GestionarReservaPage() {
+function GestionarReservaContent() {
   const { dict, href } = useLocale();
+  const searchParams = useSearchParams();
+  const hero = useSettingsHero("excursions");
   const [bookingId, setBookingId] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [booking, setBooking] = useState<Booking | null>(null);
+  const [autoTried, setAutoTried] = useState(false);
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  async function lookup(idValue: string, emailValue: string) {
     setError("");
     setBooking(null);
     setLoading(true);
@@ -27,7 +36,7 @@ export default function GestionarReservaPage() {
       const res = await fetch("/api/bookings/lookup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ booking_id: bookingId, email }),
+        body: JSON.stringify({ booking_id: idValue, email: emailValue }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Error");
@@ -39,19 +48,43 @@ export default function GestionarReservaPage() {
     }
   }
 
+  useEffect(() => {
+    if (autoTried) return;
+    const idParam = (searchParams.get("id") || searchParams.get("booking_id") || "").trim();
+    const emailParam = (searchParams.get("email") || "").trim();
+    if (idParam) setBookingId(idParam);
+    if (emailParam) setEmail(emailParam);
+    setAutoTried(true);
+    if (idParam && emailParam) {
+      void lookup(idParam, emailParam);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot from URL
+  }, [searchParams, autoTried]);
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    await lookup(bookingId, email);
+  }
+
+  const cancelHref = booking
+    ? href("/cancelar-reserva") +
+      `?id=${encodeURIComponent(booking.id)}&email=${encodeURIComponent(booking.customer.email)}`
+    : href("/cancelar-reserva");
+
   return (
     <>
       <PageHero
-        image="/images/heroes/excursions.jpg"
+        image={hero.image}
         title={dict.manage.title}
         subtitle={dict.manage.subtitle}
         compact
+        objectPosition={hero.objectPosition}
       />
 
       <section className="mx-auto max-w-xl px-4 py-14 md:px-6">
         <form
           onSubmit={handleSubmit}
-          className="space-y-4 border-t-4 border-ocean bg-surface p-6 ring-1 ring-sand-line"
+          className="space-y-4 rounded-lg bg-white p-6 ring-1 ring-sand-line"
         >
           <div>
             <label className="mb-1 block text-sm font-bold">
@@ -61,7 +94,7 @@ export default function GestionarReservaPage() {
               className={inputClass}
               value={bookingId}
               onChange={(e) => setBookingId(e.target.value)}
-              placeholder="BK-1001"
+              placeholder="R-1001 / CR-1001 / T-1001 / BK-1001"
               required
             />
           </div>
@@ -98,9 +131,35 @@ export default function GestionarReservaPage() {
                 <dd className="text-right font-bold">{booking.tourTitle}</dd>
               </div>
               <div className="flex justify-between gap-4">
-                <dt className="text-ink-muted">{dict.common.date}</dt>
-                <dd className="font-bold">{booking.date}</dd>
+                <dt className="text-ink-muted">{dict.voucher.bookingDate}</dt>
+                <dd className="font-bold">
+                  {formatDateShort(booking.createdAt)}
+                </dd>
               </div>
+              <div className="flex justify-between gap-4">
+                <dt className="text-ink-muted">{dict.voucher.serviceDate}</dt>
+                <dd className="font-bold">{formatDateShort(booking.date)}</dd>
+              </div>
+              {bookingServiceTime(booking) && (
+                <div className="flex justify-between gap-4">
+                  <dt className="text-ink-muted">{dict.voucher.serviceTime}</dt>
+                  <dd className="font-bold">{bookingServiceTime(booking)}</dd>
+                </div>
+              )}
+              {bookingReturnDate(booking) && (
+                <div className="flex justify-between gap-4">
+                  <dt className="text-ink-muted">{dict.voucher.returnDate}</dt>
+                  <dd className="font-bold">
+                    {formatDateShort(bookingReturnDate(booking))}
+                  </dd>
+                </div>
+              )}
+              {bookingReturnTime(booking) && (
+                <div className="flex justify-between gap-4">
+                  <dt className="text-ink-muted">{dict.voucher.returnTime}</dt>
+                  <dd className="font-bold">{bookingReturnTime(booking)}</dd>
+                </div>
+              )}
               <div className="flex justify-between gap-4">
                 <dt className="text-ink-muted">{dict.manage.people}</dt>
                 <dd className="font-bold">
@@ -125,6 +184,25 @@ export default function GestionarReservaPage() {
                 <dd className="font-bold">{booking.paymentStatus}</dd>
               </div>
             </dl>
+
+            <div className="mt-6 grid gap-2 sm:grid-cols-2">
+              <Link
+                href={href(`/voucher?id=${encodeURIComponent(booking.id)}`)}
+                className="inline-flex items-center justify-center bg-ocean px-4 py-3 text-sm font-bold text-white hover:bg-ocean-deep"
+              >
+                {dict.manage.viewVoucher}
+              </Link>
+              {booking.status !== "cancelled" &&
+                booking.status !== "completed" && (
+                  <Link
+                    href={cancelHref}
+                    className="inline-flex items-center justify-center border border-red-300 px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50"
+                  >
+                    {dict.manage.cancelBooking}
+                  </Link>
+                )}
+            </div>
+
             <p className="mt-6 text-sm text-ink-muted">
               {dict.manage.help}{" "}
               <a
@@ -145,5 +223,19 @@ export default function GestionarReservaPage() {
         )}
       </section>
     </>
+  );
+}
+
+export default function GestionarReservaPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="mx-auto max-w-xl px-4 py-14 text-ink-muted md:px-6">
+          Cargando…
+        </div>
+      }
+    >
+      <GestionarReservaContent />
+    </Suspense>
   );
 }

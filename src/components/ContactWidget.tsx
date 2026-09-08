@@ -17,18 +17,18 @@ export function ContactWidget() {
   return (
     <div className="fixed right-4 bottom-4 z-50 flex flex-col items-end gap-3">
       {open && (
-        <div className="w-[300px] overflow-hidden bg-surface shadow-[8px_8px_0_rgba(16,36,24,0.12)] ring-1 ring-sand-line">
-          <div className="relative bg-bg-deep px-4 py-4 text-white">
+        <div className="w-[300px] overflow-hidden rounded-lg bg-white shadow-2xl ring-1 ring-sand-line">
+          <div className="relative bg-header px-4 py-4 text-white">
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="absolute top-2 right-2 p-1 hover:bg-white/10"
+              className="absolute top-2 right-2 rounded p-1 hover:bg-white/10"
               aria-label="Close"
             >
               <X className="h-4 w-4" />
             </button>
             <div className="flex items-center gap-3">
-              <div className="relative h-10 w-10 overflow-hidden bg-ocean">
+              <div className="relative h-10 w-10 overflow-hidden rounded-full bg-white">
                 <Image
                   src="/images/brand/logo-mark.png"
                   alt=""
@@ -50,7 +50,7 @@ export function ContactWidget() {
             <li>
               <a
                 href="tel:+34646080585"
-                className="flex flex-col items-center gap-1 bg-sky-soft px-2 py-3 text-xs font-bold text-ink transition hover:bg-ocean hover:text-white"
+                className="flex flex-col items-center gap-1 rounded-md bg-sky-soft px-2 py-3 text-xs font-bold text-ink transition hover:bg-ocean hover:text-white"
               >
                 <Phone className="h-4 w-4" />
                 {dict.common.phone}
@@ -61,7 +61,7 @@ export function ContactWidget() {
                 href="https://wa.me/34646080585"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-1 bg-sky-soft px-2 py-3 text-xs font-bold text-ink transition hover:bg-ocean hover:text-white"
+                className="flex flex-col items-center gap-1 rounded-md bg-sky-soft px-2 py-3 text-xs font-bold text-ink transition hover:bg-ocean hover:text-white"
               >
                 <MessageCircle className="h-4 w-4" />
                 {dict.contactWidget.whatsapp}
@@ -72,7 +72,7 @@ export function ContactWidget() {
                 href="https://m.me/LanzaroteExperienceTours"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-1 bg-sky-soft px-2 py-3 text-xs font-bold text-ink transition hover:bg-ocean hover:text-white"
+                className="flex flex-col items-center gap-1 rounded-md bg-sky-soft px-2 py-3 text-xs font-bold text-ink transition hover:bg-ocean hover:text-white"
               >
                 <Share2 className="h-4 w-4" />
                 {dict.contactWidget.facebook}
@@ -82,7 +82,7 @@ export function ContactWidget() {
               <Link
                 href={href("/contacto")}
                 onClick={() => setOpen(false)}
-                className="flex flex-col items-center gap-1 bg-sky-soft px-2 py-3 text-xs font-bold text-ink transition hover:bg-ocean hover:text-white"
+                className="flex flex-col items-center gap-1 rounded-md bg-sky-soft px-2 py-3 text-xs font-bold text-ink transition hover:bg-ocean hover:text-white"
               >
                 <Mail className="h-4 w-4" />
                 {dict.common.email}
@@ -95,7 +95,7 @@ export function ContactWidget() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-2 bg-ocean px-5 py-3 text-sm font-bold tracking-wide text-white uppercase shadow-[4px_4px_0_rgba(16,36,24,0.2)] transition hover:bg-ocean-deep"
+        className="inline-flex items-center gap-2 rounded-full bg-ocean px-5 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-ocean-deep"
       >
         <MessageCircle className="h-4 w-4" />
         {dict.contactWidget.questions}
