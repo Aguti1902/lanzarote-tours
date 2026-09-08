@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
 import type { Tour } from "@/types";
 
 function isActive(tour: Tour) {
@@ -12,6 +12,7 @@ function isActive(tour: Tour) {
 export default function AdminExcursionesPage() {
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(true);
+  const [savingOrder, setSavingOrder] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -24,6 +25,33 @@ export default function AdminExcursionesPage() {
   useEffect(() => {
     load();
   }, []);
+
+  async function persistOrder(next: Tour[]) {
+    setSavingOrder(true);
+    try {
+      const res = await fetch("/api/tours", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order: next.map((t) => t.id) }),
+      });
+      const data = await res.json();
+      if (res.ok && Array.isArray(data.tours)) {
+        setTours(data.tours);
+      }
+    } finally {
+      setSavingOrder(false);
+    }
+  }
+
+  async function move(index: number, direction: -1 | 1) {
+    const target = index + direction;
+    if (target < 0 || target >= tours.length) return;
+    const next = [...tours];
+    const [item] = next.splice(index, 1);
+    next.splice(target, 0, item);
+    setTours(next);
+    await persistOrder(next);
+  }
 
   async function remove(id: string, title: string) {
     if (!confirm(`¿Eliminar «${title}»?`)) return;
@@ -39,7 +67,10 @@ export default function AdminExcursionesPage() {
             Listado de excursiones
           </h1>
           <p className="mt-1 text-sm text-ink-muted">
-            {loading ? "Cargando…" : `${tours.length} excursiones`}
+            {loading
+              ? "Cargando…"
+              : `${tours.length} excursiones · el orden de esta lista es el de la web pública`}
+            {savingOrder ? " · Guardando orden…" : ""}
           </p>
         </div>
         <Link
@@ -55,6 +86,7 @@ export default function AdminExcursionesPage() {
         <table className="w-full min-w-[920px] text-left text-sm">
           <thead className="border-b border-sand-line bg-bg text-ink-muted">
             <tr>
+              <th className="px-4 py-3 font-medium">Orden</th>
               <th className="px-4 py-3 font-medium">Estado</th>
               <th className="px-4 py-3 font-medium">Nombre del tour</th>
               <th className="px-4 py-3 font-medium">Isla</th>
@@ -66,23 +98,48 @@ export default function AdminExcursionesPage() {
           <tbody>
             {loading && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-ink-muted">
+                <td colSpan={7} className="px-4 py-8 text-center text-ink-muted">
                   Cargando…
                 </td>
               </tr>
             )}
             {!loading && tours.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-ink-muted">
+                <td colSpan={7} className="px-4 py-8 text-center text-ink-muted">
                   No hay excursiones todavía.
                 </td>
               </tr>
             )}
             {!loading &&
-              tours.map((t) => {
+              tours.map((t, index) => {
                 const active = isActive(t);
                 return (
                   <tr key={t.id} className="border-b border-sand-line/70">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          disabled={index === 0 || savingOrder}
+                          onClick={() => move(index, -1)}
+                          className="rounded p-1 text-ink-muted hover:bg-sky-soft hover:text-ocean disabled:opacity-30"
+                          aria-label="Subir"
+                        >
+                          <ChevronUp className="h-4 w-4" />
+                        </button>
+                        <button
+                          type="button"
+                          disabled={index === tours.length - 1 || savingOrder}
+                          onClick={() => move(index, 1)}
+                          className="rounded p-1 text-ink-muted hover:bg-sky-soft hover:text-ocean disabled:opacity-30"
+                          aria-label="Bajar"
+                        >
+                          <ChevronDown className="h-4 w-4" />
+                        </button>
+                        <span className="min-w-[1.5rem] text-xs font-bold text-ink-muted">
+                          {t.priority ?? index + 1}
+                        </span>
+                      </div>
+                    </td>
                     <td className="px-4 py-3">
                       <span className="inline-flex items-center gap-2 text-xs font-semibold">
                         <span
@@ -129,9 +186,7 @@ export default function AdminExcursionesPage() {
                         ? `${t.durationHours} horas`
                         : t.duration || "—"}
                     </td>
-                    <td className="px-4 py-3">
-                      {t.activityType || "—"}
-                    </td>
+                    <td className="px-4 py-3">{t.activityType || "—"}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Link

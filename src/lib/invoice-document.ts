@@ -54,7 +54,7 @@ function money(n: number): string {
   return `${n < 0 ? "-" : ""}${formatted} €`;
 }
 
-function paymentMethodLabel(code?: string): string {
+export function paymentMethodLabel(code?: string): string {
   if (!code) return "";
   const map: Record<string, string> = {
     CC: "Tarjeta",

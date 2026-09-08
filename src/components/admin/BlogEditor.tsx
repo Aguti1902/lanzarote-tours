@@ -11,6 +11,7 @@ import {
   withBlogLocaleTag,
 } from "@/lib/blog-locale";
 import { Field, adminInput } from "@/components/admin/Field";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 
 export function BlogEditor({ initial }: { initial?: BlogPost }) {
@@ -173,13 +174,14 @@ export function BlogEditor({ initial }: { initial?: BlogPost }) {
           />
         </Field>
       </div>
-      <Field label="URL imagen">
-        <input
-          className={adminInput}
-          value={post.image || ""}
-          onChange={(e) => setPost({ ...post, image: e.target.value })}
-        />
-      </Field>
+      <ImageUploadField
+        label="Imagen de portada"
+        value={post.image || ""}
+        folder="blog"
+        aspectRatio={16 / 9}
+        hint="Suba una foto desde el ordenador. También puede recortarla antes de guardar."
+        onChange={(url) => setPost({ ...post, image: url })}
+      />
       <Field label="Tags temáticos (separados por coma, sin idioma)">
         <input
           className={adminInput}

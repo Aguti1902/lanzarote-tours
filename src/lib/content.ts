@@ -62,9 +62,26 @@ function isTourActive(tour: Tour): boolean {
   return tour.active !== false;
 }
 
+function tourPriority(tour: Tour): number {
+  const n = Number(tour.priority);
+  return Number.isFinite(n) ? n : Number.MAX_SAFE_INTEGER;
+}
+
+/** Orden del panel: campo «Prioridad del tour» (menor = primero). */
+export function sortToursByPanelOrder(tours: Tour[]): Tour[] {
+  return tours
+    .map((tour, index) => ({ tour, index }))
+    .sort((a, b) => {
+      const byPriority = tourPriority(a.tour) - tourPriority(b.tour);
+      if (byPriority !== 0) return byPriority;
+      return a.index - b.index;
+    })
+    .map(({ tour }) => tour);
+}
+
 /** Todas las excursiones (incluye inactivas). Uso admin / API. */
 export const getTours = cache(async (): Promise<Tour[]> => {
-  return readJson<Tour[]>("tours.json");
+  return sortToursByPanelOrder(await readJson<Tour[]>("tours.json"));
 });
 
 /** Solo excursiones activas para la web pública. */
@@ -99,8 +116,28 @@ export async function upsertTour(tour: Tour): Promise<Tour> {
   const idx = tours.findIndex((t) => t.id === tour.id);
   if (idx === -1) tours.push(tour);
   else tours[idx] = tour;
-  await saveTours(tours);
+  await saveTours(sortToursByPanelOrder(tours));
   return tour;
+}
+
+/** Reordena el listado y reescribe `priority` 1..n según el panel. */
+export async function reorderTours(ids: string[]): Promise<Tour[]> {
+  const tours = await readJsonFresh<Tour[]>("tours.json");
+  const byId = new Map(tours.map((t) => [t.id, t]));
+  const ordered: Tour[] = [];
+  const seen = new Set<string>();
+  for (const id of ids) {
+    const tour = byId.get(id);
+    if (!tour || seen.has(id)) continue;
+    seen.add(id);
+    ordered.push({ ...tour, priority: ordered.length + 1 });
+  }
+  for (const tour of tours) {
+    if (seen.has(tour.id)) continue;
+    ordered.push({ ...tour, priority: ordered.length + 1 });
+  }
+  await saveTours(ordered);
+  return ordered;
 }
 
 export async function createTour(
@@ -196,7 +233,7 @@ export async function createTour(
     translations: input.translations || { en: {}, de: {} },
   };
   tours.push(tour);
-  await saveTours(tours);
+  await saveTours(sortToursByPanelOrder(tours));
   return tour;
 }
 

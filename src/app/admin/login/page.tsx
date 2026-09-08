@@ -40,7 +40,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-bg-deep via-[#1a4d73] to-ocean px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-bg-deep via-[#1c5a36] to-ocean px-4">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-xl ring-1 ring-sand-line"

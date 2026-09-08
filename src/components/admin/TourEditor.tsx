@@ -539,7 +539,7 @@ export function TourEditor({ initial }: { initial?: Tour }) {
                 <option value="yes">Sí</option>
               </select>
             </Field>
-            <Field label="Prioridad del tour">
+            <Field label="Prioridad del tour (orden en la web, 1 = primero)">
               <input
                 type="number"
                 className={adminInput}

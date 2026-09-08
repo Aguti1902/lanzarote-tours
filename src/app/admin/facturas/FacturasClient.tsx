@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { FileSpreadsheet } from "lucide-react";
 import type { Invoice, SiteSettings } from "@/types";
 import { formatPrice } from "@/lib/format";
 import {
@@ -17,6 +18,7 @@ import {
   downloadInvoicePdf,
   openInvoiceWindow,
 } from "@/lib/invoice-document";
+import { downloadInvoicesExcel } from "@/lib/invoice-excel";
 
 function money2(n: number) {
   return n.toLocaleString("es-ES", {
@@ -44,7 +46,7 @@ export function FacturasClient() {
   });
   const [selected, setSelected] = useState<Invoice | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [busy, setBusy] = useState<"pdf" | "print" | null>(null);
+  const [busy, setBusy] = useState<"pdf" | "print" | "excel" | null>(null);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -152,6 +154,25 @@ export function FacturasClient() {
     }
   }
 
+  function handleExcel() {
+    if (!filteredInvoices.length) {
+      setMessage("No hay facturas en el rango seleccionado para exportar.");
+      return;
+    }
+    setBusy("excel");
+    setMessage("");
+    try {
+      downloadInvoicesExcel(filteredInvoices, range);
+      setMessage(
+        `Excel descargado (${filteredInvoices.length} facturas, por meses). Ajuste las fechas si quiere otro periodo.`
+      );
+    } catch {
+      setMessage("No se pudo generar el Excel. Inténtelo de nuevo.");
+    } finally {
+      setBusy(null);
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -192,16 +213,27 @@ export function FacturasClient() {
         />
       </div>
 
-      <DateRangeFilter
-        value={range}
-        onChange={(next) => {
-          setRange(next);
-          setPage(1);
-        }}
-        label="Calendario de facturación"
-        hint="Filtre facturas por fecha de emisión"
-        resultCount={filteredInvoices.length}
-      />
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <DateRangeFilter
+          value={range}
+          onChange={(next) => {
+            setRange(next);
+            setPage(1);
+          }}
+          label="Calendario de facturación"
+          hint="Filtre facturas por fecha de emisión"
+          resultCount={filteredInvoices.length}
+        />
+        <button
+          type="button"
+          disabled={busy !== null || loading || filteredInvoices.length === 0}
+          onClick={handleExcel}
+          className="inline-flex items-center gap-2 rounded-md bg-ocean px-4 py-2.5 text-sm font-bold text-white hover:bg-ocean-deep disabled:opacity-50"
+        >
+          <FileSpreadsheet className="h-4 w-4" />
+          {busy === "excel" ? "Generando…" : "Descargar Excel"}
+        </button>
+      </div>
 
       {message && (
         <p className="rounded-lg bg-sky-soft px-4 py-2 text-sm text-ocean-deep ring-1 ring-sand-line">

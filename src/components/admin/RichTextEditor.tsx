@@ -7,6 +7,7 @@ import {
   AlignLeft,
   AlignRight,
   Bold,
+  ImagePlus,
   Indent,
   List,
   ListOrdered,
@@ -80,6 +81,7 @@ export function RichTextEditor({
   minHeight?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
   const lastExternal = useRef(value);
   const ready = useRef(false);
 
@@ -110,6 +112,24 @@ export function RichTextEditor({
     ref.current?.focus();
     document.execCommand(command, false, arg);
     emit();
+  }
+
+  async function insertImageFile(file: File | null) {
+    if (!file) return;
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      body.append("folder", "blog");
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body,
+      });
+      const data = await res.json();
+      if (!res.ok || !data.url) return;
+      run("insertImage", data.url);
+    } finally {
+      if (imageInputRef.current) imageInputRef.current.value = "";
+    }
   }
 
   return (
@@ -164,6 +184,20 @@ export function RichTextEditor({
             <AlignJustify className="h-4 w-4" />
           </ToolbarBtn>
           <span className="mx-1 h-4 w-px bg-sand-line" />
+          <ToolbarBtn
+            title="Insertar imagen"
+            onClick={() => imageInputRef.current?.click()}
+          >
+            <ImagePlus className="h-4 w-4" />
+          </ToolbarBtn>
+          <input
+            ref={imageInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            className="hidden"
+            onChange={(e) => insertImageFile(e.target.files?.[0] || null)}
+          />
+          <span className="mx-1 h-4 w-px bg-sand-line" />
           <label className="inline-flex items-center gap-1 text-xs text-ink-muted">
             <Type className="h-3.5 w-3.5" />
             <select
@@ -201,7 +235,7 @@ export function RichTextEditor({
           aria-multiline="true"
           contentEditable
           suppressContentEditableWarning
-          className="rich-editor max-w-none px-3 py-2.5 text-sm leading-relaxed text-ink outline-none [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5"
+          className="rich-editor max-w-none px-3 py-2.5 text-sm leading-relaxed text-ink outline-none [&_img]:my-2 [&_img]:max-h-[360px] [&_img]:max-w-full [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5"
           style={{ minHeight }}
           onInput={emit}
           onBlur={emit}
@@ -220,7 +254,8 @@ export function RichTextEditor({
         />
       </div>
       <p className="text-xs text-ink-muted">
-        Formato: negrita, listas, sangría, alineación, tamaño y color.
+        Formato: negrita, listas, sangría, alineación, tamaño, color e imágenes
+        subidas desde el ordenador.
       </p>
     </div>
   );
