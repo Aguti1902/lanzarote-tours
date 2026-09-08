@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Figtree, Fraunces, Outfit, Syne } from "next/font/google";
+import { Outfit, Syne } from "next/font/google";
 import { AppLoadingProvider } from "@/components/AppLoadingProvider";
 import { CartProvider } from "@/components/CartProvider";
 import "./globals.css";
@@ -15,20 +15,6 @@ const syne = Syne({
   variable: "--font-syne",
   subsets: ["latin"],
   weight: ["700", "800"],
-  display: "swap",
-});
-
-const figtree = Figtree({
-  variable: "--font-figtree",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-});
-
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
   display: "swap",
 });
 
@@ -59,10 +45,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="es"
-      className={`${outfit.variable} ${syne.variable} ${figtree.variable} ${fraunces.variable} h-full`}
-    >
+    <html lang="es" className={`${outfit.variable} ${syne.variable} h-full`}>
       <body className="flex min-h-full flex-col font-sans antialiased">
         <AppLoadingProvider>
           <CartProvider>{children}</CartProvider>

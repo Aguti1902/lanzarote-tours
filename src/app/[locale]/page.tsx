@@ -6,6 +6,7 @@ import {
   Building2,
   Bus,
   Globe2,
+  Info,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -76,55 +77,53 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-bg-deep text-white">
-        <div className="grid min-h-[86vh] lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="relative z-10 flex flex-col justify-center px-4 py-16 md:px-10 lg:px-16">
-            <p className="animate-fade-up section-kicker !text-[#cfe8d4]">
-              {dict.home.toursKicker}
-            </p>
-            <h1 className="animate-fade-up-delay mt-5 max-w-xl font-display text-[clamp(2.6rem,6vw,4.8rem)] leading-[0.98] text-white">
-              {settings.homeHeadline || settings.brandName}
-            </h1>
-            <p className="animate-fade-up-delay mt-5 max-w-md text-lg leading-relaxed text-white/80 md:text-xl">
-              {settings.tagline}
-            </p>
-            <div className="animate-fade-up-delay-2 mt-8 flex flex-wrap gap-3">
-              <Link href={lp("/excursiones")} className="btn-primary">
-                {dict.home.ctaOffers}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link href={lp("/excursiones-cruceros")} className="btn-ghost">
-                {dict.home.ctaCruise}
-              </Link>
-            </div>
-          </div>
-          <div className="relative min-h-[42vh] lg:min-h-full">
-            <Image
-              src={settings.homeHeroImage}
-              alt="Lanzarote"
-              fill
-              priority
-              fetchPriority="high"
-              quality={70}
-              className="hero-image object-cover"
-              sizes="(max-width:1024px) 100vw, 50vw"
-              style={{
-                objectPosition: settings.homeHeroPosition || "50% 42%",
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-bg-deep via-transparent to-transparent lg:bg-gradient-to-l lg:from-transparent lg:via-transparent lg:to-bg-deep/40" />
+      <section className="relative min-h-[88vh] overflow-hidden bg-[#2a3344] text-white md:min-h-[92vh]">
+        <Image
+          src={settings.homeHeroImage}
+          alt="Lanzarote"
+          fill
+          priority
+          fetchPriority="high"
+          quality={70}
+          className="hero-image object-cover"
+          sizes="100vw"
+          style={{
+            objectPosition: settings.homeHeroPosition || "50% 42%",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/28 via-black/8 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/32 via-transparent to-black/5" />
+
+        <div className="relative mx-auto flex min-h-[88vh] max-w-6xl flex-col justify-end px-4 pb-28 pt-28 md:min-h-[92vh] md:justify-center md:px-6 md:pb-24">
+          <p className="animate-fade-up text-hero-shadow font-display text-[clamp(2.8rem,8vw,5.5rem)] leading-[0.95] tracking-[-0.04em] text-white">
+            {settings.brandName}
+          </p>
+          <p className="animate-fade-up-delay text-hero-shadow mt-5 max-w-md text-lg text-white md:text-xl">
+            {settings.tagline}
+          </p>
+          <div className="animate-fade-up-delay-2 mt-8 flex flex-wrap gap-3">
+            <Link href={lp("/excursiones")} className="btn-primary">
+              {dict.home.ctaOffers}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href={lp("/excursiones-cruceros")} className="btn-ghost">
+              {dict.home.ctaCruise}
+            </Link>
           </div>
         </div>
 
-        <div className="overflow-hidden border-t border-white/10 bg-ocean py-2.5 text-sm text-white">
-          <div className="flex items-center gap-3 px-4">
-            <span className="sr-only">{dict.common.info}</span>
+        <div className="absolute right-0 bottom-0 left-0 border-t border-white/10 bg-bg-deep">
+          <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3.5 md:gap-4 md:px-6 md:py-4">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/30 md:h-9 md:w-9">
+              <Info className="h-4 w-4 md:h-5 md:w-5" aria-hidden />
+              <span className="sr-only">{dict.common.info}</span>
+            </span>
             <div className="min-w-0 flex-1 overflow-hidden">
               <div className="marquee-track gap-16">
                 {[0, 1].map((i) => (
                   <p
                     key={i}
-                    className="shrink-0 whitespace-nowrap text-sm font-medium tracking-wide md:text-base"
+                    className="shrink-0 whitespace-nowrap text-base font-medium text-white md:text-lg"
                   >
                     {bannerText}
                   </p>
@@ -206,7 +205,7 @@ export default async function HomePage({ params }: Props) {
           sizes="100vw"
         />
         <div className="relative z-10 mx-auto flex min-h-[380px] max-w-6xl flex-col justify-center px-4 py-16 md:px-6">
-          <p className="text-sm font-bold tracking-[0.18em] text-[#ffb59f] uppercase">
+          <p className="text-sm font-bold tracking-[0.18em] text-[#cfe8d4] uppercase">
             {dict.home.transfersKicker}
           </p>
           <h2 className="text-hero-shadow mt-3 max-w-xl font-display text-4xl font-extrabold tracking-tight md:text-5xl">
@@ -231,7 +230,7 @@ export default async function HomePage({ params }: Props) {
           sizes="100vw"
         />
         <div className="relative z-10 mx-auto flex min-h-[380px] max-w-6xl flex-col justify-center px-4 py-16 md:items-end md:px-6 md:text-right">
-          <p className="text-sm font-bold tracking-[0.18em] text-[#ffb59f] uppercase">
+          <p className="text-sm font-bold tracking-[0.18em] text-[#cfe8d4] uppercase">
             {dict.home.cruisesKicker}
           </p>
           <h2 className="text-hero-shadow mt-3 max-w-xl font-display text-4xl font-extrabold tracking-tight md:text-5xl">
@@ -247,11 +246,11 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
-      <section className="bg-gradient-to-b from-white via-[#fff8f2] to-sky-soft/60 py-20 md:py-24">
+      <section className="bg-gradient-to-b from-white via-[#f3f8f3] to-sky-soft/60 py-20 md:py-24">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 md:grid-cols-2 md:px-6">
           <div className="relative">
             <div className="absolute -inset-3 rounded-[2rem] bg-ocean/15 blur-2xl" />
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] shadow-[0_24px_60px_rgba(235,72,35,0.16)] ring-1 ring-white/60">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] shadow-[0_24px_60px_rgba(42,122,74,0.16)] ring-1 ring-white/60">
               <Image
                 src={settings.aboutImage}
                 alt="LET"

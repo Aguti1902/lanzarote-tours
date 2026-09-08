@@ -31,7 +31,7 @@ export default async function LocaleLayout({
 
   return (
     <LocaleProvider locale={locale} dict={dict}>
-      <div lang={locale} className="site-public flex min-h-full flex-1 flex-col">
+      <div lang={locale} className="flex min-h-full flex-1 flex-col">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

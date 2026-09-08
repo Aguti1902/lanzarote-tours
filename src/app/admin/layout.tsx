@@ -219,7 +219,7 @@ function AdminShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="flex min-h-screen bg-bg">
+    <div className="flex min-h-screen bg-[#f3f4f6]">
       <aside className="sticky top-0 z-30 hidden h-screen w-64 shrink-0 flex-col overflow-hidden bg-header text-white md:flex">
         <div className="shrink-0 border-b border-white/10 px-5 py-5">
           <div className="relative mb-2 h-10 w-[140px]">

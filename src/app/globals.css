@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #eef3ea;
+  --bg: #fffaf6;
   --bg-deep: #102418;
-  --surface: #fbfaf4;
+  --surface: #ffffff;
   --ink: #14241a;
   --ink-muted: #4d6154;
   --ocean: #2a7a4a;
   --ocean-deep: #1c5a36;
   --coral: #b4532a;
   --coral-hover: #93421f;
-  --sand-line: #d3ddcf;
+  --sand-line: #dce6d8;
   --rating: #c4a035;
   --success: #2a7a4a;
-  --sky-soft: #e4eee3;
-  --sky-mist: #c5d6c4;
-  --header: #102418;
+  --sky-soft: #e8f3ea;
+  --sky-mist: #d4e5d6;
+  --header: #2a7a4a;
   --sun: #c4a035;
 }
 
@@ -173,7 +173,7 @@ h3,
 }
 
 .sky-panel {
-  background: linear-gradient(165deg, #ffffff 0%, #fff4ec 100%);
+  background: linear-gradient(165deg, #ffffff 0%, #e8f3ea 100%);
 }
 
 .btn-primary {
@@ -185,14 +185,14 @@ h3,
   padding: 0.9rem 1.5rem;
   font-weight: 700;
   color: white;
-  box-shadow: 0 12px 32px rgba(235, 72, 35, 0.34);
+  box-shadow: 0 12px 32px rgba(42, 122, 74, 0.34);
   transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-primary:hover {
   background: var(--ocean-deep);
   transform: translateY(-2px);
-  box-shadow: 0 16px 38px rgba(201, 52, 18, 0.38);
+  box-shadow: 0 16px 38px rgba(16, 36, 24, 0.32);
 }
 
 .btn-ghost {
@@ -265,7 +265,7 @@ h3,
     105deg,
     rgba(20, 26, 38, 0.52) 0%,
     rgba(20, 26, 38, 0.22) 48%,
-    rgba(235, 72, 35, 0.18) 100%
+    rgba(42, 122, 74, 0.22) 100%
   );
 }
 
@@ -274,7 +274,7 @@ h3,
     255deg,
     rgba(20, 26, 38, 0.52) 0%,
     rgba(20, 26, 38, 0.22) 48%,
-    rgba(235, 72, 35, 0.18) 100%
+    rgba(42, 122, 74, 0.22) 100%
   );
 }
 
@@ -344,80 +344,5 @@ h3,
   .nav-progress-bar {
     animation: none;
   }
-}
-
-/* Web pública: tipografía editorial. El panel comparte los tokens verdes de :root. */
-.site-public {
-  --bg: #eef3ea;
-  --bg-deep: #102418;
-  --surface: #fbfaf4;
-  --ink: #14241a;
-  --ink-muted: #4d6154;
-  --ocean: #2a7a4a;
-  --ocean-deep: #1c5a36;
-  --coral: #b4532a;
-  --coral-hover: #93421f;
-  --sand-line: #d3ddcf;
-  --rating: #c4a035;
-  --success: #2a7a4a;
-  --sky-soft: #e4eee3;
-  --sky-mist: #c5d6c4;
-  --header: #102418;
-  background:
-    linear-gradient(180deg, rgba(42, 122, 74, 0.06), transparent 28%),
-    var(--bg);
-  color: var(--ink);
-  font-family: var(--font-figtree), var(--font-outfit), system-ui, sans-serif;
-}
-
-.site-public h1,
-.site-public h2,
-.site-public h3,
-.site-public .font-display,
-.site-public .section-title {
-  font-family: var(--font-fraunces), var(--font-syne), Georgia, serif;
-  font-weight: 600;
-  letter-spacing: -0.025em;
-}
-
-.site-public .section-kicker::before {
-  width: 0.7rem;
-  height: 0.7rem;
-  background: var(--ocean);
-}
-
-.site-public .btn-primary {
-  border-radius: 2px;
-  box-shadow: 4px 4px 0 rgba(16, 36, 24, 0.18);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-size: 0.78rem;
-}
-
-.site-public .btn-primary:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 6px 6px 0 rgba(16, 36, 24, 0.22);
-}
-
-.site-public .btn-ghost {
-  border-radius: 2px;
-  background: transparent;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-size: 0.78rem;
-}
-
-.site-public .band-dark::after,
-.site-public .band-dark-end::after {
-  background: linear-gradient(
-    115deg,
-    rgba(16, 36, 24, 0.88) 0%,
-    rgba(16, 36, 24, 0.5) 52%,
-    rgba(42, 122, 74, 0.35) 100%
-  );
-}
-
-.logo-plate {
-  background: var(--bg-deep);
 }
 

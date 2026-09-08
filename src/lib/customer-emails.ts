@@ -255,10 +255,10 @@ function confirmationLegalBlock(c: (typeof COPY)[LocaleKey]) {
     )
     .join("");
   return `
-    <div style="margin:28px 0 0;padding-top:20px;border-top:3px solid #eb4823">
+    <div style="margin:28px 0 0;padding-top:20px;border-top:3px solid #2a7a4a">
       <h2 style="margin:0 0 10px;font-size:18px;line-height:1.3;color:#1a1d24;font-family:Georgia,'Times New Roman',serif">${escapeHtml(c.cancelPolicyTitle)}</h2>
       <p style="margin:0 0 20px;font-size:13px;line-height:1.55;color:#4f5665">${escapeHtml(c.cancelPolicyBody)}</p>
-      <div style="margin:0;padding-top:16px;border-top:3px solid #eb4823">
+      <div style="margin:0;padding-top:16px;border-top:3px solid #2a7a4a">
         ${legalHtml}
       </div>
     </div>
@@ -280,7 +280,7 @@ function bookingSummaryRows(
   const returnTime = bookingReturnTime(booking);
 
   return [
-    emailRow(c.locator, `<span style="color:#eb4823">${escapeHtml(booking.id)}</span>`),
+    emailRow(c.locator, `<span style="color:#2a7a4a">${escapeHtml(booking.id)}</span>`),
     emailRow(c.service, escapeHtml(booking.tourTitle)),
     emailRow(c.date, escapeHtml(formatDate(booking.date, locale))),
     serviceTime ? emailRow(c.time, escapeHtml(serviceTime)) : "",
@@ -504,7 +504,7 @@ export async function notifyOpsCancellation(
   const rowsHtml = [
     emailRow(
       "Localizador",
-      `<span style="color:#eb4823">${escapeHtml(booking.id)}</span>`
+      `<span style="color:#2a7a4a">${escapeHtml(booking.id)}</span>`
     ),
     emailRow("Servicio", escapeHtml(booking.tourTitle)),
     emailRow("Fecha", escapeHtml(booking.date)),

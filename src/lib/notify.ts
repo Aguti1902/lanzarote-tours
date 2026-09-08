@@ -37,7 +37,7 @@ export async function notifyContactMessage(input: {
     emailRow("Nombre", escapeHtml(input.name)),
     emailRow(
       "Email",
-      `<a href="mailto:${escapeHtml(input.email)}" style="color:#eb4823;text-decoration:none">${escapeHtml(input.email)}</a>`
+      `<a href="mailto:${escapeHtml(input.email)}" style="color:#2a7a4a;text-decoration:none">${escapeHtml(input.email)}</a>`
     ),
     emailRow("Teléfono", escapeHtml(input.phone || "—")),
   ]
@@ -139,7 +139,7 @@ export async function notifyNewBooking(
   const rowsHtml = [
     emailRow(
       "Localizador",
-      `<span style="color:#eb4823">${escapeHtml(booking.id)}</span>`
+      `<span style="color:#2a7a4a">${escapeHtml(booking.id)}</span>`
     ),
     emailRow("Estado", escapeHtml(booking.status)),
     emailRow("Servicio", escapeHtml(booking.tourTitle)),
@@ -160,7 +160,7 @@ export async function notifyNewBooking(
     emailRow("Cliente", escapeHtml(booking.customer.name)),
     emailRow(
       "Email",
-      `<a href="mailto:${escapeHtml(booking.customer.email)}" style="color:#eb4823;text-decoration:none">${escapeHtml(booking.customer.email)}</a>`
+      `<a href="mailto:${escapeHtml(booking.customer.email)}" style="color:#2a7a4a;text-decoration:none">${escapeHtml(booking.customer.email)}</a>`
     ),
     emailRow("Teléfono", escapeHtml(booking.customer.phone || "—")),
     booking.customer.hotel

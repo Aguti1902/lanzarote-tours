@@ -11,9 +11,9 @@ export function emailRow(label: string, value: string) {
 }
 
 export function emailCta(href: string, label: string, primary = false) {
-  const bg = primary ? "#eb4823" : "#ffffff";
-  const color = primary ? "#ffffff" : "#eb4823";
-  const border = "#eb4823";
+  const bg = primary ? "#2a7a4a" : "#ffffff";
+  const color = primary ? "#ffffff" : "#2a7a4a";
+  const border = "#2a7a4a";
   return `<a href="${escapeHtml(href)}" style="display:inline-block;margin:4px 6px 4px 0;padding:12px 18px;background:${bg};color:${color};border:1px solid ${border};text-decoration:none;font-size:14px;font-weight:700">${escapeHtml(label)}</a>`;
 }
 

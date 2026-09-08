@@ -32,7 +32,7 @@ export function ReviewsSection({
       className={
         compact
           ? "mt-12 border-t border-sand-line pt-10"
-          : "border-y border-sand-line bg-[linear-gradient(180deg,#fff7f2_0%,#ffffff_55%)] py-16 md:py-20"
+          : "border-y border-sand-line bg-[linear-gradient(180deg,#f3f8f3_0%,#ffffff_55%)] py-16 md:py-20"
       }
     >
       <div className={compact ? "" : "mx-auto max-w-6xl px-4 md:px-6"}>

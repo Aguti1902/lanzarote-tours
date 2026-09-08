@@ -42,30 +42,23 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b border-sand-line bg-surface/95 text-ink backdrop-blur-xl transition-shadow duration-300 ${
-        scrolled ? "shadow-[0_12px_32px_rgba(16,36,24,0.08)]" : ""
+      className={`sticky top-0 z-50 text-white transition-all duration-300 ${
+        scrolled
+          ? "bg-ocean/95 shadow-[0_10px_40px_rgba(16,36,24,0.28)] backdrop-blur-xl"
+          : "bg-ocean"
       }`}
     >
-      <div className="hidden border-b border-sand-line bg-bg-deep text-white sm:block">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-1.5 text-[11px] font-semibold tracking-[0.14em] uppercase md:px-6">
-          <p className="text-white/70">Lanzarote · grupos pequeños · solo en español</p>
-          <a href="tel:+34646080585" className="text-white/85 hover:text-white">
-            +34 646 08 05 85
-          </a>
-        </div>
-      </div>
-
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
         <Link
           href={href("/")}
-          className="logo-plate relative block h-12 w-[158px] shrink-0 px-2 py-1.5 transition hover:opacity-90 md:h-[52px] md:w-[176px]"
+          className="relative block h-11 w-[150px] shrink-0 transition hover:opacity-90 md:h-12 md:w-[175px]"
         >
           <Image
             src="/images/brand/logo.png"
             alt="Lanzarote Experience Tours"
             fill
-            className="object-contain object-left p-1.5"
-            sizes="176px"
+            className="object-contain object-left"
+            sizes="175px"
           />
         </Link>
 
@@ -87,10 +80,10 @@ export function Header() {
                 key={link.path}
                 href={link.href}
                 prefetch={link.path === "/excursiones-cruceros" ? false : undefined}
-                className={`px-3 py-2 text-[13px] font-semibold tracking-wide transition ${
+                className={`rounded-full px-3.5 py-2 text-[13px] font-semibold tracking-wide uppercase transition ${
                   active
-                    ? "bg-ocean text-white"
-                    : "text-ink/75 hover:bg-sky-soft hover:text-ink"
+                    ? "bg-white text-ocean"
+                    : "text-white/90 hover:bg-white/15 hover:text-white"
                 }`}
               >
                 {link.label}
@@ -99,13 +92,13 @@ export function Header() {
           })}
         </nav>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <div className="hidden sm:block">
-            <LanguageSwitcher tone="light" />
+            <LanguageSwitcher />
           </div>
           <Link
             href={href("/gestionar-reserva")}
-            className="p-2.5 text-ink/80 transition hover:bg-sky-soft hover:text-ink"
+            className="rounded-full p-2.5 text-white/95 transition hover:bg-white/15"
             title={dict.nav.manageBooking}
             aria-label={dict.nav.manageBooking}
           >
@@ -113,20 +106,20 @@ export function Header() {
           </Link>
           <Link
             href={href("/carrito")}
-            className="relative p-2.5 text-ink/80 transition hover:bg-sky-soft hover:text-ink"
+            className="relative rounded-full p-2.5 text-white/95 transition hover:bg-white/15"
             title={dict.nav.cart}
             aria-label={dict.nav.cart}
           >
             <ShoppingCart className="h-5 w-5" />
             {count > 0 && (
-              <span className="absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center bg-ocean px-1 text-[10px] font-bold text-white">
+              <span className="absolute top-0.5 right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white px-1 text-[10px] font-bold text-ocean">
                 {count}
               </span>
             )}
           </Link>
           <button
             type="button"
-            className="p-2.5 text-ink lg:hidden"
+            className="rounded-full p-2.5 text-white lg:hidden"
             aria-label={open ? dict.common.close : dict.common.menu}
             onClick={() => setOpen((v) => !v)}
           >
@@ -136,17 +129,17 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="border-t border-sand-line bg-surface px-4 py-4 lg:hidden">
+        <div className="border-t border-white/20 bg-ocean-deep px-4 py-4 lg:hidden">
           <div className="mb-3">
-            <LanguageSwitcher tone="light" />
+            <LanguageSwitcher />
           </div>
-          <nav className="flex flex-col">
+          <nav className="flex flex-col gap-1">
             {links.map((link) => (
               <Link
                 key={link.path}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="border-b border-sand-line px-1 py-3 text-base font-semibold text-ink"
+                className="rounded-lg px-3 py-3 text-base font-semibold uppercase tracking-wide text-white hover:bg-white/10"
               >
                 {link.label}
               </Link>

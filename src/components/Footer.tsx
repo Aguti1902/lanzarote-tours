@@ -14,7 +14,7 @@ export function Footer() {
 
   return (
     <footer className="mt-auto bg-bg-deep text-white">
-      <div className="h-1.5 bg-ocean" />
+      <div className="h-1 bg-gradient-to-r from-ocean via-[#5aa872] to-ocean" />
       <div className="mx-auto max-w-6xl px-4 py-14 md:px-6">
         <div className="grid gap-12 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>

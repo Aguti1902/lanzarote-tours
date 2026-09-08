@@ -15,7 +15,7 @@ export function TourCard({ tour }: { tour: Tour }) {
   return (
     <Link
       href={href(`/excursiones/${tour.slug}`)}
-      className="card-lift group flex flex-col overflow-hidden bg-surface shadow-[4px_4px_0_rgba(16,36,24,0.08)] ring-1 ring-sand-line"
+      className="card-lift group flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_10px_36px_rgba(23,28,38,0.06)] ring-1 ring-sand-line"
     >
       <div className="relative aspect-[5/4] overflow-hidden">
         <Image
@@ -28,7 +28,7 @@ export function TourCard({ tour }: { tour: Tour }) {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/5 to-transparent" />
         {tour.groupSize && (
-          <span className="absolute top-3 left-3 bg-surface px-3 py-1 text-[11px] font-bold tracking-wide text-ocean-deep uppercase">
+          <span className="absolute top-3 left-3 rounded-full bg-white/95 px-3 py-1 text-[11px] font-bold tracking-wide text-ocean-deep uppercase shadow-sm">
             {groupSizeLabel(tour.groupSize, locale)}
           </span>
         )}
@@ -36,7 +36,7 @@ export function TourCard({ tour }: { tour: Tour }) {
           <h3 className="font-display text-xl font-extrabold tracking-tight text-white drop-shadow md:text-2xl">
             {tour.shortTitle}
           </h3>
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center bg-ocean text-white transition group-hover:bg-bg-deep">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ocean text-white transition group-hover:bg-white group-hover:text-ocean">
             <ArrowUpRight className="h-4 w-4" />
           </span>
         </div>

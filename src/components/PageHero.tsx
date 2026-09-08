@@ -38,23 +38,21 @@ export function PageHero({
       <div className="absolute inset-0 bg-gradient-to-r from-black/28 via-black/8 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/5" />
       <div
-        className={`relative mx-auto flex max-w-6xl items-end px-4 md:px-6 ${HERO_PAD}`}
+        className={`relative mx-auto flex max-w-6xl flex-col justify-end px-4 md:px-6 ${HERO_PAD}`}
       >
-        <div className="max-w-3xl border-l-4 border-ocean bg-surface/95 p-6 text-ink shadow-[8px_8px_0_rgba(16,36,24,0.18)] md:p-8">
         {eyebrow && (
-          <p className="animate-fade-up mb-3 text-[11px] font-bold tracking-[0.22em] text-ocean-deep uppercase">
+          <p className="animate-fade-up mb-3 text-xs font-bold tracking-[0.18em] text-[#cfe8d4] uppercase">
             {eyebrow}
           </p>
         )}
-        <h1 className="animate-fade-up-delay max-w-3xl font-display text-4xl font-semibold tracking-tight md:text-5xl">
+        <h1 className="animate-fade-up-delay text-hero-shadow max-w-3xl font-display text-4xl font-extrabold tracking-tight md:text-6xl">
           {title}
         </h1>
         {subtitle && (
-          <p className="animate-fade-up-delay-2 mt-3 max-w-2xl text-base leading-relaxed text-ink-muted md:text-lg">
+          <p className="animate-fade-up-delay-2 text-hero-shadow mt-4 max-w-2xl text-base leading-relaxed text-white md:text-lg">
             {subtitle}
           </p>
         )}
-        </div>
       </div>
     </section>
   );

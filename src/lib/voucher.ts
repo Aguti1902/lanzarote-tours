@@ -234,7 +234,7 @@ export function buildVoucherHtml(
   :root {
     --ink: #1a1d24;
     --muted: #5a6170;
-    --ocean: #eb4823;
+    --ocean: #2a7a4a;
     --line: #e5e0db;
     --soft: #f6f4f2;
     --header: #2b3345;
@@ -258,7 +258,7 @@ export function buildVoucherHtml(
   }
   .topbar {
     height: 6px;
-    background: linear-gradient(90deg, var(--ocean), #ff7a4d, var(--ocean));
+    background: linear-gradient(90deg, var(--ocean), #5aa872, var(--ocean));
   }
   .head {
     display: flex;
