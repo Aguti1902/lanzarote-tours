@@ -31,11 +31,9 @@ function countLegacy(list: Booking[]): number {
   return list.filter((b) => isLegacyLocator(b.id)).length;
 }
 
-let cmsSyncInFlight: Promise<void> | null = null;
-
 /**
- * Prefer Storage as source of truth once it has bookings.
- * Only seed from the deploy JSON when remote is empty (first migration).
+ * Con Supabase, Storage es la fuente de verdad (incluido un listado vacío).
+ * No se vuelven a subir las reservas del bundle del deploy.
  */
 async function resolveBookingsList(): Promise<Booking[]> {
   const local = await readLocalCmsJson<Booking[]>("bookings.json");
@@ -44,33 +42,13 @@ async function resolveBookingsList(): Promise<Booking[]> {
     return local;
   }
 
-  let remote: Booking[] = [];
   try {
-    remote = await readCmsJson<Booking[]>("bookings.json");
-    if (!Array.isArray(remote)) remote = [];
+    const remote = await readCmsJson<Booking[]>("bookings.json");
+    return Array.isArray(remote) ? remote : [];
   } catch (error) {
     warnSupabaseFallback("bookings-resolve", error as Error);
     return local;
   }
-
-  if (remote.length > 0) {
-    return remote;
-  }
-
-  if (local.length > 0 && !cmsSyncInFlight) {
-    cmsSyncInFlight = writeCmsJson("bookings.json", local)
-      .then(() => {
-        console.info(
-          `[bookings] Semilla inicial: ${local.length} reservas del deploy → Supabase Storage`
-        );
-      })
-      .catch((error) => {
-        cmsSyncInFlight = null;
-        warnSupabaseFallback("bookings-cms-sync", error as Error);
-      });
-  }
-
-  return local;
 }
 
 export async function getBookings(): Promise<Booking[]> {

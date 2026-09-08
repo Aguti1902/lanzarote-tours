@@ -11,6 +11,22 @@ import { LEGACY_PATH_REDIRECTS } from "./src/lib/legacy-redirects";
  */
 const NEXT_STATIC_REDIRECT_SKIP = new Set(["/en/traslados", "/de/traslados"]);
 
+function supabaseImageHosts() {
+  const hosts = new Set<string>(["wdnviethdarcmneghhqv.supabase.co"]);
+  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (raw) {
+    try {
+      hosts.add(new URL(raw).hostname);
+    } catch {
+      /* ignore invalid URL */
+    }
+  }
+  return [...hosts].map((hostname) => ({
+    protocol: "https" as const,
+    hostname,
+  }));
+}
+
 const legacyRedirects = Object.entries(LEGACY_PATH_REDIRECTS).flatMap(
   ([source, destination]) => {
     if (source === destination) return [];
@@ -71,10 +87,7 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "img.holidu.com",
       },
-      {
-        protocol: "https",
-        hostname: "wdnviethdarcmneghhqv.supabase.co",
-      },
+      ...supabaseImageHosts(),
       {
         protocol: "https",
         hostname: "www.lanzaroteexperiencetours.com",

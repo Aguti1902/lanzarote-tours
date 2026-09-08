@@ -71,7 +71,22 @@ export function cmsCacheTag(file: string): string {
 
 function isMissingStorageObject(status: number, message: string): boolean {
   if (status === 404) return true;
-  return /not found|object not found|no such file/i.test(message);
+  return /not found|object not found|no such file|nosuchkey/i.test(message);
+}
+
+function isMissingCmsError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const rec = error as {
+    message?: string;
+    status?: number;
+    statusCode?: string | number;
+    code?: string;
+  };
+  const status = Number(rec.statusCode ?? rec.status ?? 0);
+  const message = String(rec.message ?? "");
+  const code = String(rec.code ?? "");
+  if (/^NoSuchKey$/i.test(code)) return true;
+  return isMissingStorageObject(status, message);
 }
 
 async function fetchStorageJson<T>(
@@ -84,7 +99,10 @@ async function fetchStorageJson<T>(
     .createSignedUrl(file, 120, { download: true });
   if (signError || !signed?.signedUrl) {
     const message = signError?.message || "No hay URL firmada";
-    if (options?.allowMissing && isMissingStorageObject(0, message)) {
+    if (
+      options?.allowMissing &&
+      (isMissingCmsError(signError) || isMissingStorageObject(0, message))
+    ) {
       return null;
     }
     throw signError || new Error(`No hay URL firmada para ${file}`);
@@ -124,6 +142,11 @@ async function readCmsJsonUncached<T>(
     }
     return data;
   } catch (error) {
+    const missing = isMissingCmsError(error);
+    if (missing && allowLocalFallback) {
+      warnSupabaseFallback(`cms-read:${file}`, error as Error);
+      return readLocalJson<T>(file);
+    }
     if (!allowLocalFallback || isProtectedLiveCmsFile(file)) {
       throw error instanceof Error
         ? error
