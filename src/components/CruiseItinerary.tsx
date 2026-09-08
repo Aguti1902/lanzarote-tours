@@ -1,0 +1,317 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { MapPin, Ship, Waves } from "lucide-react";
+import type { CruiseSailing, CruiseShoreTour } from "@/types";
+import { formatDateShort, formatPrice } from "@/lib/format";
+import {
+  shoreTourDurationLabel,
+  shoreTourPublicHighlights,
+} from "@/lib/shore-tour-display";
+import { resolveShoreToursForStop } from "@/lib/cruise-shore-match";
+import { useLocale } from "@/components/LocaleProvider";
+import { CruiseTourBooking } from "@/components/CruiseTourBooking";
+import { MeetingPointModal } from "@/components/MeetingPointModal";
+import { RichContent } from "@/components/RichContent";
+
+type Props = {
+  sailing: CruiseSailing;
+  tours: CruiseShoreTour[];
+};
+
+export function CruiseItinerary({ sailing, tours }: Props) {
+  const { dict, href, locale } = useLocale();
+  const [openTour, setOpenTour] = useState<string | null>(null);
+  const [bookingTour, setBookingTour] = useState<string | null>(null);
+  const [meetingTourId, setMeetingTourId] = useState<string | null>(null);
+  const meetingTour = meetingTourId
+    ? tours.find((t) => t.id === meetingTourId)
+    : undefined;
+  const meetingImages = meetingTour?.meetingPointImages?.filter(Boolean) || [];
+
+  const nightsLabel =
+    sailing.nights == null
+      ? ""
+      : `${sailing.nights} ${
+          sailing.nights === 1
+            ? dict.cruises.nightSingular
+            : dict.cruises.nightPlural
+        }`;
+
+  const departure = formatDateShort(sailing.departureDate);
+  const title =
+    locale === "es"
+      ? `Excursiones ${sailing.shipName} (${sailing.companyName}) con salida el ${departure}${nightsLabel ? ` (${nightsLabel})` : ""}`
+      : locale === "de"
+        ? `Ausflüge ${sailing.shipName} (${sailing.companyName}) Abfahrt ${departure}${nightsLabel ? ` (${nightsLabel})` : ""}`
+        : `Excursions for ${sailing.shipName} (${sailing.companyName}) departing ${departure}${nightsLabel ? ` (${nightsLabel})` : ""}`;
+
+  return (
+    <div className="space-y-10">
+      <header className="space-y-3">
+        <nav className="flex flex-wrap items-center gap-1.5 text-xs text-ink-muted sm:text-sm">
+          <Link href={href("/")} className="hover:text-ocean">
+            LET
+          </Link>
+          <span>/</span>
+          <Link href={href("/excursiones-cruceros")} className="hover:text-ocean">
+            {dict.cruises.breadcrumbCruises}
+          </Link>
+          <span>/</span>
+          <Link
+            href={href(`/excursiones-cruceros/${sailing.companySlug}`)}
+            className="hover:text-ocean"
+          >
+            {sailing.companyName}
+          </Link>
+          <span>/</span>
+          <span className="font-medium text-ink">{sailing.shipName}</span>
+          <span>/</span>
+          <span>
+            {departure}
+            {nightsLabel ? ` · ${nightsLabel}` : ""}
+          </span>
+        </nav>
+        <h1 className="font-display text-3xl font-extrabold tracking-tight md:text-4xl">
+          {title}
+        </h1>
+      </header>
+
+      <section>
+        <h2 className="text-2xl font-bold md:text-3xl">
+          {dict.cruises.itineraryTitle}
+        </h2>
+        <ol className="relative mt-8 space-y-5 before:absolute before:top-3 before:bottom-3 before:left-[18px] before:w-px before:bg-sand-line">
+          {sailing.stops.map((stop) => {
+            const stopTours = resolveShoreToursForStop(
+              stop.tourIds,
+              stop.port,
+              tours
+            );
+
+            return (
+              <li key={`${stop.day}-${stop.date}-${stop.portKey}`}>
+                <article className="relative rounded-2xl bg-white p-4 shadow-[0_8px_28px_rgba(23,28,38,0.05)] ring-1 ring-sand-line sm:p-5">
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <span className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full bg-ocean text-sm font-bold text-white shadow-[0_6px_16px_rgba(42,122,74,0.35)]">
+                      {stop.day}
+                    </span>
+                    {stop.date && (
+                      <span className="rounded-full bg-ocean px-3 py-1 text-xs font-semibold text-white sm:text-sm">
+                        {stop.isSeaDay
+                          ? `${dict.cruises.seaDay}: ${formatDateShort(stop.date)}`
+                          : `${dict.cruises.callDay}: ${formatDateShort(stop.date)}`}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-start gap-2">
+                    {stop.isSeaDay ? (
+                      <Waves className="mt-1 h-5 w-5 shrink-0 text-ocean" />
+                    ) : (
+                      <Ship className="mt-1 h-5 w-5 shrink-0 text-ocean" />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-xl font-bold text-ink">
+                        {stop.isSeaDay ? dict.cruises.atSea : stop.port}
+                      </h3>
+                      {stop.time ? (
+                        <p className="mt-1 text-sm text-ink-muted">{stop.time}</p>
+                      ) : null}
+
+                      {stop.isSeaDay ? null : stopTours.length > 0 ? (
+                        <div className="mt-5 space-y-5">
+                          {stopTours.map((tour) => {
+                            const expanded = openTour === tour.id;
+                            const bookingOpen = bookingTour === tour.id;
+                            const detailHref = href(
+                              `/excursiones-cruceros/tour/${tour.id}?sailing=${encodeURIComponent(sailing.id)}&company=${encodeURIComponent(sailing.companySlug)}&ship=${encodeURIComponent(sailing.shipSlug)}&date=${encodeURIComponent(stop.date || "")}`
+                            );
+                            return (
+                              <div
+                                key={tour.id}
+                                className="overflow-hidden rounded-xl ring-1 ring-sand-line"
+                              >
+                                <div className="relative">
+                                  <div className="relative aspect-[16/9] bg-sky-soft sm:aspect-[21/9]">
+                                    {tour.image ? (
+                                      <Image
+                                        src={tour.image}
+                                        alt={tour.title}
+                                        fill
+                                        className="object-cover"
+                                        sizes="(max-width: 768px) 100vw, 720px"
+                                      />
+                                    ) : null}
+                                  </div>
+                                  {tour.priceAdult != null && (
+                                    <span className="absolute top-3 right-3 rounded bg-white px-2.5 py-1 text-sm font-bold text-ocean shadow">
+                                      {formatPrice(
+                                        Number(tour.privatePrice) > 0
+                                          ? Number(tour.privatePrice)
+                                          : tour.priceAdult
+                                      )}
+                                    </span>
+                                  )}
+                                </div>
+
+                                <div className="space-y-4 p-4 sm:p-5">
+                                  <h4 className="text-lg font-bold leading-snug">
+                                    {tour.title}
+                                  </h4>
+                                  {tour.summary && (
+                                    <p className="text-sm leading-relaxed text-ink-muted">
+                                      {tour.summary}
+                                    </p>
+                                  )}
+                                  <ul className="space-y-1.5 text-sm text-ink-muted">
+                                    {(() => {
+                                      const duration = shoreTourDurationLabel(
+                                        tour,
+                                        dict.cruises.durationHours
+                                      );
+                                      const bullets = shoreTourPublicHighlights(
+                                        tour,
+                                        {
+                                          smallGroupMax:
+                                            dict.cruises.smallGroupMax,
+                                        }
+                                      );
+                                      return (
+                                        <>
+                                          {duration ? (
+                                            <li>
+                                              <span className="font-semibold text-ink">
+                                                {dict.cruises.durationLabel}:{" "}
+                                              </span>
+                                              {duration}
+                                            </li>
+                                          ) : null}
+                                          {bullets.map((item) => (
+                                            <li key={item}>• {item}</li>
+                                          ))}
+                                          {tour.places.length > 0 && (
+                                            <li>
+                                              <span className="font-semibold text-ink">
+                                                {dict.cruises.placesToVisit}:{" "}
+                                              </span>
+                                              {tour.places.join(", ")}
+                                            </li>
+                                          )}
+                                        </>
+                                      );
+                                    })()}
+                                  </ul>
+
+                                  {expanded && (
+                                    <div className="space-y-3 rounded-lg bg-sky-soft/80 p-3 text-sm leading-relaxed text-ink-muted">
+                                      {tour.description && (
+                                        <div className="text-sm">
+                                          <RichContent text={tour.description} />
+                                        </div>
+                                      )}
+                                      {tour.included && tour.included.length > 0 && (
+                                        <div>
+                                          <p className="font-semibold text-ink">
+                                            {dict.cruises.included}
+                                          </p>
+                                          <ul className="mt-1 space-y-0.5">
+                                            {tour.included.map((item) => (
+                                              <li key={item}>• {item}</li>
+                                            ))}
+                                          </ul>
+                                        </div>
+                                      )}
+                                      {tour.notIncluded &&
+                                        tour.notIncluded.length > 0 && (
+                                          <div>
+                                            <p className="font-semibold text-ink">
+                                              {dict.cruises.notIncluded}
+                                            </p>
+                                            <ul className="mt-1 space-y-0.5">
+                                              {tour.notIncluded.map((item) => (
+                                                <li key={item}>• {item}</li>
+                                              ))}
+                                            </ul>
+                                          </div>
+                                        )}
+                                      <Link
+                                        href={detailHref}
+                                        className="inline-block font-bold text-ocean hover:underline"
+                                      >
+                                        {dict.cruises.moreInfo} →
+                                      </Link>
+                                    </div>
+                                  )}
+
+                                  <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        setOpenTour(expanded ? null : tour.id)
+                                      }
+                                      className="inline-flex items-center justify-center rounded-full border border-ink/20 px-4 py-2.5 text-sm font-bold uppercase tracking-wide transition hover:border-ocean hover:text-ocean"
+                                    >
+                                      {dict.cruises.moreInfo}
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setMeetingTourId(tour.id)}
+                                      className="inline-flex items-center justify-center gap-1.5 rounded-full border border-ocean bg-ocean/5 px-4 py-2.5 text-sm font-bold uppercase tracking-wide text-ocean transition hover:bg-ocean hover:text-white"
+                                    >
+                                      <MapPin className="h-4 w-4" />
+                                      {dict.cruises.meetingPoint}
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        setBookingTour(
+                                          bookingOpen ? null : tour.id
+                                        )
+                                      }
+                                      className="btn-primary justify-center rounded-full px-5 py-2.5 text-sm uppercase tracking-wide"
+                                    >
+                                      {dict.cruises.bookTour}
+                                    </button>
+                                  </div>
+
+                                  {bookingOpen && stop.date && (
+                                    <CruiseTourBooking
+                                      tour={tour}
+                                      sailing={sailing}
+                                      callDate={stop.date}
+                                      portName={stop.port}
+                                      onClose={() => setBookingTour(null)}
+                                    />
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <p className="mt-3 text-sm leading-relaxed text-ink-muted italic">
+                          {dict.cruises.noToursYet.replace("{port}", stop.port)}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+
+      <MeetingPointModal
+        open={Boolean(meetingTourId)}
+        title={dict.cruises.meetingPointTitle}
+        body={dict.cruises.meetingPointBody}
+        images={meetingImages}
+        onClose={() => setMeetingTourId(null)}
+      />
+    </div>
+  );
+}

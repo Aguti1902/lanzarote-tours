@@ -1,0 +1,394 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { CreditCard, Percent, ShoppingCart } from "lucide-react";
+import type { CruiseSailing, CruiseShoreTour, PaymentMethod } from "@/types";
+import { formatPrice } from "@/lib/format";
+import { isServiceDateWithinLeadTime } from "@/lib/booking-lead-time";
+import { expectedOnlineCharge, splitPaymentAmounts } from "@/lib/payments";
+import {
+  shoreTourBookingTotal,
+  shoreTourIsFlatPrice,
+  shoreTourMaxPassengers,
+  shoreTourUnitPrice,
+} from "@/lib/shore-tour-display";
+import { useCart } from "@/components/CartProvider";
+import { useLocale } from "@/components/LocaleProvider";
+import { ShoreMeetingPointButton } from "@/components/ShoreMeetingPointButton";
+
+const inputClass =
+  "w-full rounded border border-sand-line bg-white px-3 py-2.5 text-sm outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20";
+
+type Props = {
+  tour: CruiseShoreTour;
+  sailing: CruiseSailing;
+  callDate: string;
+  portName: string;
+  onClose?: () => void;
+};
+
+export function CruiseTourBooking({
+  tour,
+  sailing,
+  callDate,
+  portName,
+  onClose,
+}: Props) {
+  const router = useRouter();
+  const { addItem } = useCart();
+  const { dict, href } = useLocale();
+  const isFlat = shoreTourIsFlatPrice(tour);
+  const price = shoreTourUnitPrice(tour);
+  const max = shoreTourMaxPassengers(tour);
+  const dateBlocked = useMemo(
+    () =>
+      Boolean(
+        callDate &&
+          (tour.blockedDates || []).some((b) => b.date === callDate)
+      ),
+    [callDate, tour.blockedDates]
+  );
+  const tooSoon = useMemo(
+    () => Boolean(callDate) && !isServiceDateWithinLeadTime(callDate),
+    [callDate]
+  );
+  const cannotBook = dateBlocked || tooSoon;
+
+  const [passengers, setPassengers] = useState(Math.min(2, max));
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [cartMsg, setCartMsg] = useState("");
+  const [mode, setMode] = useState<"quick" | "checkout">("quick");
+
+  const total = useMemo(
+    () => shoreTourBookingTotal(tour, passengers),
+    [passengers, tour]
+  );
+  const split = useMemo(() => {
+    const base = splitPaymentAmounts(total, paymentMethod);
+    return {
+      ...base,
+      amountDueOnline: expectedOnlineCharge(total, paymentMethod),
+    };
+  }, [total, paymentMethod]);
+
+  const methods = (
+    [
+      {
+        id: "card" as const,
+        label: dict.booking.card,
+        icon: <CreditCard className="h-4 w-4" />,
+        show: tour.allowCard !== false,
+      },
+      {
+        id: "deposit_20" as const,
+        label: dict.booking.deposit,
+        icon: <Percent className="h-4 w-4" />,
+        show: tour.allowCard !== false,
+      },
+      // Cruceros: no "pago el día" — evita facturas sin cobro real.
+    ] as const
+  ).filter((m) => m.show);
+
+  const notes = [
+    `Crucero: ${sailing.shipName} (${sailing.companyName})`,
+    `Salida crucero: ${sailing.departureDate}`,
+    `Escala: ${portName} · ${callDate}`,
+    sailing.id ? `Ref. salida: ${sailing.id}` : "",
+    isFlat
+      ? `Precio grupo: ${formatPrice(price)} (máx. ${max} personas)`
+      : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+  function handleAddToCart() {
+    setError("");
+    setCartMsg("");
+    if (tooSoon) {
+      setError(dict.booking.minLeadTime);
+      return;
+    }
+    if (dateBlocked) {
+      setError(dict.booking.dateUnavailable);
+      return;
+    }
+    if (!callDate || passengers < 1) {
+      setError(dict.cruises.selectPassengers);
+      return;
+    }
+    if (passengers > max) {
+      setError(dict.cruises.selectPassengers);
+      return;
+    }
+    addItem({
+      tourId: tour.id,
+      slug: `cruise/${tour.id}`,
+      title: tour.title,
+      image: tour.image,
+      date: callDate,
+      adults: passengers,
+      children: 0,
+      priceAdult: price,
+      priceChild: 0,
+      pricingMode: isFlat ? "flat" : "per_person",
+      cruiseShip: sailing.shipName,
+      cruiseCompany: sailing.companyName,
+      sailingId: sailing.id,
+      portName,
+      notes,
+      source: "cruise",
+    });
+    setCartMsg(dict.booking.added);
+  }
+
+  async function handleBookNow(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    if (tooSoon) {
+      setError(dict.booking.minLeadTime);
+      return;
+    }
+    if (dateBlocked) {
+      setError(dict.booking.dateUnavailable);
+      return;
+    }
+    if (!name || !email || !phone) {
+      setError(dict.booking.fillRequired);
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "tour",
+          tourId: tour.id,
+          tourTitle: tour.title,
+          date: callDate,
+          adults: passengers,
+          children: 0,
+          totalPrice: total,
+          paymentMethod,
+          source: "cruise",
+          customer: {
+            name,
+            email,
+            phone,
+            cruiseShip: sailing.shipName,
+            notes,
+          },
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || dict.booking.bookError);
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+        return;
+      }
+      router.push(`${href("/reserva/confirmacion")}?id=${data.booking.id}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : dict.booking.bookError);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="rounded-xl bg-sky-soft/70 p-4 ring-1 ring-sand-line sm:p-5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-sm font-bold text-ink">
+            {dict.cruises.bookTourTitle}
+          </p>
+          <p className="mt-1 text-xs text-ink-muted">
+            {sailing.shipName} · {callDate} · {portName}
+          </p>
+        </div>
+        {onClose && (
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-sm font-semibold text-ink-muted hover:text-ocean"
+          >
+            {dict.common.close}
+          </button>
+        )}
+      </div>
+
+      <div className="mt-4">
+        <ShoreMeetingPointButton
+          images={tour.meetingPointImages}
+          title={dict.cruises.meetingPointTitle}
+          body={dict.cruises.meetingPointBody}
+          buttonLabel={dict.cruises.meetingPoint}
+          className="inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-ocean bg-white px-4 py-2.5 text-sm font-bold uppercase tracking-wide text-ocean transition hover:bg-ocean hover:text-white"
+        />
+      </div>
+
+      {tooSoon ? (
+        <p className="mt-4 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-800 ring-1 ring-rose-200">
+          {dict.booking.minLeadTime}
+        </p>
+      ) : dateBlocked ? (
+        <p className="mt-4 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-800 ring-1 ring-rose-200">
+          Esta fecha no está disponible para la excursión.
+        </p>
+      ) : null}
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
+        <label className="text-sm">
+          <span className="mb-1 block text-ink-muted">
+            {dict.cruises.selectPassengers}
+          </span>
+          <select
+            className={inputClass}
+            value={passengers}
+            onChange={(e) => setPassengers(Number(e.target.value))}
+          >
+            {Array.from({ length: max }, (_, i) => i + 1).map((n) => (
+              <option key={n} value={n}>
+                {n}{" "}
+                {n === 1
+                  ? dict.cruises.passengerSingular
+                  : dict.cruises.passengerPlural}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="rounded-lg bg-white px-4 py-3 text-right ring-1 ring-sand-line">
+          <p className="text-xs text-ink-muted">{dict.cruises.bookingTotal}</p>
+          <p className="font-display text-2xl font-extrabold text-ocean">
+            {formatPrice(total)}
+          </p>
+          <p className="text-[11px] text-ink-muted">
+            {isFlat
+              ? `máx. ${max}`
+              : `${formatPrice(price)} / ${dict.cruises.perPerson}`}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          disabled={cannotBook}
+          className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-ink/15 bg-white px-4 py-3 text-sm font-bold uppercase tracking-wide transition hover:border-ocean hover:text-ocean disabled:opacity-50"
+        >
+          <ShoppingCart className="h-4 w-4" />
+          {dict.booking.addToCart}
+        </button>
+        <button
+          type="button"
+          onClick={() => setMode(mode === "checkout" ? "quick" : "checkout")}
+          disabled={cannotBook}
+          className="btn-primary flex-1 justify-center rounded-full px-4 py-3 text-sm uppercase tracking-wide disabled:opacity-50"
+        >
+          {dict.booking.bookNow}
+        </button>
+      </div>
+
+      {cannotBook && (
+        <p className="mt-3 text-sm font-semibold text-rose-700">
+          {tooSoon
+            ? dict.booking.minLeadTime
+            : "Esta fecha no está disponible para reservar."}
+        </p>
+      )}
+
+      {cartMsg && (
+        <p className="mt-3 text-sm font-semibold text-success">
+          {cartMsg}{" "}
+          <button
+            type="button"
+            className="underline"
+            onClick={() => router.push(href("/carrito"))}
+          >
+            {dict.nav.cart}
+          </button>
+        </p>
+      )}
+
+      {mode === "checkout" && (
+        <form
+          onSubmit={handleBookNow}
+          className="mt-4 space-y-3 border-t border-sand-line pt-4"
+        >
+          <input
+            className={inputClass}
+            placeholder={dict.booking.name}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+          <input
+            type="email"
+            className={inputClass}
+            placeholder={dict.common.email}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="tel"
+            className={inputClass}
+            placeholder={dict.common.phone}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            required
+          />
+          <div className="grid gap-2 sm:grid-cols-2">
+            {methods.map((method) => (
+              <label
+                key={method.id}
+                className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2.5 text-sm ${
+                  paymentMethod === method.id
+                    ? "border-ocean bg-white text-ocean"
+                    : "border-sand-line bg-white text-ink-muted"
+                }`}
+              >
+                <input
+                  type="radio"
+                  className="sr-only"
+                  checked={paymentMethod === method.id}
+                  onChange={() => setPaymentMethod(method.id)}
+                />
+                {method.icon}
+                {method.label}
+              </label>
+            ))}
+          </div>
+          {(paymentMethod === "deposit_20" ||
+            paymentMethod === "deposit_10") && (
+            <p className="text-xs text-ink-muted">
+              {dict.cart.now} {formatPrice(split.amountDueOnline)} ·{" "}
+              {dict.cart.cashDay} {formatPrice(split.amountDueCash)}
+            </p>
+          )}
+          {tour.cancellationPolicy && (
+            <p className="text-xs text-ink-muted">{tour.cancellationPolicy}</p>
+          )}
+          {error && <p className="text-sm text-red-600">{error}</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-primary w-full justify-center disabled:opacity-60"
+          >
+            {loading ? dict.common.processing : dict.cruises.confirmBooking}
+          </button>
+        </form>
+      )}
+
+      {error && mode === "quick" && (
+        <p className="mt-3 text-sm text-red-600">{error}</p>
+      )}
+    </div>
+  );
+}
