@@ -738,7 +738,7 @@ export function BookingDetailModal({
                       value={booking.customer.phone || "—"}
                     />
                     <Row
-                      label="Idioma de la excursión"
+                      label="Idioma de la reserva"
                       value={
                         bookingLocaleLabel(booking.locale) || "—"
                       }
@@ -814,7 +814,7 @@ export function BookingDetailModal({
                   )}
                   {bookingLocaleLabel(booking.locale) && (
                     <li>
-                      Idioma del tour: {bookingLocaleLabel(booking.locale)}
+                      Idioma de la reserva: {bookingLocaleLabel(booking.locale)}
                     </li>
                   )}
                   {bookingReturnDate(booking) && (

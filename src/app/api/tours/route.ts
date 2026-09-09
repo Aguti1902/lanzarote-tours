@@ -3,6 +3,7 @@ import {
   createTour,
   deleteTour,
   getTours,
+  reorderTours,
   upsertTour,
 } from "@/lib/content";
 import type { Tour } from "@/types";
@@ -47,6 +48,22 @@ export async function PUT(request: Request) {
     return NextResponse.json({ tour });
   } catch {
     return NextResponse.json({ error: "No se pudo guardar" }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: Request) {
+  const denied = await requireAdmin(request);
+  if (denied) return denied;
+
+  try {
+    const body = (await request.json()) as { ids?: string[] };
+    if (!Array.isArray(body.ids) || body.ids.length === 0) {
+      return NextResponse.json({ error: "Falta el orden de ids" }, { status: 400 });
+    }
+    const tours = await reorderTours(body.ids.map(String));
+    return NextResponse.json({ tours });
+  } catch {
+    return NextResponse.json({ error: "No se pudo reordenar" }, { status: 500 });
   }
 }
 

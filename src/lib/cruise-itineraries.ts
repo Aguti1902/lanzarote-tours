@@ -7,6 +7,7 @@ import type {
 } from "@/types";
 import { readCmsJson, readCmsJsonFresh, readCmsJsonIfExists, writeCmsJson } from "@/lib/supabase/cms-store";
 import { applyShoreTourPaymentPolicy } from "@/lib/shore-tour-display";
+import { cruisePortRegions } from "@/lib/cruise-shore-match";
 
 const emptyData: CruiseItinerariesData = {
   updatedAt: "",
@@ -24,15 +25,47 @@ type ShoreToursFile = {
   shoreTours: CruiseShoreTour[];
 };
 
+function markLanzaroteStopsWithShoreTours(
+  data: CruiseItinerariesData
+): CruiseItinerariesData {
+  const tours = data.shoreTours || [];
+  const lanzaroteTourIds = tours
+    .filter(
+      (tour) =>
+        tour.active !== false &&
+        cruisePortRegions(tour.port || "").includes("lanzarote")
+    )
+    .map((tour) => tour.id);
+  if (!lanzaroteTourIds.length) return data;
+
+  return {
+    ...data,
+    sailings: (data.sailings || []).map((sailing) => ({
+      ...sailing,
+      stops: (sailing.stops || []).map((stop) => {
+        if (stop.isSeaDay) return stop;
+        if (!cruisePortRegions(stop.port || "").includes("lanzarote")) {
+          return stop;
+        }
+        return {
+          ...stop,
+          hasTours: true,
+          tourIds: stop.tourIds?.length ? stop.tourIds : lanzaroteTourIds,
+        };
+      }),
+    })),
+  };
+}
+
 function withShorePaymentPolicy(
   data: CruiseItinerariesData
 ): CruiseItinerariesData {
-  return {
+  return markLanzaroteStopsWithShoreTours({
     ...data,
     shoreTours: (data.shoreTours || []).map((tour) =>
       applyShoreTourPaymentPolicy(tour)
     ),
-  };
+  });
 }
 
 async function readCanonicalShoreTours(): Promise<CruiseShoreTour[] | null> {

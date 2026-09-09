@@ -215,10 +215,16 @@ export async function POST(request: Request) {
           ? "pending"
           : "confirmed";
 
+    const localeFromReferer = (() => {
+      const referer = request.headers.get("referer") || "";
+      const match = referer.match(/\/(es|en|de)(?:\/|$)/i);
+      return match ? match[1].toLowerCase() : undefined;
+    })();
+
     const localeNorm =
       typeof locale === "string" && locale.trim()
         ? locale.trim().toLowerCase().slice(0, 5)
-        : undefined;
+        : localeFromReferer;
 
     if (shoreTourForPricing) {
       const pax = adultsNum + childrenNum;

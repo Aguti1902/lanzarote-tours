@@ -227,17 +227,24 @@ export function FacturasClient() {
         />
         <button
           type="button"
-          disabled={
-            busy !== null ||
-            loading ||
-            !invoices.some((inv) => inDateRange(inv.createdAt, range))
-          }
+          onClick={() => {
+            const year = new Date().getFullYear();
+            setRange({ from: `${year}-01-01`, to: `${year}-12-31` });
+            setPage(1);
+          }}
+          className="rounded-md px-3 py-2 text-sm font-semibold text-ocean ring-1 ring-ocean/30 hover:bg-sky-soft"
+        >
+          Año {new Date().getFullYear()}
+        </button>
+        <button
+          type="button"
+          disabled={busy !== null || loading}
           onClick={handleExcel}
           className="inline-flex items-center gap-2 rounded-md bg-ocean px-4 py-2 text-sm font-bold text-white hover:bg-ocean-deep disabled:opacity-50"
-          title="Descarga un Excel con las facturas del rango de fechas, con los mismos campos que Facturación 2024 (hojas por mes y canceladas)."
+          title="Descarga un Excel con las facturas del rango de fechas, con los mismos campos que Facturacion 2024.xlsx (hojas por mes y canceladas)."
         >
           <FileSpreadsheet className="h-4 w-4" />
-          {busy === "excel" ? "Generando Excel…" : "Descargar Excel"}
+          {busy === "excel" ? "Generando Excel…" : "Descargar Excel por fechas"}
         </button>
       </div>
 

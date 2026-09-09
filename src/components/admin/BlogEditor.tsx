@@ -179,7 +179,7 @@ export function BlogEditor({ initial }: { initial?: BlogPost }) {
         label="Imagen del artículo"
         value={post.image || ""}
         folder="blog"
-        hint="Suba una foto desde el ordenador. Se usará como portada del artículo."
+        hint="Suba una foto desde el ordenador. Se usará como portada del artículo. No hace falta pegar una URL."
         onChange={(url) => setPost({ ...post, image: url })}
       />
       <Field label="Tags temáticos (separados por coma, sin idioma)">

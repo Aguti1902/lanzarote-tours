@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { GripVertical, Plus, Trash2 } from "lucide-react";
 import type { Tour } from "@/types";
 
 function isActive(tour: Tour) {
@@ -12,6 +12,8 @@ function isActive(tour: Tour) {
 export default function AdminExcursionesPage() {
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(true);
+  const [savingOrder, setSavingOrder] = useState(false);
+  const [dragId, setDragId] = useState<string | null>(null);
 
   async function load() {
     setLoading(true);
@@ -24,6 +26,35 @@ export default function AdminExcursionesPage() {
   useEffect(() => {
     load();
   }, []);
+
+  async function persistOrder(next: Tour[]) {
+    setTours(next);
+    setSavingOrder(true);
+    try {
+      const res = await fetch("/api/tours", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: next.map((t) => t.id) }),
+      });
+      const data = await res.json();
+      if (res.ok && Array.isArray(data.tours)) {
+        setTours(data.tours);
+      }
+    } finally {
+      setSavingOrder(false);
+    }
+  }
+
+  function moveTour(fromId: string, toId: string) {
+    if (fromId === toId) return;
+    const from = tours.findIndex((t) => t.id === fromId);
+    const to = tours.findIndex((t) => t.id === toId);
+    if (from < 0 || to < 0) return;
+    const next = [...tours];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item);
+    void persistOrder(next);
+  }
 
   async function remove(id: string, title: string) {
     if (!confirm(`¿Eliminar «${title}»?`)) return;
@@ -39,7 +70,10 @@ export default function AdminExcursionesPage() {
             Listado de excursiones
           </h1>
           <p className="mt-1 text-sm text-ink-muted">
-            {loading ? "Cargando…" : `${tours.length} excursiones`}
+            {loading
+              ? "Cargando…"
+              : `${tours.length} excursiones · Arrastre para el mismo orden que en la web`}
+            {savingOrder ? " · Guardando orden…" : ""}
           </p>
         </div>
         <Link
@@ -55,6 +89,7 @@ export default function AdminExcursionesPage() {
         <table className="w-full min-w-[920px] text-left text-sm">
           <thead className="border-b border-sand-line bg-bg text-ink-muted">
             <tr>
+              <th className="w-12 px-2 py-3 font-medium" />
               <th className="px-4 py-3 font-medium">Orden</th>
               <th className="px-4 py-3 font-medium">Estado</th>
               <th className="px-4 py-3 font-medium">Nombre del tour</th>
@@ -67,27 +102,45 @@ export default function AdminExcursionesPage() {
           <tbody>
             {loading && (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-ink-muted">
+                <td colSpan={8} className="px-4 py-8 text-center text-ink-muted">
                   Cargando…
                 </td>
               </tr>
             )}
             {!loading && tours.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-8 text-center text-ink-muted">
+                <td colSpan={8} className="px-4 py-8 text-center text-ink-muted">
                   No hay excursiones todavía.
                 </td>
               </tr>
             )}
             {!loading &&
-              [...tours]
-                .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999))
-                .map((t) => {
+              tours.map((t, index) => {
                 const active = isActive(t);
                 return (
-                  <tr key={t.id} className="border-b border-sand-line/70">
+                  <tr
+                    key={t.id}
+                    draggable
+                    onDragStart={() => setDragId(t.id)}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={() => {
+                      if (dragId) moveTour(dragId, t.id);
+                      setDragId(null);
+                    }}
+                    className={`border-b border-sand-line/70 ${
+                      dragId === t.id ? "bg-ocean/5" : ""
+                    }`}
+                  >
+                    <td className="px-2 py-3 text-ink-muted">
+                      <span
+                        className="inline-flex cursor-grab text-ink-muted active:cursor-grabbing"
+                        title="Arrastrar para reordenar"
+                      >
+                        <GripVertical className="h-4 w-4" />
+                      </span>
+                    </td>
                     <td className="px-4 py-3 tabular-nums text-ink-muted">
-                      {t.priority ?? "—"}
+                      {index + 1}
                     </td>
                     <td className="px-4 py-3">
                       <span className="inline-flex items-center gap-2 text-xs font-semibold">
@@ -135,9 +188,7 @@ export default function AdminExcursionesPage() {
                         ? `${t.durationHours} horas`
                         : t.duration || "—"}
                     </td>
-                    <td className="px-4 py-3">
-                      {t.activityType || "—"}
-                    </td>
+                    <td className="px-4 py-3">{t.activityType || "—"}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <Link

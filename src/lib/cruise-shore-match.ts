@@ -14,7 +14,13 @@ export function cruisePortSlug(port: string): string {
 export function cruisePortRegions(port: string): string[] {
   const s = cruisePortSlug(port);
   const keys: string[] = [];
-  if (/lanzarote/.test(s)) keys.push("lanzarote");
+  if (
+    /lanzarote/.test(s) ||
+    /arrecife/.test(s) ||
+    /marmoles/.test(s)
+  ) {
+    keys.push("lanzarote");
+  }
   if (/tenerife/.test(s)) keys.push("tenerife");
   if (/gran-canaria|las-palmas/.test(s)) keys.push("gran-canaria");
   if (/la-palma/.test(s) && !/gran-canaria/.test(s)) keys.push("la-palma");

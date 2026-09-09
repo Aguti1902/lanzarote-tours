@@ -36,23 +36,17 @@ export async function GET(request: Request) {
     inRange(inv.createdAt, from, to)
   );
 
-  if (filtered.length === 0) {
-    return NextResponse.json(
-      { error: "No hay facturas en este rango de fechas" },
-      { status: 404 }
-    );
-  }
-
   try {
     const buffer = await buildInvoicesWorkbook(filtered, bookings);
     const filename = invoicesExcelFilename(from, to);
+    const encoded = encodeURIComponent(filename);
 
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,
       headers: {
         "Content-Type":
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "Content-Disposition": `attachment; filename="${filename}"`,
+        "Content-Disposition": `attachment; filename="${filename.replace(/"/g, "")}"; filename*=UTF-8''${encoded}`,
         "Cache-Control": "no-store",
       },
     });

@@ -1,5 +1,6 @@
 import type { Booking } from "@/types";
 import { bookingServiceTime } from "@/lib/booking-time";
+import { bookingLocaleLabel } from "@/lib/booking-display";
 import {
   EMAIL_BRAND,
   emailBody,
@@ -113,7 +114,9 @@ export async function notifyNewBooking(
     `Niños: ${booking.children}`,
     `Total: ${booking.amountTotal ?? booking.totalPrice} €`,
     `Pago: ${booking.paymentMethod} / ${booking.paymentStatus}`,
-    booking.locale ? `Idioma: ${booking.locale}` : "",
+    booking.locale
+      ? `Idioma: ${bookingLocaleLabel(booking.locale) || booking.locale}`
+      : "",
     "",
     "Cliente:",
     `  Nombre: ${booking.customer.name}`,
@@ -156,7 +159,12 @@ export async function notifyNewBooking(
       "Pago",
       escapeHtml(`${booking.paymentMethod} / ${booking.paymentStatus}`)
     ),
-    booking.locale ? emailRow("Idioma", escapeHtml(booking.locale)) : "",
+    booking.locale
+      ? emailRow(
+          "Idioma de la reserva",
+          escapeHtml(bookingLocaleLabel(booking.locale) || booking.locale)
+        )
+      : "",
     emailRow("Cliente", escapeHtml(booking.customer.name)),
     emailRow(
       "Email",

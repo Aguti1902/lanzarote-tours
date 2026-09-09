@@ -37,7 +37,7 @@ export function CruiseTourBooking({
 }: Props) {
   const router = useRouter();
   const { addItem } = useCart();
-  const { dict, href } = useLocale();
+  const { dict, href, locale } = useLocale();
   const isFlat = shoreTourIsFlatPrice(tour);
   const price = shoreTourUnitPrice(tour);
   const max = shoreTourMaxPassengers(tour);
@@ -176,6 +176,7 @@ export function CruiseTourBooking({
           children: 0,
           totalPrice: total,
           paymentMethod,
+          locale,
           source: "cruise",
           customer: {
             name,

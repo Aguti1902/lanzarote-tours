@@ -319,19 +319,20 @@ export async function buildInvoicesWorkbook(
   }
 
   for (const key of months) {
-    const year = key.slice(0, 4);
-    const label = `${monthLabel(key)} ${year}`;
+    const month = monthLabel(key);
+    const issuedName = `Facturas ${month}`.slice(0, 31);
+    const creditsName = `${month} Canceladas`.slice(0, 31);
     const list = byMonth.get(key) || [];
     const issued = list.filter((i) => !isCreditInvoice(i));
     const credits = list.filter((i) => isCreditInvoice(i));
 
-    const ws = wb.addWorksheet(`Facturas ${label}`.slice(0, 31));
+    const ws = wb.addWorksheet(issuedName);
     applyIssuedHeaders(ws);
     issued.forEach((inv, i) => {
       addIssuedRow(ws, i + 3, inv, bookIndex.get(inv.bookingId));
     });
 
-    const wsC = wb.addWorksheet(`${label} Canceladas`.slice(0, 31));
+    const wsC = wb.addWorksheet(creditsName);
     applyCreditHeaders(wsC);
     credits.forEach((inv, i) => {
       addCreditRow(wsC, i + 3, inv, bookIndex.get(inv.bookingId));
@@ -345,17 +346,17 @@ export function invoicesExcelFilename(from?: string, to?: string): string {
   const a = from?.slice(0, 10) || "";
   const b = to?.slice(0, 10) || "";
   if (a && b && a.slice(0, 4) === b.slice(0, 4) && a.endsWith("-01-01") && b.endsWith("-12-31")) {
-    return `Facturacion_${a.slice(0, 4)}.xlsx`;
+    return `Facturacion ${a.slice(0, 4)}.xlsx`;
   }
   if (a && b && a.slice(0, 4) === b.slice(0, 4) && a.slice(0, 4).length === 4) {
     const year = a.slice(0, 4);
     if (a === `${year}-01-01` && b.startsWith(year)) {
-      return `Facturacion_${year}.xlsx`;
+      return `Facturacion ${year}.xlsx`;
     }
-    return `Facturacion_${a}_${b}.xlsx`;
+    return `Facturacion ${a} ${b}.xlsx`;
   }
-  if (a && b) return `Facturacion_${a}_${b}.xlsx`;
-  if (a) return `Facturacion_desde_${a}.xlsx`;
-  if (b) return `Facturacion_hasta_${b}.xlsx`;
+  if (a && b) return `Facturacion ${a} ${b}.xlsx`;
+  if (a) return `Facturacion desde ${a}.xlsx`;
+  if (b) return `Facturacion hasta ${b}.xlsx`;
   return "Facturacion.xlsx";
 }

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import type { Booking, BookingStatus } from "@/types";
 import { formatDate, formatPrice, paymentLabel } from "@/lib/format";
-import { compareBookingsByServiceNearest } from "@/lib/booking-display";
+import { compareBookingsByServiceNearest, bookingLocaleLabel } from "@/lib/booking-display";
 import {
   DateRangeFilter,
   emptyDateRange,
@@ -420,6 +420,11 @@ export default function AdminReservasPage() {
                       </p>
                       <p className="text-xs text-ink-muted">{b.customer.name}</p>
                       <p className="text-xs text-ink-muted">{b.customer.email}</p>
+                      {bookingLocaleLabel(b.locale) ? (
+                        <p className="text-xs font-semibold text-ocean">
+                          Idioma reserva: {bookingLocaleLabel(b.locale)}
+                        </p>
+                      ) : null}
                     </button>
                   </td>
                   <td className="px-4 py-3">

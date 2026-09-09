@@ -259,7 +259,9 @@ export function ImageUploadField({
 
         {hint && <p className="text-xs text-ink-muted">{hint}</p>}
         {value && (
-          <p className="truncate font-mono text-[11px] text-ink-muted">{value}</p>
+          <p className="truncate text-[11px] text-ink-muted">
+            Imagen lista. Use «Cambiar imagen» para sustituirla.
+          </p>
         )}
         {error && <p className="text-sm text-red-600">{error}</p>}
       </div>

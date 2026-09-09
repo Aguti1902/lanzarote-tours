@@ -62,13 +62,21 @@ function isTourActive(tour: Tour): boolean {
   return tour.active !== false;
 }
 
-/** Menor `priority` = primero en la web y en el panel. Empate: orden original. */
+/** Menor `priority` = primero en la web y en el panel. Empate: orden del array. */
 export function compareTourOrder(a: Tour, b: Tour): number {
-  return (a.priority ?? 999) - (b.priority ?? 999);
+  const pa = Number.isFinite(a.priority) ? Number(a.priority) : 999;
+  const pb = Number.isFinite(b.priority) ? Number(b.priority) : 999;
+  return pa - pb;
 }
 
 function sortToursByPriority(tours: Tour[]): Tour[] {
-  return [...tours].sort(compareTourOrder);
+  return tours
+    .map((tour, index) => ({ tour, index }))
+    .sort((a, b) => {
+      const byPriority = compareTourOrder(a.tour, b.tour);
+      return byPriority !== 0 ? byPriority : a.index - b.index;
+    })
+    .map(({ tour }) => tour);
 }
 
 /** Todas las excursiones (incluye inactivas). Uso admin / API. */
@@ -101,6 +109,24 @@ export async function getCruiseTours(): Promise<Tour[]> {
 
 export async function saveTours(tours: Tour[]): Promise<void> {
   await writeJson("tours.json", sortToursByPriority(tours));
+}
+
+/** Orden del listado del panel = orden público. `ids` es la secuencia visible. */
+export async function reorderTours(ids: string[]): Promise<Tour[]> {
+  const tours = await readJsonFresh<Tour[]>("tours.json");
+  const map = new Map(tours.map((tour) => [tour.id, tour]));
+  const ordered: Tour[] = [];
+  for (const id of ids) {
+    const tour = map.get(id);
+    if (!tour) continue;
+    ordered.push({ ...tour, priority: ordered.length + 1 });
+    map.delete(id);
+  }
+  for (const tour of map.values()) {
+    ordered.push({ ...tour, priority: ordered.length + 1 });
+  }
+  await writeJson("tours.json", ordered);
+  return ordered;
 }
 
 export async function upsertTour(tour: Tour): Promise<Tour> {
