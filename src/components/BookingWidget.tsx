@@ -6,6 +6,11 @@ import { CreditCard, Percent, ShoppingCart, Wallet } from "lucide-react";
 import type { CruiseCall, PaymentMethod, Tour } from "@/types";
 import { formatPrice } from "@/lib/format";
 import { isFlatPriceTour } from "@/lib/tour-pricing";
+import {
+  effectiveAdultPrice,
+  effectiveChildPrice,
+  isTourDateBookable,
+} from "@/lib/tour-availability";
 import { useCart } from "@/components/CartProvider";
 import { useLocale } from "@/components/LocaleProvider";
 import { expectedOnlineCharge, splitPaymentAmounts } from "@/lib/payments";
