@@ -72,6 +72,7 @@ export type Dictionary = {
     contact247: string;
     privacy: string;
     terms: string;
+    cookies: string;
     rights: string;
     tagline: string;
     agencyLicense: string;
@@ -512,6 +513,7 @@ const es: Dictionary = {
     contact247: "Contacto 24/7",
     privacy: "Privacidad",
     terms: "Condiciones",
+    cookies: "Cookies",
     rights: "Todos los derechos reservados",
     tagline: "Visitas guiadas en Lanzarote",
     agencyLicense: "Agencia Nº: I-AV-0002407.1",
@@ -1098,6 +1100,7 @@ const en: Dictionary = {
     contact247: "Contact 24/7",
     privacy: "Privacy",
     terms: "Terms",
+    cookies: "Cookies",
     rights: "All rights reserved",
     tagline: "Guided tours in Lanzarote",
     agencyLicense: "Agency No: I-AV-0002407.1",
@@ -1635,6 +1638,7 @@ const de: Dictionary = {
     contact247: "Kontakt 24/7",
     privacy: "Datenschutz",
     terms: "Bedingungen",
+    cookies: "Cookies",
     rights: "Alle Rechte vorbehalten",
     tagline: "Geführte Touren auf Lanzarote",
     agencyLicense: "Agentur-Nr.: I-AV-0002407.1",

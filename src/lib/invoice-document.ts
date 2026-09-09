@@ -148,16 +148,15 @@ export function buildInvoiceHtml(
     border-bottom: 1px solid var(--line);
   }
   .logo-wrap {
-    width: 190px;
+    width: 220px;
     height: 56px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: var(--header);
-    border-radius: 6px;
-    padding: 8px 12px;
+    justify-content: flex-start;
+    background: transparent;
+    padding: 0;
   }
-  .logo-wrap img { max-width: 100%; max-height: 40px; object-fit: contain; }
+  .logo-wrap img { max-width: 100%; max-height: 52px; object-fit: contain; }
   .doc-title { text-align: right; }
   .doc-title .kind {
     margin: 0;

@@ -28,9 +28,9 @@ export function ContactWidget() {
               <X className="h-4 w-4" />
             </button>
             <div className="flex items-center gap-3">
-              <div className="relative h-10 w-10 overflow-hidden rounded-full bg-white">
+              <div className="relative h-10 w-16 overflow-hidden rounded-md bg-white">
                 <Image
-                  src="/images/brand/logo-mark.png"
+                  src="/images/brand/logo-green.png"
                   alt=""
                   fill
                   className="object-contain p-1"

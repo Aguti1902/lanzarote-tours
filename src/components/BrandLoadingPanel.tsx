@@ -18,13 +18,13 @@ export function BrandLoadingPanel({
 }: Props) {
   const card = (
     <div className="mx-4 flex max-w-sm flex-col items-center rounded-2xl bg-white px-8 py-10 text-center shadow-[0_24px_60px_rgba(23,28,38,0.28)]">
-      <div className="logo-loading-pulse relative h-16 w-24">
+      <div className="logo-loading-pulse relative h-12 w-40">
         <Image
-          src="/images/brand/logo-mark.png"
-            alt="Lanzarote Tours"
+          src="/images/brand/logo-green.png"
+          alt="Lanzarote Tours"
           fill
           className="object-contain"
-          sizes="96px"
+          sizes="160px"
           priority
         />
       </div>

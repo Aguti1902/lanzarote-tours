@@ -48,6 +48,9 @@ export const ROUTE_LOCALES = [
   { es: "/factura", en: "/invoice", de: "/rechnung" },
   { es: "/voucher", en: "/voucher", de: "/voucher" },
   { es: "/gateway", en: "/gateway", de: "/gateway" },
+  { es: "/privacidad", en: "/privacy", de: "/datenschutz" },
+  { es: "/condiciones", en: "/terms", de: "/agb" },
+  { es: "/cookies", en: "/cookies", de: "/cookies" },
 ] as const;
 
 /** Alias → segmento canónico del mismo idioma (umlauts, sinónimos legacy). */

@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Mail, Phone } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { useLocale } from "@/components/LocaleProvider";
 
 export function Footer() {
@@ -18,13 +18,11 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4 py-14 md:px-6">
         <div className="grid gap-12 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>
-            <div className="relative mb-5 h-24 w-[176px] overflow-hidden rounded-lg bg-black">
-              <Image
-                src="/images/brand/logo.png"
-                alt="Lanzarote Tours"
-                fill
-                className="object-contain object-left"
-                sizes="176px"
+            <div className="relative mb-5 h-12 w-[240px] md:h-14 md:w-[280px]">
+              <BrandLogo
+                variant="onDark"
+                className="h-full w-full"
+                sizes="280px"
               />
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-white/65">
@@ -127,23 +125,16 @@ export function Footer() {
             Lanzarote Experience Tours S.L.U. · 2009/{new Date().getFullYear()} ·{" "}
             {dict.footer.rights}
           </p>
-          <div className="flex gap-4">
-            <a
-              href="https://www.lanzaroteexperiencetours.com/dist/legal/privacy-policy-es.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white/70"
-            >
+          <div className="flex flex-wrap gap-4">
+            <Link href={href("/privacidad")} className="hover:text-white/70">
               {dict.footer.privacy}
-            </a>
-            <a
-              href="https://www.lanzaroteexperiencetours.com/dist/legal/sales-cancellation-policy-es.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-white/70"
-            >
+            </Link>
+            <Link href={href("/condiciones")} className="hover:text-white/70">
               {dict.footer.terms}
-            </a>
+            </Link>
+            <Link href={href("/cookies")} className="hover:text-white/70">
+              {dict.footer.cookies}
+            </Link>
           </div>
         </div>
       </div>

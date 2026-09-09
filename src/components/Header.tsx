@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, ShoppingCart, User, X } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { useCart } from "@/components/CartProvider";
 import { useLocale } from "@/components/LocaleProvider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -51,14 +51,13 @@ export function Header() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
         <Link
           href={href("/")}
-          className="relative block h-16 w-[118px] shrink-0 overflow-hidden rounded-lg bg-black transition hover:opacity-90 md:h-[4.5rem] md:w-[132px]"
+          className="relative block h-10 w-[200px] shrink-0 transition hover:opacity-90 md:h-12 md:w-[248px]"
         >
-          <Image
-            src="/images/brand/logo.png"
-            alt="Lanzarote Tours"
-            fill
-            className="object-contain object-left"
-            sizes="132px"
+          <BrandLogo
+            variant="onDark"
+            className="h-full w-full"
+            sizes="248px"
+            priority
           />
         </Link>
 

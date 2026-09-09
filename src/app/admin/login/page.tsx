@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -45,6 +46,9 @@ export default function AdminLoginPage() {
         onSubmit={handleSubmit}
         className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-xl ring-1 ring-sand-line"
       >
+        <div className="relative mb-4 h-12 w-[220px]">
+          <BrandLogo variant="onLight" className="h-full w-full" sizes="220px" />
+        </div>
         <p className="font-display text-2xl text-ink">Administración</p>
         <p className="mt-1 text-sm text-ink-muted">Lanzarote Tours</p>
         <label className="mt-6 block">

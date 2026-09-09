@@ -271,12 +271,11 @@ export function buildVoucherHtml(
   .brand-logo {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    background: var(--header);
-    padding: 10px 14px;
-    border-radius: 6px;
+    justify-content: flex-start;
+    background: transparent;
+    padding: 0;
   }
-  .brand-logo img { height: 52px; width: auto; display: block; }
+  .brand-logo img { height: 48px; width: auto; max-width: 220px; display: block; }
   .brand .legal {
     margin-top: 10px;
     font-size: 12px;
@@ -404,7 +403,7 @@ export function buildVoucherHtml(
     <div class="head">
       <div class="brand">
         <div class="brand-logo">
-          <img src="${logoUrl}" alt="${esc(company.brandName)}" width="113" height="75" />
+          <img src="${logoUrl}" alt="${esc(company.brandName)}" width="200" height="54" />
         </div>
         <p class="legal">
           <strong>${esc(company.legalName)}</strong><br />
