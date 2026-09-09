@@ -179,6 +179,26 @@ const nextConfig: NextConfig = {
         destination: "/de/kreuzfahrt/:path*",
         permanent: true,
       },
+      {
+        source: "/blog",
+        destination: "/es",
+        permanent: true,
+      },
+      {
+        source: "/blog/:path*",
+        destination: "/es",
+        permanent: true,
+      },
+      {
+        source: "/:locale(es|en|de)/blog",
+        destination: "/:locale",
+        permanent: true,
+      },
+      {
+        source: "/:locale(es|en|de)/blog/:path*",
+        destination: "/:locale",
+        permanent: true,
+      },
     ];
   },
 };

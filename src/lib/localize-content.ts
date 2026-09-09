@@ -1,6 +1,5 @@
 import type { Locale } from "@/i18n/config";
 import type {
-  BlogPost,
   CruiseShoreTour,
   SiteSettings,
   Tour,
@@ -52,10 +51,6 @@ type TourTranslation = Partial<
   >
 >;
 
-type BlogTranslation = Partial<
-  Pick<BlogPost, "title" | "excerpt" | "content" | "author" | "tags">
->;
-
 type ShoreTourTranslation = Partial<
   Pick<
     CruiseShoreTour,
@@ -74,7 +69,7 @@ type ShoreTourTranslation = Partial<
 interface ContentTranslations {
   settings: Partial<SiteSettings>;
   tours: Record<string, TourTranslation>;
-  blog: Record<string, BlogTranslation>;
+  blog: Record<string, Record<string, unknown>>;
   transfers: Pick<TransfersData, "highlights">;
   shoreTours: Record<string, ShoreTourTranslation>;
   cruise: {
@@ -377,25 +372,6 @@ export async function localizeTours(
 ): Promise<Tour[]> {
   if (locale === "es") return tours;
   return Promise.all(tours.map((tour) => localizeTour(tour, locale)));
-}
-
-export async function localizeBlogPost(
-  post: BlogPost,
-  locale: Locale
-): Promise<BlogPost> {
-  if (locale === "es") return post;
-
-  const translations = await loadTranslations(locale);
-  const overlay = translations.blog[post.slug];
-  return overlay ? { ...post, ...overlay } : post;
-}
-
-export async function localizeBlogPosts(
-  posts: BlogPost[],
-  locale: Locale
-): Promise<BlogPost[]> {
-  if (locale === "es") return posts;
-  return Promise.all(posts.map((post) => localizeBlogPost(post, locale)));
 }
 
 export async function localizeTransfers(

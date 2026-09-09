@@ -7,7 +7,6 @@ export type Dictionary = {
     transfers: string;
     cruises: string;
     houses: string;
-    blog: string;
     contact: string;
     cart: string;
     manageBooking: string;
@@ -312,12 +311,6 @@ export type Dictionary = {
     reviewsCta: string;
     reviewsTraveler: string;
   };
-  blog: {
-    eyebrow: string;
-    readArticle: string;
-    readMore: string;
-    related: string;
-  };
   booking: {
     date: string;
     time: string;
@@ -444,7 +437,6 @@ const es: Dictionary = {
     transfers: "Traslados",
     cruises: "Cruceros",
     houses: "Casas",
-    blog: "Blog",
     contact: "Contacto",
     cart: "Carrito",
     manageBooking: "Gestione su reserva",
@@ -894,12 +886,6 @@ const es: Dictionary = {
     reviewsCta: "Leer más en Tripadvisor",
     reviewsTraveler: "Viajero",
   },
-  blog: {
-    eyebrow: "Blog",
-    readArticle: "Leer artículo",
-    readMore: "Leer más",
-    related: "También te puede interesar",
-  },
   booking: {
     date: "Fecha *",
     time: "Hora del servicio",
@@ -1037,7 +1023,6 @@ const en: Dictionary = {
     transfers: "Transfers",
     cruises: "Cruises",
     houses: "Homes",
-    blog: "Blog",
     contact: "Contact",
     cart: "Cart",
     manageBooking: "Manage booking",
@@ -1438,12 +1423,6 @@ const en: Dictionary = {
     reviewsCta: "Read more on Tripadvisor",
     reviewsTraveler: "Traveller",
   },
-  blog: {
-    eyebrow: "Blog",
-    readArticle: "Read article",
-    readMore: "Read more",
-    related: "You may also like",
-  },
   booking: {
     date: "Date *",
     time: "Service time",
@@ -1581,7 +1560,6 @@ const de: Dictionary = {
     transfers: "Transfers",
     cruises: "Kreuzfahrten",
     houses: "Häuser",
-    blog: "Blog",
     contact: "Kontakt",
     cart: "Warenkorb",
     manageBooking: "Buchung verwalten",
@@ -1990,12 +1968,6 @@ const de: Dictionary = {
     reviewsBasedOn: "Basierend auf {n} Tripadvisor-Bewertungen",
     reviewsCta: "Mehr auf Tripadvisor lesen",
     reviewsTraveler: "Reisender",
-  },
-  blog: {
-    eyebrow: "Blog",
-    readArticle: "Artikel lesen",
-    readMore: "Mehr lesen",
-    related: "Das könnte Sie auch interessieren",
   },
   booking: {
     date: "Datum *",

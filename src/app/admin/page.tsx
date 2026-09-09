@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import {
   Banknote,
-  BookOpen,
   Bus,
   CalendarCheck,
   FileText,
@@ -46,7 +45,6 @@ export default function AdminDashboard() {
   const [counts, setCounts] = useState({
     tours: 0,
     transfers: 0,
-    posts: 0,
     invoices: 0,
     cruises: 0,
   });
@@ -73,14 +71,12 @@ export default function AdminDashboard() {
     Promise.all([
       fetch("/api/tours").then((r) => r.json()),
       fetch("/api/transfers").then((r) => r.json()),
-      fetch("/api/blog").then((r) => r.json()),
       fetch("/api/invoices").then((r) => r.json()),
       fetch("/api/cruises").then((r) => r.json()),
-    ]).then(([toursData, transfersData, blogData, invData, cruiseData]) => {
+    ]).then(([toursData, transfersData, invData, cruiseData]) => {
       setCounts({
         tours: toursData.tours?.length || 0,
         transfers: transfersData.destinations?.length || 0,
-        posts: blogData.posts?.length || 0,
         invoices: invData.invoices?.length || 0,
         cruises: cruiseData.calls?.length || 0,
       });
@@ -188,7 +184,7 @@ export default function AdminDashboard() {
             })}
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {[
               {
                 href: "/admin/excursiones",
@@ -213,12 +209,6 @@ export default function AdminDashboard() {
                 label: "Facturas",
                 count: counts.invoices,
                 icon: FileText,
-              },
-              {
-                href: "/admin/blog",
-                label: "Blog",
-                count: counts.posts,
-                icon: BookOpen,
               },
             ].map((item) => (
               <Link

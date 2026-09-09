@@ -73,7 +73,6 @@ Desde el panel puedes:
 | Feedback | Valoraciones y sugerencias de clientes |
 | Redirecciones | 301/302 SEO entre slugs |
 | Traducciones | Textos UI ES → EN / DE |
-| Blog | Crear / editar / eliminar entradas |
 | Ajustes | Contacto, textos hero, datos fiscales |
 
 Los cambios se guardan en `src/data/*.json` y se ven en la web al instante.
@@ -96,7 +95,6 @@ Botón flotante **Chat IA** en la web pública. Responde sobre excursiones, tras
 - `/excursiones-cruceros/tour/[id]` — ficha de excursión de crucero con carrito / reserva
 - `/cruceristas` — landing + calendario de escalas en Lanzarote temporada 2026-2027
 - `/traslados` — aeropuerto ↔ destinos
-- `/blog`
 
 ## Pagos (grupo grande)
 

@@ -8,7 +8,6 @@ import {
   Anchor,
   Banknote,
   BarChart3,
-  BookOpen,
   Building2,
   Bus,
   CalendarClock,
@@ -75,7 +74,6 @@ const nav: NavItem[] = [
   { href: "/admin/feedback", label: "Feedback", icon: MessageSquareHeart },
   { href: "/admin/redirecciones", label: "Redirecciones", icon: Link2 },
   { href: "/admin/traducciones", label: "Traducciones", icon: Languages },
-  { href: "/admin/blog", label: "Blog", icon: BookOpen },
   { href: "/admin/ajustes", label: "Ajustes", icon: Settings },
 ];
 

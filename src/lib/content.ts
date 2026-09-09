@@ -1,6 +1,5 @@
 import { cache } from "react";
 import type {
-  BlogPost,
   CruiseCall,
   CruisesData,
   PageContentBlock,
@@ -26,7 +25,6 @@ import {
   readLocalCmsJson,
   writeCmsJson,
 } from "@/lib/supabase/cms-store";
-import { getBlogPostLocale, withBlogLocaleTag } from "@/lib/blog-locale";
 import { tourMatchesSlug } from "@/i18n/tour-slugs";
 import { SETTINGS_STRING_KEYS } from "@/lib/settings-i18n";
 import {
@@ -337,67 +335,6 @@ export async function updateTransferHighlights(
   data.highlights = highlights;
   await saveTransfersData(data);
   return highlights;
-}
-
-/* ── Blog ── */
-
-export const getBlogPosts = cache(async (): Promise<BlogPost[]> => {
-  return readJson<BlogPost[]>("blog.json");
-});
-
-export async function getPostBySlug(slug: string): Promise<BlogPost | undefined> {
-  return (await getBlogPosts()).find((p) => p.slug === slug);
-}
-
-export async function saveBlogPosts(posts: BlogPost[]): Promise<void> {
-  await writeJson("blog.json", posts);
-}
-
-export async function upsertBlogPost(post: BlogPost): Promise<BlogPost> {
-  const posts = await readJsonFresh<BlogPost[]>("blog.json");
-  const normalized: BlogPost = {
-    ...post,
-    tags: withBlogLocaleTag(post.tags, getBlogPostLocale(post)),
-  };
-  const idx = posts.findIndex((p) => p.slug === normalized.slug);
-  if (idx === -1) posts.unshift(normalized);
-  else posts[idx] = normalized;
-  await saveBlogPosts(posts);
-  return normalized;
-}
-
-export async function createBlogPost(
-  input: Partial<BlogPost> & Pick<BlogPost, "title" | "excerpt" | "content">
-): Promise<BlogPost> {
-  const posts = await readJsonFresh<BlogPost[]>("blog.json");
-  const baseSlug = slugify(input.slug || input.title);
-  let slug = baseSlug;
-  let n = 2;
-  while (posts.some((p) => p.slug === slug)) {
-    slug = `${baseSlug}-${n++}`;
-  }
-  const locale = getBlogPostLocale({ tags: input.tags || [] });
-  const post: BlogPost = {
-    slug,
-    title: input.title,
-    excerpt: input.excerpt,
-    content: input.content,
-    image: input.image || "/images/blog/cruise.jpg",
-    date: input.date || new Date().toISOString().slice(0, 10),
-    author: input.author || "Equipo Lanzarote Experience Tours",
-    tags: withBlogLocaleTag(input.tags || [], locale),
-  };
-  posts.unshift(post);
-  await saveBlogPosts(posts);
-  return post;
-}
-
-export async function deleteBlogPost(slug: string): Promise<boolean> {
-  const posts = await readJsonFresh<BlogPost[]>("blog.json");
-  const next = posts.filter((p) => p.slug !== slug);
-  if (next.length === posts.length) return false;
-  await saveBlogPosts(next);
-  return true;
 }
 
 /* ── Cruises (port calls) ── */

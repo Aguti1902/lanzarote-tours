@@ -116,7 +116,6 @@ type SectionId =
   | "home"
   | "about"
   | "excursions"
-  | "blog"
   | "cruise"
   | "transfers";
 
@@ -140,14 +139,6 @@ const SECTION_KEYS: Record<SectionId, SettingsTranslatableKey[]> = {
     "excursionsFaqTitle",
     "excursionsBlocksTitle",
     "excursionsBlocksIntro",
-  ],
-  blog: [
-    "blogTitle",
-    "blogIntro",
-    "blogText",
-    "blogFaqTitle",
-    "blogBlocksTitle",
-    "blogBlocksIntro",
   ],
   cruise: [
     "cruiseHeadline",
@@ -739,85 +730,6 @@ export default function AdminAjustesPage() {
                       settings.excursionsFaqTitle || ""
                     );
                     setFaqs("excursionsFaqs", settings.excursionsFaqs || []);
-                  }
-            }
-          />
-        </section>
-
-        <section className="space-y-4 rounded-xl bg-white p-5 shadow-sm ring-1 ring-sand-line">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="font-display text-xl">Blog</h2>
-            {locale !== "es" && (
-              <button
-                type="button"
-                disabled={generating}
-                onClick={() => generateTranslations("blog")}
-                className="text-xs font-bold text-ocean hover:underline disabled:opacity-50"
-              >
-                Generar esta sección
-              </button>
-            )}
-          </div>
-          <Field label="Título">
-            <input
-              className={adminInput}
-              value={textValue("blogTitle")}
-              onChange={(e) => setText("blogTitle", e.target.value)}
-            />
-          </Field>
-          <Field label="Entradilla">
-            <RichTextEditor
-              value={textValue("blogIntro")}
-              onChange={(html) => setText("blogIntro", html)}
-              minHeight={100}
-            />
-          </Field>
-          <Field label="Texto completo">
-            <RichTextEditor
-              value={textValue("blogText")}
-              onChange={(html) => setText("blogText", html)}
-              minHeight={160}
-            />
-          </Field>
-          <ImageUploadField
-            label="Imagen hero"
-            folder="blog"
-            value={settings.blogHeroImage}
-            onChange={(url) => setShared("blogHeroImage", url)}
-            objectPosition={settings.blogHeroPosition}
-            onObjectPositionChange={(pos) => setShared("blogHeroPosition", pos)}
-            aspectRatio={16 / 9}
-            hint={HERO_HINT}
-          />
-          <ContentBlocksEditor
-            sectionTitle={textValue("blogBlocksTitle")}
-            sectionIntro={textValue("blogBlocksIntro")}
-            blocks={blocksValue("blogBlocks")}
-            folder="blog"
-            onTitleChange={(v) => setText("blogBlocksTitle", v)}
-            onIntroChange={(v) => setText("blogBlocksIntro", v)}
-            onChange={(blocks) => setBlocks("blogBlocks", blocks)}
-            onCopyFromBase={
-              locale === "es"
-                ? undefined
-                : () => {
-                    setText("blogBlocksTitle", settings.blogBlocksTitle || "");
-                    setText("blogBlocksIntro", settings.blogBlocksIntro || "");
-                    setBlocks("blogBlocks", settings.blogBlocks || []);
-                  }
-            }
-          />
-          <FaqEditor
-            title={textValue("blogFaqTitle")}
-            faqs={faqsValue("blogFaqs")}
-            onTitleChange={(v) => setText("blogFaqTitle", v)}
-            onChange={(faqs) => setFaqs("blogFaqs", faqs)}
-            onCopyFromBase={
-              locale === "es"
-                ? undefined
-                : () => {
-                    setText("blogFaqTitle", settings.blogFaqTitle || "");
-                    setFaqs("blogFaqs", settings.blogFaqs || []);
                   }
             }
           />

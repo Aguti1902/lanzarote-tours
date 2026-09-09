@@ -47,7 +47,6 @@ export const ROUTE_LOCALES = [
   { es: "/carrito", en: "/cart", de: "/warenkorb" },
   { es: "/factura", en: "/invoice", de: "/rechnung" },
   { es: "/voucher", en: "/voucher", de: "/voucher" },
-  { es: "/blog", en: "/blog", de: "/blog" },
   { es: "/gateway", en: "/gateway", de: "/gateway" },
 ] as const;
 

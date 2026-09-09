@@ -10,7 +10,6 @@ type HeroKey =
   | "home"
   | "transfer"
   | "cruise"
-  | "blog"
   | "houses";
 
 const FALLBACKS: Record<
@@ -52,12 +51,6 @@ const FALLBACKS: Record<
     position: "cruiseHeroPosition",
     imageFallback: "/images/home/cruceros.jpg",
     positionFallback: "50% 45%",
-  },
-  blog: {
-    image: "blogHeroImage",
-    position: "blogHeroPosition",
-    imageFallback: "/images/heroes/blog.jpg",
-    positionFallback: "50% 40%",
   },
   houses: {
     image: "housesHeroImage",
