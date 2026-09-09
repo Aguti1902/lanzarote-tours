@@ -429,6 +429,14 @@ export type Dictionary = {
     aria: string;
     reviews: string;
   };
+  cookieBanner: {
+    title: string;
+    body: string;
+    accept: string;
+    reject: string;
+    policy: string;
+    manage: string;
+  };
 };
 
 const es: Dictionary = {
@@ -1016,6 +1024,14 @@ const es: Dictionary = {
     aria: "Ver reseñas en Tripadvisor",
     reviews: "reseñas",
   },
+  cookieBanner: {
+    title: "Cookies",
+    body: "Usamos cookies necesarias para el idioma, el carrito y la reserva. No usamos cookies publicitarias. Puede aceptar o continuar solo con las imprescindibles.",
+    accept: "Aceptar",
+    reject: "Solo necesarias",
+    policy: "Política de cookies",
+    manage: "Gestionar cookies",
+  },
 };
 
 const en: Dictionary = {
@@ -1553,6 +1569,14 @@ const en: Dictionary = {
   tripadvisorBadge: {
     aria: "See Tripadvisor reviews",
     reviews: "reviews",
+  },
+  cookieBanner: {
+    title: "Cookies",
+    body: "We use necessary cookies for language, the cart and bookings. We do not use advertising cookies. You can accept or continue with essential cookies only.",
+    accept: "Accept",
+    reject: "Essential only",
+    policy: "Cookies policy",
+    manage: "Manage cookies",
   },
 };
 
@@ -2100,6 +2124,14 @@ const de: Dictionary = {
   tripadvisorBadge: {
     aria: "Tripadvisor-Bewertungen ansehen",
     reviews: "Bewertungen",
+  },
+  cookieBanner: {
+    title: "Cookies",
+    body: "Wir nutzen notwendige Cookies für Sprache, Warenkorb und Buchung. Wir setzen keine Werbe-Cookies. Sie können zustimmen oder nur die erforderlichen Cookies zulassen.",
+    accept: "Akzeptieren",
+    reject: "Nur notwendige",
+    policy: "Cookie-Richtlinie",
+    manage: "Cookies verwalten",
   },
 };
 

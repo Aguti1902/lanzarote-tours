@@ -51,12 +51,12 @@ export function Header() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
         <Link
           href={href("/")}
-          className="relative block h-10 w-[200px] shrink-0 transition hover:opacity-90 md:h-12 md:w-[248px]"
+          className="relative block h-8 w-[164px] shrink-0 transition hover:opacity-90 md:h-10 md:w-[200px]"
         >
           <BrandLogo
             variant="onDark"
             className="h-full w-full"
-            sizes="248px"
+            sizes="200px"
             priority
           />
         </Link>

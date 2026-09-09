@@ -4,11 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Mail, Phone } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
+import { useCookieConsent } from "@/components/CookieBanner";
 import { useLocale } from "@/components/LocaleProvider";
 
 export function Footer() {
   const pathname = usePathname();
   const { dict, href } = useLocale();
+  const { openSettings } = useCookieConsent();
 
   if (pathname.startsWith("/admin")) return null;
 
@@ -135,6 +137,13 @@ export function Footer() {
             <Link href={href("/cookies")} className="hover:text-white/70">
               {dict.footer.cookies}
             </Link>
+            <button
+              type="button"
+              onClick={openSettings}
+              className="hover:text-white/70"
+            >
+              {dict.cookieBanner.manage}
+            </button>
           </div>
         </div>
       </div>

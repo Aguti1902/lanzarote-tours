@@ -215,7 +215,7 @@ const es: LegalBundle = {
       {
         heading: "4. Cómo gestionarlas",
         paragraphs: [
-          "Puede bloquear o borrar cookies desde la configuración de su navegador. Si desactiva las necesarias, algunas funciones (idioma, carrito o pago) pueden dejar de funcionar.",
+          "Puede aceptar o limitar las cookies no esenciales desde el banner de este sitio (también en «Gestionar cookies» del pie). También puede bloquear o borrar cookies desde la configuración de su navegador. Si desactiva las necesarias, algunas funciones (idioma, carrito o pago) pueden dejar de funcionar.",
         ],
       },
       {
@@ -418,7 +418,7 @@ const en: LegalBundle = {
       {
         heading: "4. How to manage them",
         paragraphs: [
-          "You can block or delete cookies in your browser settings. If you disable essential cookies, language, cart or payment features may stop working.",
+          "You can accept or limit non-essential cookies from the banner on this site (or via «Manage cookies» in the footer). You can also block or delete cookies in your browser settings. If you disable essential cookies, language, cart or payment features may stop working.",
         ],
       },
       {
@@ -621,7 +621,7 @@ const de: LegalBundle = {
       {
         heading: "4. Verwaltung",
         paragraphs: [
-          "Sie können Cookies im Browser blockieren oder löschen. Deaktivieren Sie erforderliche Cookies, können Sprache, Warenkorb oder Zahlung ausfallen.",
+          "Über das Banner dieser Website (oder «Cookies verwalten» im Footer) können Sie nicht essenzielle Cookies akzeptieren oder ablehnen. Sie können Cookies auch im Browser blockieren oder löschen. Deaktivieren Sie erforderliche Cookies, können Sprache, Warenkorb oder Zahlung ausfallen.",
         ],
       },
       {

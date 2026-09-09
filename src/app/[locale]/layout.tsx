@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { CookieConsentProvider } from "@/components/CookieBanner";
 import { FloatingHelpLazy } from "@/components/FloatingHelpLazy";
 import { TripadvisorBadge } from "@/components/TripadvisorBadge";
 import { LocaleProvider } from "@/components/LocaleProvider";
@@ -31,19 +32,21 @@ export default async function LocaleLayout({
 
   return (
     <LocaleProvider locale={locale} dict={dict}>
-      <div lang={locale} className="flex min-h-full flex-1 flex-col">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <TripadvisorBadge
-          url={tripadvisor.url}
-          rating={tripadvisor.rating}
-          reviewCount={tripadvisor.reviewCount}
-          label={dict.tripadvisorBadge.aria}
-          reviewsLabel={dict.tripadvisorBadge.reviews}
-        />
-        <FloatingHelpLazy />
-      </div>
+      <CookieConsentProvider>
+        <div lang={locale} className="flex min-h-full flex-1 flex-col">
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <TripadvisorBadge
+            url={tripadvisor.url}
+            rating={tripadvisor.rating}
+            reviewCount={tripadvisor.reviewCount}
+            label={dict.tripadvisorBadge.aria}
+            reviewsLabel={dict.tripadvisorBadge.reviews}
+          />
+          <FloatingHelpLazy />
+        </div>
+      </CookieConsentProvider>
     </LocaleProvider>
   );
 }
