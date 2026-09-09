@@ -1,6 +1,7 @@
 import type { Booking, Invoice } from "@/types";
 import { updateBooking } from "@/lib/bookings";
 import { readCmsJson, writeCmsJson } from "@/lib/supabase/cms-store";
+import { isDepositMethod } from "@/lib/payments";
 
 /** IGIC Canarias — fijo al 7% en facturas y abonos. */
 export const IGIC_RATE = 7;
@@ -75,6 +76,26 @@ function formatInvoiceId(type: Invoice["type"], number: number): string {
   return `${prefix}-${number}`;
 }
 
+function roundMoney(n: number): number {
+  return Math.round(Number(n) * 100) / 100;
+}
+
+/**
+ * Solo se factura el cobro con tarjeta.
+ * Efectivo (100% o el resto de un depósito) no genera factura.
+ * En depósito 20%/10% la factura es únicamente ese importe de tarjeta.
+ */
+export function invoiceAmountForBooking(booking: {
+  paymentMethod?: string;
+  amountPaidCard?: number;
+}): number {
+  const paidCard = roundMoney(booking.amountPaidCard || 0);
+  if (paidCard <= 0) return 0;
+  if (booking.paymentMethod === "pay_on_day") return 0;
+  if (isDepositMethod(booking.paymentMethod || "")) return paidCard;
+  return paidCard;
+}
+
 export async function createInvoiceForBooking(
   booking: Booking,
   notes?: string
@@ -90,28 +111,29 @@ export async function createInvoiceForBooking(
   const number = nextInvoiceNumber(invoices);
   const id = formatInvoiceId("invoice", number);
 
-  const amountTotal = booking.amountTotal ?? booking.totalPrice;
-  const { subtotal, taxAmount, total } = splitIgic(amountTotal, taxRate);
+  const invoiceTotal = invoiceAmountForBooking(booking);
+  if (invoiceTotal <= 0) {
+    throw new Error(
+      "No se emite factura: no hay cobro con tarjeta (el efectivo no se factura)."
+    );
+  }
+  const { subtotal, taxAmount, total } = splitIgic(invoiceTotal, taxRate);
   const paidCard = Number(booking.amountPaidCard) || 0;
-  const paidCash = Number(booking.amountPaidCash) || 0;
   const dueCash = Number(booking.amountDueCash) || 0;
-  const paidTotal = Math.round((paidCard + paidCash) * 100) / 100;
 
   let paymentNotes = notes;
   if (!paymentNotes) {
-    if (
-      booking.paymentMethod === "deposit_20" ||
-      booking.paymentMethod === "deposit_10"
-    ) {
-      paymentNotes = `Depósito ${booking.paymentMethod === "deposit_20" ? "20" : "10"}% tarjeta: ${paidCard.toFixed(2)}€. Pendiente efectivo: ${dueCash.toFixed(2)}€.`;
-    } else if (booking.paymentMethod === "pay_on_day") {
-      paymentNotes = `Pago el día del servicio. Cobrado: ${paidTotal.toFixed(2)}€. Pendiente: ${dueCash.toFixed(2)}€.`;
-    } else if (paidTotal < amountTotal) {
-      paymentNotes = `Cobrado: ${paidTotal.toFixed(2)}€. Pendiente: ${(Math.round((amountTotal - paidTotal) * 100) / 100).toFixed(2)}€.`;
+    if (isDepositMethod(booking.paymentMethod)) {
+      const pct = booking.paymentMethod === "deposit_20" ? "20" : "10";
+      paymentNotes = `Factura del depósito ${pct}% cobrado con tarjeta (${paidCard.toFixed(2)}€). El resto en efectivo (${dueCash.toFixed(2)}€) no se factura.`;
     } else {
-      paymentNotes = `Pagado: ${paidTotal.toFixed(2)}€.`;
+      paymentNotes = `Pagado con tarjeta: ${paidCard.toFixed(2)}€.`;
     }
   }
+
+  const lineDescription = isDepositMethod(booking.paymentMethod)
+    ? `Depósito ${booking.paymentMethod === "deposit_20" ? "20" : "10"}% tarjeta — ${booking.tourTitle}`
+    : booking.tourTitle;
 
   const invoice: Invoice = {
     id,
@@ -127,7 +149,7 @@ export async function createInvoiceForBooking(
     },
     lines: [
       {
-        description: booking.tourTitle,
+        description: lineDescription,
         qty: 1,
         unitPrice: subtotal,
         total: subtotal,

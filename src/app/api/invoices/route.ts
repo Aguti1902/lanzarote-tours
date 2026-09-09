@@ -4,6 +4,7 @@ import {
   createInvoiceForBooking,
   getInvoiceById,
   getInvoices,
+  invoiceAmountForBooking,
   invoiceStats,
 } from "@/lib/invoices";
 import { requireAdmin } from "@/lib/admin-auth";
@@ -40,16 +41,12 @@ export async function POST(request: Request) {
     if (!booking) {
       return NextResponse.json({ error: "Reserva no encontrada" }, { status: 404 });
     }
-    const paidCard = Number(booking.amountPaidCard) || 0;
-    const paidCash = Number(booking.amountPaidCash) || 0;
-    const isPaid =
-      paidCard > 0 ||
-      paidCash > 0 ||
-      booking.paymentStatus === "paid" ||
-      booking.paymentStatus === "partial";
-    if (!isPaid && !body.force) {
+    if (invoiceAmountForBooking(booking) <= 0) {
       return NextResponse.json(
-        { error: "La reserva aún no tiene cobro; no se emite factura" },
+        {
+          error:
+            "No se emite factura por efectivo. Solo se factura el cobro con tarjeta (en depósitos, únicamente el 20%).",
+        },
         { status: 400 }
       );
     }

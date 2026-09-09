@@ -16,6 +16,8 @@ import {
 import { useCart } from "@/components/CartProvider";
 import { useLocale } from "@/components/LocaleProvider";
 import { ShoreMeetingPointButton } from "@/components/ShoreMeetingPointButton";
+import { PhoneInput } from "@/components/PhoneInput";
+import { composeInternationalPhone, defaultPhonePrefix } from "@/lib/phone";
 
 const inputClass =
   "w-full rounded border border-sand-line bg-white px-3 py-2.5 text-sm outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20";
@@ -58,6 +60,9 @@ export function CruiseTourBooking({
   const [passengers, setPassengers] = useState(Math.min(2, max));
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phonePrefix, setPhonePrefix] = useState(() =>
+    defaultPhonePrefix(locale)
+  );
   const [phone, setPhone] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [loading, setLoading] = useState(false);
@@ -181,7 +186,8 @@ export function CruiseTourBooking({
           customer: {
             name,
             email,
-            phone,
+            phone: composeInternationalPhone(phonePrefix, phone),
+            phonePrefix,
             cruiseShip: sailing.shipName,
             notes,
           },
@@ -337,13 +343,12 @@ export function CruiseTourBooking({
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <input
-            type="tel"
-            className={inputClass}
-            placeholder={dict.common.phone}
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
+          <PhoneInput
+            prefix={phonePrefix}
+            number={phone}
+            onPrefixChange={setPhonePrefix}
+            onNumberChange={setPhone}
+            inputClassName={inputClass}
           />
           <div className="grid gap-2 sm:grid-cols-2">
             {methods.map((method) => (

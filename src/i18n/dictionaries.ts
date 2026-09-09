@@ -36,6 +36,8 @@ export type Dictionary = {
     next: string;
     language: string;
     info: string;
+    phonePrefix: string;
+    phoneNumber: string;
   };
   home: {
     ctaOffers: string;
@@ -471,6 +473,8 @@ const es: Dictionary = {
     next: "Siguiente",
     language: "Idioma",
     info: "Información",
+    phonePrefix: "Prefijo",
+    phoneNumber: "Número de móvil",
   },
   home: {
     ctaOffers: "Ver nuestras ofertas",
@@ -1062,6 +1066,8 @@ const en: Dictionary = {
     next: "Next",
     language: "Language",
     info: "Information",
+    phonePrefix: "Prefix",
+    phoneNumber: "Mobile number",
   },
   home: {
     ctaOffers: "See our offers",
@@ -1604,6 +1610,8 @@ const de: Dictionary = {
     next: "Weiter",
     language: "Sprache",
     info: "Information",
+    phonePrefix: "Vorwahl",
+    phoneNumber: "Handynummer",
   },
   home: {
     ctaOffers: "Unsere Angebote ansehen",

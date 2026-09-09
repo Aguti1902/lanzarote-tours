@@ -12,6 +12,8 @@ import {
   transferExtraPassengers,
   type TransferDirection,
 } from "@/lib/transfer-price";
+import { PhoneInput } from "@/components/PhoneInput";
+import { composeInternationalPhone, defaultPhonePrefix } from "@/lib/phone";
 import type { PaymentMethod, TransferDestination } from "@/types";
 
 const inputClass =
@@ -36,6 +38,9 @@ export function TransferBookingForm({
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phonePrefix, setPhonePrefix] = useState(() =>
+    defaultPhonePrefix(locale)
+  );
   const [phone, setPhone] = useState("");
   const [hotel, setHotel] = useState("");
   const [flightNumber, setFlightNumber] = useState("");
@@ -125,7 +130,14 @@ export function TransferBookingForm({
           children: 0,
           totalPrice: total,
           paymentMethod,
-          customer: { name, email, phone, hotel, flightNumber },
+          customer: {
+            name,
+            email,
+            phone: composeInternationalPhone(phonePrefix, phone),
+            phonePrefix,
+            hotel,
+            flightNumber,
+          },
           transfer: {
             destination: dest.name,
             destinationId: dest.id,
@@ -289,18 +301,13 @@ export function TransferBookingForm({
             required
           />
         </label>
-        <label className="block">
-          <span className="mb-1 block text-sm font-medium">
-            {dict.common.phone} *
-          </span>
-          <input
-            type="tel"
-            className={inputClass}
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
-          />
-        </label>
+        <PhoneInput
+          prefix={phonePrefix}
+          number={phone}
+          onPrefixChange={setPhonePrefix}
+          onNumberChange={setPhone}
+          inputClassName={inputClass}
+        />
         <label className="block">
           <span className="mb-1 block text-sm font-medium">
             {dict.transferForm.flight}

@@ -11,6 +11,8 @@ import { formatPrice } from "@/lib/format";
 import type { PaymentMethod } from "@/types";
 import { isServiceDateWithinLeadTime } from "@/lib/booking-lead-time";
 import { expectedOnlineCharge, splitPaymentAmounts } from "@/lib/payments";
+import { PhoneInput } from "@/components/PhoneInput";
+import { composeInternationalPhone, defaultPhonePrefix } from "@/lib/phone";
 
 const inputClass =
   "w-full rounded border border-sand-line bg-white px-3 py-2.5 text-sm outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20";
@@ -21,6 +23,9 @@ export default function CarritoPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phonePrefix, setPhonePrefix] = useState(() =>
+    defaultPhonePrefix(locale)
+  );
   const [phone, setPhone] = useState("");
   const [hotel, setHotel] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
@@ -90,7 +95,8 @@ export default function CarritoPage() {
             customer: {
               name,
               email,
-              phone,
+              phone: composeInternationalPhone(phonePrefix, phone),
+              phonePrefix,
               hotel,
               cruiseShip: item.cruiseShip,
               notes: item.notes,
@@ -238,12 +244,12 @@ export default function CarritoPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
-              <input
-                className={inputClass}
-                placeholder={dict.common.phone}
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required
+              <PhoneInput
+                prefix={phonePrefix}
+                number={phone}
+                onPrefixChange={setPhonePrefix}
+                onNumberChange={setPhone}
+                inputClassName={inputClass}
               />
               <input
                 className={inputClass}

@@ -9,6 +9,7 @@ import {
 import {
   createCreditNoteForBooking,
   createInvoiceForBooking,
+  invoiceAmountForBooking,
 } from "@/lib/invoices";
 import { assessCancellation } from "@/lib/cancellation";
 import {
@@ -47,21 +48,15 @@ import {
 } from "@/lib/tour-availability";
 import { isFlatPriceTour } from "@/lib/tour-pricing";
 import { isStripeConfigured } from "@/lib/stripe";
-import type { BookingStatus, PaymentMethod } from "@/types";
+import { composeInternationalPhone } from "@/lib/phone";
 import { requireAdmin } from "@/lib/admin-auth";
 
-/** Solo emitir factura automática cuando ya hay cobro real. */
+/** Solo emitir factura automática por cobro con tarjeta (nunca efectivo). */
 function shouldAutoIssueInvoice(booking: {
   paymentMethod: PaymentMethod | string;
-  paymentStatus?: string;
   amountPaidCard?: number;
-  amountPaidCash?: number;
 }): boolean {
-  const paidCard = Number(booking.amountPaidCard) || 0;
-  const paidCash = Number(booking.amountPaidCash) || 0;
-  if (paidCard > 0 || paidCash > 0) return true;
-  if (booking.paymentStatus === "paid") return true;
-  return false;
+  return invoiceAmountForBooking(booking) > 0;
 }
 
 function isDateBlocked(
@@ -286,6 +281,17 @@ export async function POST(request: Request) {
       );
     }
 
+    const customerPhone = composeInternationalPhone(
+      customer?.phonePrefix,
+      customer?.phone
+    );
+    const customerPayload = {
+      ...customer,
+      phone: customerPhone || String(customer?.phone || "").trim(),
+      phonePrefix:
+        String(customer?.phonePrefix || "").trim() || undefined,
+    };
+
     let booking = await addBooking({
       type,
       tourId,
@@ -297,7 +303,7 @@ export async function POST(request: Request) {
       totalPrice: resolvedTotal,
       paymentMethod: method,
       paymentStatus: status === "pending" ? "unpaid" : undefined,
-      customer,
+      customer: customerPayload,
       transfer: transferPayload,
       minibus,
       status,
@@ -309,7 +315,13 @@ export async function POST(request: Request) {
       groupId: groupId ? String(groupId) : undefined,
     });
 
-    if (customer?.cruiseShip || booking.groupId) {
+    const isShoreBooking =
+      source === "cruise" ||
+      String(tourId || "").startsWith("shore-") ||
+      Boolean(customerPayload?.cruiseShip) ||
+      Boolean(booking.groupId);
+
+    if (isShoreBooking) {
       const assigned = await assignBookingToCruiseGroup(booking);
       booking = assigned.booking;
     }
@@ -342,9 +354,14 @@ export async function POST(request: Request) {
       }
     }
 
-    const invoice = shouldAutoIssueInvoice(booking)
-      ? await createInvoiceForBooking(booking)
-      : null;
+    let invoice = null;
+    if (shouldAutoIssueInvoice(booking)) {
+      try {
+        invoice = await createInvoiceForBooking(booking);
+      } catch (err) {
+        console.error("[bookings] invoice skipped", err);
+      }
+    }
 
     void notifyNewBooking(booking, {
       bookingMethod: methodNorm,
@@ -409,11 +426,7 @@ export async function PATCH(request: Request) {
       if (!booking) {
         return NextResponse.json({ error: "No encontrada" }, { status: 404 });
       }
-      let invoice = null;
-      if (!booking.invoiceId) {
-        invoice = await createInvoiceForBooking(booking);
-      }
-      return NextResponse.json({ booking, invoice });
+      return NextResponse.json({ booking, invoice: null });
     }
 
     // Recalcular importes al editar el total en el panel

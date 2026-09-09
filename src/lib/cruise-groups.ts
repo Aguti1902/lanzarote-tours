@@ -5,6 +5,14 @@ import {
   upsertCruiseGroup,
 } from "@/lib/admin-extras";
 import { getBookings, updateBooking } from "@/lib/bookings";
+import {
+  findSailingForPortCall,
+  getCruiseShoreTourById,
+} from "@/lib/cruise-itineraries";
+import {
+  shoreTourMaxPassengers,
+  shoreTourUnitPrice,
+} from "@/lib/shore-tour-display";
 
 export function normalizeCruiseKey(value: string): string {
   return value
@@ -204,11 +212,13 @@ export async function assignBookingToCruiseGroup(
   }
 
   const ship = booking.customer?.cruiseShip?.trim();
-  if (!ship || !booking.date) {
+  const isShoreTour = String(booking.tourId || "").startsWith("shore-");
+  if ((!ship && !isShoreTour) || !booking.date) {
     return { booking };
   }
+  const shipLabel = ship || "Crucero";
 
-  const groups = await getCruiseGroups();
+  let groups = await getCruiseGroups();
   const pax = bookingPax(booking);
   const title = booking.tourTitle || "";
 
@@ -216,7 +226,22 @@ export async function assignBookingToCruiseGroup(
     .filter((g) => {
       if (g.status === "done" || g.status === "private") return false;
       if (g.date !== booking.date) return false;
-      if (!shipMatchesBooking(booking, g)) return false;
+      if (ship && !shipMatchesBooking(booking, g)) return false;
+      if (!ship && isShoreTour) {
+        if (
+          title &&
+          normalizeCruiseKey(g.excursionTitle) &&
+          !normalizeCruiseKey(title).includes(
+            normalizeCruiseKey(g.excursionTitle)
+          ) &&
+          !normalizeCruiseKey(g.excursionTitle).includes(
+            normalizeCruiseKey(title)
+          )
+        ) {
+          return false;
+        }
+        return true;
+      }
       if (
         title &&
         normalizeCruiseKey(g.excursionTitle) &&
@@ -238,13 +263,45 @@ export async function assignBookingToCruiseGroup(
       return a.id.localeCompare(b.id);
     });
 
-  if (candidates.length === 0) {
-    return { booking };
+  let pool = candidates;
+
+  if (pool.length === 0) {
+    const shore = booking.tourId
+      ? await getCruiseShoreTourById(booking.tourId)
+      : undefined;
+    const sailing = await findSailingForPortCall({
+      shipName: shipLabel,
+      date: booking.date,
+    });
+    const created = await upsertCruiseGroup({
+      shipName: sailing?.shipName || shipLabel,
+      company: sailing?.companyName || "",
+      date: booking.date,
+      port: shore?.port || "Lanzarote",
+      excursionTitle: booking.tourTitle || shore?.title || "Excursión shore",
+      complete: false,
+      minPax: Number(shore?.minPax) || 0,
+      maxPax: shore ? shoreTourMaxPassengers(shore) : 14,
+      pax: 0,
+      pricePerPerson: shore ? shoreTourUnitPrice(shore) : undefined,
+      departureDate: sailing?.departureDate,
+      sailingId: sailing?.id,
+      status: "open",
+      seriesIndex: 1,
+      notes: `Grupo creado automáticamente con la reserva ${booking.id}`,
+    });
+    try {
+      await ensureGroupPaymentLinks(created);
+    } catch {
+      /* se pueden generar en el panel */
+    }
+    pool = [created];
+    groups = [...groups, created];
   }
 
   const bookings = await getBookings();
   let target =
-    candidates.find((g) => {
+    pool.find((g) => {
       if (g.status !== "open") return false;
       const live = livePaxForGroup(g, bookings, groups, booking.id);
       const max = g.maxPax != null ? Number(g.maxPax) : Infinity;
@@ -254,7 +311,7 @@ export async function assignBookingToCruiseGroup(
   let spawned: CruiseGroup | undefined;
 
   if (!target) {
-    const seed = candidates[candidates.length - 1];
+    const seed = pool[pool.length - 1];
     const synced = await syncCruiseGroupCapacity(seed.id);
     spawned = synced.spawned;
     const refreshed = await getCruiseGroups();

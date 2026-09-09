@@ -11,11 +11,8 @@ import { useLocale } from "@/components/LocaleProvider";
 import { expectedOnlineCharge, splitPaymentAmounts } from "@/lib/payments";
 import { TourDatePicker } from "@/components/TourDatePicker";
 import { isServiceDateWithinLeadTime } from "@/lib/booking-lead-time";
-import {
-  effectiveAdultPrice,
-  effectiveChildPrice,
-  isTourDateBookable,
-} from "@/lib/tour-availability";
+import { PhoneInput } from "@/components/PhoneInput";
+import { composeInternationalPhone, defaultPhonePrefix } from "@/lib/phone";
 
 const inputClass =
   "w-full rounded border border-sand-line bg-white px-2.5 py-1.5 text-sm outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20";
@@ -32,6 +29,9 @@ export function BookingWidget({ tour }: { tour: Tour }) {
     useState<PaymentMethod>("card");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phonePrefix, setPhonePrefix] = useState(() =>
+    defaultPhonePrefix(locale)
+  );
   const [phone, setPhone] = useState("");
   const [hotel, setHotel] = useState("");
   const [cruiseShip, setCruiseShip] = useState("");
@@ -181,7 +181,15 @@ export function BookingWidget({ tour }: { tour: Tour }) {
             ? tour.bookingMethod || "request"
             : "online",
           locale,
-          customer: { name, email, phone, hotel, cruiseShip, notes },
+          customer: {
+            name,
+            email,
+            phone: composeInternationalPhone(phonePrefix, phone),
+            phonePrefix,
+            hotel,
+            cruiseShip,
+            notes,
+          },
           minibus: isMinibus ? { hours } : undefined,
           source: cruiseShip ? "cruise" : undefined,
         }),
@@ -336,16 +344,13 @@ export function BookingWidget({ tour }: { tour: Tour }) {
               autoComplete="email"
             />
           </Field>
-          <Field label={`${dict.common.phone} *`}>
-            <input
-              type="tel"
-              className={inputClass}
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-              autoComplete="tel"
-            />
-          </Field>
+          <PhoneInput
+            prefix={phonePrefix}
+            number={phone}
+            onPrefixChange={setPhonePrefix}
+            onNumberChange={setPhone}
+            inputClassName={inputClass}
+          />
         </div>
 
         <button

@@ -546,6 +546,7 @@ export interface Booking {
     name: string;
     email: string;
     phone: string;
+    phonePrefix?: string;
     hotel?: string;
     cruiseShip?: string;
     flightNumber?: string;

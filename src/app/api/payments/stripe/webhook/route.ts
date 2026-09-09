@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPaymentLinks, upsertPaymentLink } from "@/lib/admin-extras";
 import { updateBooking } from "@/lib/bookings";
-import { createInvoiceForBooking } from "@/lib/invoices";
+import { createInvoiceForBooking, invoiceAmountForBooking } from "@/lib/invoices";
 import { applyCollectedOnlinePayment, expectedOnlineCharge } from "@/lib/payments";
 import { customerFacingNotes } from "@/lib/customer-notes";
 import { sendCustomerBookingEmail } from "@/lib/customer-emails";
@@ -109,7 +109,11 @@ async function markBookingsPaidFromStripe(
       if (next) updated = next;
     }
 
-    if (updated && !updated.invoiceId && (updated.amountPaidCard || 0) > 0) {
+    if (
+      updated &&
+      !updated.invoiceId &&
+      invoiceAmountForBooking(updated) > 0
+    ) {
       try {
         const invoice = await createInvoiceForBooking(updated);
         updated = { ...updated, invoiceId: invoice.id };
