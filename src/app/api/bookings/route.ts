@@ -50,6 +50,7 @@ import { isFlatPriceTour } from "@/lib/tour-pricing";
 import { isStripeConfigured } from "@/lib/stripe";
 import { composeInternationalPhone } from "@/lib/phone";
 import { requireAdmin } from "@/lib/admin-auth";
+import type { BookingStatus, PaymentMethod } from "@/types";
 
 /** Solo emitir factura automática por cobro con tarjeta (nunca efectivo). */
 function shouldAutoIssueInvoice(booking: {
