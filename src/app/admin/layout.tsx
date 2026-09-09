@@ -39,7 +39,7 @@ type NavItem = {
   icon: typeof LayoutDashboard;
 };
 
-/** Orden alineado con el panel legacy LET (+ extras del nuevo). */
+/** Orden alineado con el panel de administración. */
 const nav: NavItem[] = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/banner", label: "Banner", icon: Megaphone },
@@ -220,13 +220,13 @@ function AdminShell({ children }: { children: React.ReactNode }) {
     <div className="flex min-h-screen bg-[#f3f4f6]">
       <aside className="sticky top-0 z-30 hidden h-screen w-64 shrink-0 flex-col overflow-hidden bg-header text-white md:flex">
         <div className="shrink-0 border-b border-white/10 px-5 py-5">
-          <div className="relative mb-2 h-10 w-[140px]">
+          <div className="relative mb-2 h-16 w-[118px] overflow-hidden rounded-lg bg-black">
             <Image
               src="/images/brand/logo.png"
-              alt="LET"
+              alt="Lanzarote Tours"
               fill
               className="object-contain object-left"
-              sizes="140px"
+              sizes="118px"
             />
           </div>
           <p className="text-xs text-white/55">Panel de administración</p>
@@ -245,13 +245,13 @@ function AdminShell({ children }: { children: React.ReactNode }) {
           <aside className="relative flex h-full w-[min(18rem,86vw)] flex-col bg-header text-white shadow-2xl">
             <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-4">
               <div>
-                <div className="relative h-9 w-[130px]">
+                <div className="relative h-14 w-[104px] overflow-hidden rounded-lg bg-black">
                   <Image
                     src="/images/brand/logo.png"
-                    alt="LET"
+                    alt="Lanzarote Tours"
                     fill
                     className="object-contain object-left"
-                    sizes="130px"
+                    sizes="104px"
                   />
                 </div>
                 <p className="mt-1 text-xs text-white/55">Panel de administración</p>
@@ -289,7 +289,7 @@ function AdminShell({ children }: { children: React.ReactNode }) {
             <p className="text-sm font-bold text-ink">Panel admin</p>
           </div>
           <p className="hidden text-sm text-ink-muted md:block">
-            LET · Panel de administración
+            Lanzarote Tours · Panel de administración
           </p>
         </header>
         <div className="flex-1 p-4 md:p-6">{children}</div>

@@ -53,7 +53,7 @@ export function CruiseItinerary({ sailing, tours }: Props) {
       <header className="space-y-3">
         <nav className="flex flex-wrap items-center gap-1.5 text-xs text-ink-muted sm:text-sm">
           <Link href={href("/")} className="hover:text-ocean">
-            LET
+            Lanzarote Tours
           </Link>
           <span>/</span>
           <Link href={href("/excursiones-cruceros")} className="hover:text-ocean">

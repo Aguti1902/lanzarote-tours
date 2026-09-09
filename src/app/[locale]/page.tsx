@@ -253,7 +253,7 @@ export default async function HomePage({ params }: Props) {
             <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] shadow-[0_24px_60px_rgba(42,122,74,0.16)] ring-1 ring-white/60">
               <Image
                 src={settings.aboutImage}
-                alt="LET"
+                alt="Lanzarote Tours"
                 fill
                 className="photo-vivid object-cover"
                 sizes="(max-width:768px) 100vw, 50vw"

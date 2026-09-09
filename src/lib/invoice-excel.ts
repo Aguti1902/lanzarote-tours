@@ -307,7 +307,7 @@ export async function buildInvoicesWorkbook(
   const months = [...byMonth.keys()].sort();
 
   const wb = new ExcelJS.Workbook();
-  wb.creator = "Lanzarote Experience Tours";
+  wb.creator = "Lanzarote Tours";
   wb.created = new Date();
 
   if (months.length === 0) {

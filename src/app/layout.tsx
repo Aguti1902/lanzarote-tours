@@ -20,11 +20,11 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   title: {
-    default: "Lanzarote Experience Tours - Visitas guiadas en Lanzarote",
-    template: "%s | Lanzarote Experience Tours",
+    default: "Lanzarote Tours - Visitas guiadas en Lanzarote",
+    template: "%s | Lanzarote Tours",
   },
   description:
-    "Somos Lanzarote Experience Tours, una empresa familiar y local. Organizamos visitas guiadas en Lanzarote sin intermediarios, en Español y en grupos reducidos (máx 14 personas).",
+    "Somos Lanzarote Tours, una empresa familiar y local. Organizamos visitas guiadas en Lanzarote sin intermediarios, en Español y en grupos reducidos (máx 14 personas).",
   other: {
     "theme-color": "#2a7a4a",
   },

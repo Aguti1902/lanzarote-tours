@@ -18,13 +18,13 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4 py-14 md:px-6">
         <div className="grid gap-12 md:grid-cols-[1.2fr_1fr_1fr]">
           <div>
-            <div className="relative mb-5 h-14 w-[180px]">
+            <div className="relative mb-5 h-24 w-[176px] overflow-hidden rounded-lg bg-black">
               <Image
                 src="/images/brand/logo.png"
-                alt="Lanzarote Experience Tours"
+                alt="Lanzarote Tours"
                 fill
                 className="object-contain object-left"
-                sizes="180px"
+                sizes="176px"
               />
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-white/65">

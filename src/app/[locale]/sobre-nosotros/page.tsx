@@ -58,7 +58,7 @@ export default async function SobreNosotrosPage({ params }: Props) {
         <div className="relative aspect-[4/5] overflow-hidden rounded-lg ring-1 ring-sand-line">
           <Image
             src={settings.aboutImageSecondary}
-            alt="Lanzarote Experience Tours"
+            alt="Lanzarote Tours"
             fill
             className="object-cover"
             sizes="(max-width:768px) 100vw, 50vw"

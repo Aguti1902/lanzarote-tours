@@ -1,6 +1,6 @@
 import type { Booking, BookingType } from "@/types";
 
-/** Prefijos de localizador LET */
+/** Prefijos de localizador */
 export type BookingIdPrefix = "R" | "CR" | "T" | "BK";
 
 /** Tours de afiliados: La Graciosa catamarán, mercadillo y delfines */

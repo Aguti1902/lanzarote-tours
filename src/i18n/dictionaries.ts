@@ -491,7 +491,7 @@ const es: Dictionary = {
     agencyTitle: "Agencia de excursiones",
     agencyBody:
       "Vigilamos la calidad con grupos pequeños y minibuses propios.",
-    agencyCta: "Conocer LET",
+    agencyCta: "Conocer la agencia",
     islandKicker: "La isla",
     islandTitle: "Aproveche al máximo su visita a Lanzarote",
     islandBody:
@@ -513,7 +513,7 @@ const es: Dictionary = {
     privacy: "Privacidad",
     terms: "Condiciones",
     rights: "Todos los derechos reservados",
-    tagline: "LET us guide you",
+    tagline: "Visitas guiadas en Lanzarote",
     agencyLicense: "Agencia Nº: I-AV-0002407.1",
   },
   excursions: {
@@ -983,10 +983,10 @@ const es: Dictionary = {
     payAmount: "Pagar {amount}",
   },
   chat: {
-    title: "Asistente LET",
+    title: "Asistente",
     subtitle: "Excursiones, traslados y más",
     greeting:
-      "¡Hola! Soy el asistente de Lanzarote Experience Tours. Pregúntame por excursiones, precios, traslados o si llega en crucero.",
+      "¡Hola! Soy el asistente de Lanzarote Tours. Pregúntame por excursiones, precios, traslados o si llega en crucero.",
     placeholder: "Escriba su pregunta…",
     writing: "Escribiendo…",
     suggestions: [
@@ -999,7 +999,7 @@ const es: Dictionary = {
       "Ahora mismo no he podido responder. Pruebe de nuevo o llámenos al +34 646 08 05 85.",
   },
   contactWidget: {
-    title: "Lanzarote Experience Tours",
+    title: "Lanzarote Tours",
     slug: "Contacto 24 / 7",
     help: "¿Necesita ayuda? Estamos para resolver todas sus dudas.",
     questions: "¿Preguntas?",
@@ -1077,7 +1077,7 @@ const en: Dictionary = {
     agencyTitle: "Excursion agency",
     agencyBody:
       "We protect quality with small groups and our own minibuses.",
-    agencyCta: "Meet LET",
+    agencyCta: "Meet the agency",
     islandKicker: "The island",
     islandTitle: "Make the most of your visit to Lanzarote",
     islandBody:
@@ -1099,7 +1099,7 @@ const en: Dictionary = {
     privacy: "Privacy",
     terms: "Terms",
     rights: "All rights reserved",
-    tagline: "LET us guide you",
+    tagline: "Guided tours in Lanzarote",
     agencyLicense: "Agency No: I-AV-0002407.1",
   },
   excursions: {
@@ -1520,10 +1520,10 @@ const en: Dictionary = {
     payAmount: "Pay {amount}",
   },
   chat: {
-    title: "LET Assistant",
+    title: "Assistant",
     subtitle: "Excursions, transfers and more",
     greeting:
-      "Hi! I am the Lanzarote Experience Tours assistant. Ask me about excursions, prices, transfers or cruise calls.",
+      "Hi! I am the Lanzarote Tours assistant. Ask me about excursions, prices, transfers or cruise calls.",
     placeholder: "Type your question…",
     writing: "Typing…",
     suggestions: [
@@ -1536,7 +1536,7 @@ const en: Dictionary = {
       "I could not reply right now. Please try again or call +34 646 08 05 85.",
   },
   contactWidget: {
-    title: "Lanzarote Experience Tours",
+    title: "Lanzarote Tours",
     slug: "Contact 24 / 7",
     help: "Need help? We are here to answer all your questions.",
     questions: "Questions?",
@@ -1614,7 +1614,7 @@ const de: Dictionary = {
     agencyTitle: "Ausflugsagentur",
     agencyBody:
       "Wir sichern Qualität mit kleinen Gruppen und eigenen Minibussen.",
-    agencyCta: "LET kennenlernen",
+    agencyCta: "Die Agentur kennenlernen",
     islandKicker: "Die Insel",
     islandTitle: "Holen Sie das Beste aus Ihrem Besuch auf Lanzarote",
     islandBody:
@@ -1636,7 +1636,7 @@ const de: Dictionary = {
     privacy: "Datenschutz",
     terms: "Bedingungen",
     rights: "Alle Rechte vorbehalten",
-    tagline: "LET us guide you",
+    tagline: "Geführte Touren auf Lanzarote",
     agencyLicense: "Agentur-Nr.: I-AV-0002407.1",
   },
   excursions: {
@@ -2066,10 +2066,10 @@ const de: Dictionary = {
     payAmount: "{amount} zahlen",
   },
   chat: {
-    title: "LET Assistent",
+    title: "Assistent",
     subtitle: "Ausflüge, Transfers und mehr",
     greeting:
-      "Hallo! Ich bin der Assistent von Lanzarote Experience Tours. Fragen Sie mich zu Ausflügen, Preisen, Transfers oder Kreuzfahrten.",
+      "Hallo! Ich bin der Assistent von Lanzarote Tours. Fragen Sie mich zu Ausflügen, Preisen, Transfers oder Kreuzfahrten.",
     placeholder: "Schreiben Sie Ihre Frage…",
     writing: "Schreibt…",
     suggestions: [
@@ -2082,7 +2082,7 @@ const de: Dictionary = {
       "Ich konnte gerade nicht antworten. Bitte erneut versuchen oder +34 646 08 05 85 anrufen.",
   },
   contactWidget: {
-    title: "Lanzarote Experience Tours",
+    title: "Lanzarote Tours",
     slug: "Kontakt 24 / 7",
     help: "Brauchen Sie Hilfe? Wir beantworten gerne alle Fragen.",
     questions: "Fragen?",

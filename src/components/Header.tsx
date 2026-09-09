@@ -51,14 +51,14 @@ export function Header() {
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
         <Link
           href={href("/")}
-          className="relative block h-11 w-[150px] shrink-0 transition hover:opacity-90 md:h-12 md:w-[175px]"
+          className="relative block h-16 w-[118px] shrink-0 overflow-hidden rounded-lg bg-black transition hover:opacity-90 md:h-[4.5rem] md:w-[132px]"
         >
           <Image
             src="/images/brand/logo.png"
-            alt="Lanzarote Experience Tours"
+            alt="Lanzarote Tours"
             fill
             className="object-contain object-left"
-            sizes="175px"
+            sizes="132px"
           />
         </Link>
 

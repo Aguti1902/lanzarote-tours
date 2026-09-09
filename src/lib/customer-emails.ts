@@ -40,20 +40,20 @@ function localeOf(booking: Booking): LocaleKey {
 
 const COPY = {
   es: {
-    brand: "Lanzarote Experience Tours",
+    brand: "Lanzarote Tours",
     greeting: (name: string) => `Hola ${name},`,
     confirmationSubject: (id: string) =>
-      `Confirmación de reserva ${id} · Lanzarote Experience Tours`,
+      `Confirmación de reserva ${id} · Lanzarote Tours`,
     confirmationTitle: "¡Reserva confirmada!",
     confirmationLead:
       "Gracias por reservar con nosotros. Aquí tiene el resumen de su reserva y los enlaces para ver el voucher, gestionarla o cancelarla.",
     requestSubject: (id: string) =>
-      `Solicitud recibida ${id} · Lanzarote Experience Tours`,
+      `Solicitud recibida ${id} · Lanzarote Tours`,
     requestTitle: "Hemos recibido su solicitud",
     requestLead:
       "Nuestro equipo revisará su petición y se pondrá en contacto con usted lo antes posible.",
     cancellationSubject: (id: string) =>
-      `Cancelación de reserva ${id} · Lanzarote Experience Tours`,
+      `Cancelación de reserva ${id} · Lanzarote Tours`,
     cancellationTitle: "Reserva cancelada",
     cancellationLead:
       "Confirmamos que su reserva ha sido cancelada. Puede consultar el detalle a continuación.",
@@ -97,20 +97,20 @@ const COPY = {
     ],
   },
   en: {
-    brand: "Lanzarote Experience Tours",
+    brand: "Lanzarote Tours",
     greeting: (name: string) => `Hello ${name},`,
     confirmationSubject: (id: string) =>
-      `Booking confirmation ${id} · Lanzarote Experience Tours`,
+      `Booking confirmation ${id} · Lanzarote Tours`,
     confirmationTitle: "Booking confirmed!",
     confirmationLead:
       "Thank you for booking with us. Here is your booking summary and links to view the voucher, manage or cancel it.",
     requestSubject: (id: string) =>
-      `Request received ${id} · Lanzarote Experience Tours`,
+      `Request received ${id} · Lanzarote Tours`,
     requestTitle: "We have received your request",
     requestLead:
       "Our team will review your request and contact you as soon as possible.",
     cancellationSubject: (id: string) =>
-      `Booking cancellation ${id} · Lanzarote Experience Tours`,
+      `Booking cancellation ${id} · Lanzarote Tours`,
     cancellationTitle: "Booking cancelled",
     cancellationLead:
       "We confirm that your booking has been cancelled. Details below.",
@@ -154,20 +154,20 @@ const COPY = {
     ],
   },
   de: {
-    brand: "Lanzarote Experience Tours",
+    brand: "Lanzarote Tours",
     greeting: (name: string) => `Hallo ${name},`,
     confirmationSubject: (id: string) =>
-      `Buchungsbestätigung ${id} · Lanzarote Experience Tours`,
+      `Buchungsbestätigung ${id} · Lanzarote Tours`,
     confirmationTitle: "Buchung bestätigt!",
     confirmationLead:
       "Vielen Dank für Ihre Buchung. Hier finden Sie die Zusammenfassung und Links zum Voucher sowie zur Verwaltung oder Stornierung.",
     requestSubject: (id: string) =>
-      `Anfrage erhalten ${id} · Lanzarote Experience Tours`,
+      `Anfrage erhalten ${id} · Lanzarote Tours`,
     requestTitle: "Wir haben Ihre Anfrage erhalten",
     requestLead:
       "Unser Team prüft Ihre Anfrage und meldet sich so schnell wie möglich.",
     cancellationSubject: (id: string) =>
-      `Stornierung ${id} · Lanzarote Experience Tours`,
+      `Stornierung ${id} · Lanzarote Tours`,
     cancellationTitle: "Buchung storniert",
     cancellationLead:
       "Wir bestätigen, dass Ihre Buchung storniert wurde. Details unten.",
@@ -540,7 +540,7 @@ export async function notifyOpsCancellation(
         rowsHtml,
         actionsHtml: emailCta(adminUrl, "Abrir en el panel", true),
       }),
-      footerHelp: "Notificación interna · Lanzarote Experience Tours.",
+      footerHelp: "Notificación interna · Lanzarote Tours.",
       brand: EMAIL_BRAND,
       lang: "es",
     }),
@@ -556,14 +556,14 @@ export async function sendContactAutoReply(input: {
   const locale: LocaleKey =
     input.locale === "en" || input.locale === "de" ? input.locale : "es";
   const subjects = {
-    es: "Hemos recibido su mensaje · Lanzarote Experience Tours",
-    en: "We have received your message · Lanzarote Experience Tours",
-    de: "Wir haben Ihre Nachricht erhalten · Lanzarote Experience Tours",
+    es: "Hemos recibido su mensaje · Lanzarote Tours",
+    en: "We have received your message · Lanzarote Tours",
+    de: "Wir haben Ihre Nachricht erhalten · Lanzarote Tours",
   };
   const bodies = {
-    es: `Hola ${input.name},\n\nGracias por escribirnos. Hemos recibido su mensaje y le responderemos lo antes posible.\n\nLanzarote Experience Tours\n+34 646 08 05 85`,
-    en: `Hello ${input.name},\n\nThank you for contacting us. We have received your message and will reply as soon as possible.\n\nLanzarote Experience Tours\n+34 646 08 05 85`,
-    de: `Hallo ${input.name},\n\nVielen Dank für Ihre Nachricht. Wir melden uns so schnell wie möglich.\n\nLanzarote Experience Tours\n+34 646 08 05 85`,
+    es: `Hola ${input.name},\n\nGracias por escribirnos. Hemos recibido su mensaje y le responderemos lo antes posible.\n\nLanzarote Tours\n+34 646 08 05 85`,
+    en: `Hello ${input.name},\n\nThank you for contacting us. We have received your message and will reply as soon as possible.\n\nLanzarote Tours\n+34 646 08 05 85`,
+    de: `Hallo ${input.name},\n\nVielen Dank für Ihre Nachricht. Wir melden uns so schnell wie möglich.\n\nLanzarote Tours\n+34 646 08 05 85`,
   };
   const text = bodies[locale];
   return sendEmail({

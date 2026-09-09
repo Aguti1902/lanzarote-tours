@@ -337,7 +337,7 @@ export function GroupsPanel() {
     const href = `mailto:${encodeURIComponent(booking.customer.email)}?subject=${encodeURIComponent(
       `Confirmación ${group.excursionTitle} — ${group.date}`
     )}&body=${encodeURIComponent(
-      `Hola ${booking.customer.name},\n\nConfirmamos su reserva ${booking.id} para el ${group.date} (${group.shipName}).\n\nExcursión: ${group.excursionTitle}\nPuerto: ${group.port}\n\nGracias,\nLanzarote Experience Tours`
+      `Hola ${booking.customer.name},\n\nConfirmamos su reserva ${booking.id} para el ${group.date} (${group.shipName}).\n\nExcursión: ${group.excursionTitle}\nPuerto: ${group.port}\n\nGracias,\nLanzarote Tours`
     )}`;
     window.location.href = href;
   }

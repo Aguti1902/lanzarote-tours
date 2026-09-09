@@ -18,7 +18,7 @@ import { localePath } from "@/i18n/path";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Excursions | Lanzarote Experience Tours",
+  title: "Excursiones | Lanzarote Tours",
 };
 
 type Props = { params: Promise<{ locale: string }> };

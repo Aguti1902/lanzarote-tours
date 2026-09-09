@@ -74,12 +74,12 @@ async function translateWithOpenAI(
       messages: [
         {
           role: "system",
-          content: `You translate website copy for Lanzarote Experience Tours (family-run guided tours in Lanzarote, Spanish-only small groups).
+          content: `You translate website copy for Lanzarote Tours (family-run guided tours in Lanzarote, Spanish-only small groups).
 Return ONLY valid JSON with this shape: { "en": { ...keys }, "de": { ...keys } }.
 Rules:
 - Preserve meaning, tone and structure (paragraph breaks with blank lines, one value per line in aboutValues).
 - Do not invent new marketing claims.
-- Keep brand names (Lanzarote Experience Tours, LET, César Manrique, Timanfaya, place names) unchanged when appropriate.
+- Keep brand names (Lanzarote Tours, César Manrique, Timanfaya, place names) unchanged when appropriate.
 - Translate only the provided keys.`,
         },
         {

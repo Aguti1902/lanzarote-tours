@@ -12,7 +12,7 @@ import { escapeHtml, formatFromAddress, sendEmail } from "@/lib/mail";
 import { MAILBOX, resolveBookingMailbox } from "@/lib/mail-routing";
 import { resolvePublicOrigin } from "@/lib/voucher";
 
-const ADMIN_FOOTER = "Notificación interna · Lanzarote Experience Tours.";
+const ADMIN_FOOTER = "Notificación interna · Lanzarote Tours.";
 
 export async function notifyContactMessage(input: {
   name: string;

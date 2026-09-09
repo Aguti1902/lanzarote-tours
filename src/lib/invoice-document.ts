@@ -13,7 +13,7 @@ export type InvoiceCompany = {
 };
 
 const DEFAULT_COMPANY: InvoiceCompany = {
-  brandName: "Lanzarote Experience Tours",
+  brandName: "Lanzarote Tours",
   legalName: "Lanzarote Experience Tours S.L.U.",
   taxId: "B00000000",
   agencyLicense: "I-AV-0002407.1",

@@ -21,7 +21,7 @@ export function BrandLoadingPanel({
       <div className="logo-loading-pulse relative h-16 w-24">
         <Image
           src="/images/brand/logo-mark.png"
-          alt="Lanzarote Experience Tours"
+            alt="Lanzarote Tours"
           fill
           className="object-contain"
           sizes="96px"

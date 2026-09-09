@@ -141,7 +141,7 @@ export function buildVoucherHtml(
 ): string {
   const labels = { ...DEFAULT_LABELS, ...options?.labels };
   const company: VoucherCompany = {
-    brandName: "Lanzarote Experience Tours",
+    brandName: "Lanzarote Tours",
     legalName: "Lanzarote Experience Tours S.L.U.",
     taxId: "B00000000",
     address: "Calle Calderetas, 100, 35550 San Bartolomé - Lanzarote",

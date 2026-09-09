@@ -11,7 +11,7 @@ type SendEmailInput = {
   subject: string;
   text: string;
   html?: string;
-  /** Remitente completo, p.ej. `Lanzarote Experience Tours <booking@…>` */
+  /** Remitente completo, p.ej. `Lanzarote Tours <booking@…>` */
   from?: string;
   replyTo?: string;
 };
@@ -22,13 +22,13 @@ export type SendEmailResult =
 
 export function formatFromAddress(
   email: string,
-  displayName = "Lanzarote Experience Tours"
+  displayName = "Lanzarote Tours"
 ) {
   const addr = email.trim();
   if (!addr) {
     return (
       process.env.MAIL_FROM?.trim() ||
-      "Lanzarote Experience Tours <booking@lanzaroteexperiencetours.com>"
+      "Lanzarote Tours <booking@lanzaroteexperiencetours.com>"
     );
   }
   if (addr.includes("<")) return addr;

@@ -1,5 +1,5 @@
 /**
- * Destinatarios / remitentes operativos LET.
+ * Destinatarios / remitentes operativos.
  * - Bajo petición → info@
  * - Reservas / traslados → booking@
  * - Contacto web → support@

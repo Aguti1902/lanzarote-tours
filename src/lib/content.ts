@@ -456,18 +456,18 @@ export async function deleteCruiseCall(id: string): Promise<boolean> {
 /* ── Settings ── */
 
 const defaultSettings: SiteSettings = {
-  brandName: "Lanzarote Experience Tours",
-  tagline: "LET us guide you",
+  brandName: "Lanzarote Tours",
+  tagline: "Visitas guiadas en Lanzarote",
   phone: "+34 646 08 05 85",
   email: "support@lanzaroteexperiencetours.com",
   hours: "Contacto 24 / 7",
-  homeHeadline: "Lanzarote Experience Tours",
-  homeSubheadline: "LET us guide you",
+  homeHeadline: "Lanzarote Tours",
+  homeSubheadline: "Visitas guiadas en Lanzarote",
   homeHeroImage: "/images/home/timanfaya-familia.jpg",
   homeHeroPosition: "50% 42%",
-  aboutTitle: "Lanzarote Experience Tours",
+  aboutTitle: "Lanzarote Tours",
   aboutLead:
-    "LET es una empresa familiar local que ofrece visitas guiadas en Lanzarote.",
+    "Somos una empresa familiar local que ofrece visitas guiadas en Lanzarote.",
   aboutText: "",
   aboutImage: "/images/home/amigas-volcan.jpg",
   aboutImageSecondary: "/images/home/camellos.jpg",

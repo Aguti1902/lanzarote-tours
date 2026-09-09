@@ -1,6 +1,6 @@
 import { escapeHtml } from "@/lib/mail";
 
-export const EMAIL_BRAND = "Lanzarote Experience Tours";
+export const EMAIL_BRAND = "Lanzarote Tours";
 
 export function emailRow(label: string, value: string) {
   if (!value || value === "—") return "";
