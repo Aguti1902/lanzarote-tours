@@ -24,6 +24,7 @@ type GroupPaymentLink = PaymentLink & { url?: string };
 
 type GroupDetail = {
   group: CruiseGroup;
+  currentSiteId?: string;
   bookings: Booking[];
   sailing: {
     id: string;
@@ -98,6 +99,16 @@ function matchesTab(group: CruiseGroup, tab: GroupsTab, today = todayIso()) {
     default:
       return false;
   }
+}
+
+function bookingRowKey(booking: Booking) {
+  return `${booking.siteId || "local"}:${booking.id}`;
+}
+
+function isForeignBooking(booking: Booking, currentSiteId?: string) {
+  return Boolean(
+    booking.siteId && currentSiteId && booking.siteId !== currentSiteId
+  );
 }
 
 function confirmationsMailto(bookings: Booking[], subject: string) {
@@ -344,7 +355,11 @@ export function GroupsPanel() {
 
   const selectedBooking = useMemo(() => {
     if (!selectedBookingId || !detail) return null;
-    return detail.bookings.find((b) => b.id === selectedBookingId) || null;
+    return (
+      detail.bookings.find((b) => bookingRowKey(b) === selectedBookingId) ||
+      detail.bookings.find((b) => b.id === selectedBookingId) ||
+      null
+    );
   }, [selectedBookingId, detail]);
 
   if (detailId) {
@@ -657,11 +672,19 @@ export function GroupsPanel() {
                     )}
                     {detail.bookings.map((b) => (
                       <tr
-                        key={b.id}
+                        key={bookingRowKey(b)}
                         className={`border-b border-sand-line align-middle ${bookingRowClassName(b.status)}`}
                       >
                         <td className="px-4 py-3 font-semibold text-ocean">
-                          {b.id}
+                          <div className="flex flex-col gap-1">
+                            <span>{b.id}</span>
+                            {isForeignBooking(b, detail.currentSiteId) &&
+                            b.siteLabel ? (
+                              <span className="w-fit rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-800">
+                                {b.siteLabel}
+                              </span>
+                            ) : null}
+                          </div>
                         </td>
                         <td className="px-4 py-3">
                           {formatDate(b.createdAt)}
@@ -692,11 +715,12 @@ export function GroupsPanel() {
                             </button>
                             <button
                               type="button"
-                              onClick={() => setSelectedBookingId(b.id)}
+                              onClick={() => setSelectedBookingId(bookingRowKey(b))}
                               className="rounded border border-ocean/50 px-3 py-1.5 text-xs font-bold uppercase text-ocean"
                             >
                               Detalles
                             </button>
+                            {!isForeignBooking(b, detail.currentSiteId) && (
                             <Link
                               href={`/es/voucher?id=${encodeURIComponent(b.id)}`}
                               target="_blank"
@@ -704,6 +728,7 @@ export function GroupsPanel() {
                             >
                               Bono
                             </Link>
+                            )}
                           </div>
                         </td>
                       </tr>
@@ -720,6 +745,11 @@ export function GroupsPanel() {
             booking={selectedBooking}
             onClose={() => setSelectedBookingId(null)}
             onSaveCustomer={async (id, customer) => {
+              if (isForeignBooking(selectedBooking, detail?.currentSiteId)) {
+                throw new Error(
+                  "Esta reserva pertenece a otra web. Edítala en su panel."
+                );
+              }
               const res = await fetch("/api/bookings", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },

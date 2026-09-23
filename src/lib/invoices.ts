@@ -32,7 +32,10 @@ export function splitIgic(
 
 export async function getInvoices(): Promise<Invoice[]> {
   try {
-    return await readCmsJson<Invoice[]>("invoices.json");
+    const invoices = await readCmsJson<Invoice[]>("invoices.json");
+    const { raiseHubInvoiceFloor } = await import("@/lib/hub/floors");
+    await raiseHubInvoiceFloor(nextInvoiceNumber(invoices) - 1);
+    return invoices;
   } catch {
     return [];
   }
@@ -69,6 +72,12 @@ export function nextInvoiceNumber(invoices: Invoice[]): number {
     }
   }
   return max + 1;
+}
+
+async function allocateInvoiceNumber(invoices: Invoice[]): Promise<number> {
+  const localNext = nextInvoiceNumber(invoices);
+  const { tryHubNextNumber } = await import("@/lib/hub/sequences");
+  return (await tryHubNextNumber("invoice", localNext)) ?? localNext;
 }
 
 function formatInvoiceId(type: Invoice["type"], number: number): string {
@@ -108,7 +117,7 @@ export async function createInvoiceForBooking(
 
   const taxRate = IGIC_RATE;
   const invoices = await getInvoices();
-  const number = nextInvoiceNumber(invoices);
+  const number = await allocateInvoiceNumber(invoices);
   const id = formatInvoiceId("invoice", number);
 
   const invoiceTotal = invoiceAmountForBooking(booking);
@@ -198,7 +207,7 @@ export async function createCreditNoteForBooking(
   if (refundAmount <= 0 && !related) return null;
 
   const invoices = await getInvoices();
-  const number = nextInvoiceNumber(invoices);
+  const number = await allocateInvoiceNumber(invoices);
   const id = formatInvoiceId("credit_note", number);
 
   let credit: Invoice;

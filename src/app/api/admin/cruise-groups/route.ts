@@ -11,7 +11,8 @@ import {
   bookingsForGroup,
   livePaxForGroup,
 } from "@/lib/cruise-groups";
-import { getBookings } from "@/lib/bookings";
+import { getBookingsForCruiseGroups } from "@/lib/hub/bookings";
+import { getHubSiteId } from "@/lib/hub/config";
 import { findSailingForPortCall } from "@/lib/cruise-itineraries";
 
 export const dynamic = "force-dynamic";
@@ -29,7 +30,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Grupo no encontrado" }, { status: 404 });
   }
 
-  const bookings = await getBookings();
+  const bookings = await getBookingsForCruiseGroups();
   const groupBookings = bookingsForGroup(group, bookings, groups);
   const sailing = await findSailingForPortCall({
     shipName: group.shipName,
@@ -51,6 +52,7 @@ export async function GET(request: Request) {
 
   return NextResponse.json({
     group,
+    currentSiteId: getHubSiteId(),
     bookings: groupBookings,
     sailing: sailing
       ? {
