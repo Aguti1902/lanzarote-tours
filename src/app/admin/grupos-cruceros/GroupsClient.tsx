@@ -173,6 +173,14 @@ export function GroupsPanel() {
     null
   );
   const [message, setMessage] = useState("");
+  const [hubStatus, setHubStatus] = useState<{
+    configured: boolean;
+    ok: boolean;
+    siteId: string;
+    host: string;
+    count: number;
+    error: string | null;
+  } | null>(null);
   const [copiedUrl, setCopiedUrl] = useState("");
 
   const emptyForm = {
@@ -225,6 +233,7 @@ export function GroupsPanel() {
     const res = await fetch("/api/admin/extras?resource=groups");
     const data = await res.json();
     setItems(data.items || []);
+    if (data.hub) setHubStatus(data.hub);
   }, []);
 
   useEffect(() => {
@@ -844,6 +853,19 @@ export function GroupsPanel() {
         <p className="mt-1 text-sm text-ink-muted">
           Gestión de grupos por escala, mínimo de pax y estado del grupo.
         </p>
+        {hubStatus && (
+          <p
+            className={`mt-3 rounded-lg px-3 py-2 text-sm ${
+              hubStatus.ok
+                ? "bg-emerald-50 text-emerald-800"
+                : "bg-amber-50 text-amber-900"
+            }`}
+          >
+            {hubStatus.ok
+              ? `Hub conectado · ${hubStatus.host} · ${hubStatus.count} grupos compartidos · sitio ${hubStatus.siteId}`
+              : `Hub no conectado${hubStatus.host ? ` · ${hubStatus.host}` : ""}: ${hubStatus.error}`}
+          </p>
+        )}
       </div>
 
       <nav
