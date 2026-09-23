@@ -61,13 +61,23 @@ export async function GET(request: Request) {
     case "ports":
       return NextResponse.json({ items: await getCruisePorts() });
     case "groups": {
-      const { getHubCruiseGroupsStatus } = await import(
-        "@/lib/hub/cruise-groups"
+      const { getHubHost, getHubSiteId, isHubConfigured } = await import(
+        "@/lib/hub/config"
       );
       const items = await getCruiseGroups();
+      const configured = isHubConfigured();
       return NextResponse.json({
         items,
-        hub: await getHubCruiseGroupsStatus(),
+        hub: {
+          configured,
+          ok: configured,
+          siteId: getHubSiteId(),
+          host: getHubHost(),
+          count: items.length,
+          error: configured
+            ? null
+            : "Faltan HUB_SUPABASE_URL y HUB_SUPABASE_SERVICE_ROLE_KEY",
+        },
       });
     }
     case "redirects":
