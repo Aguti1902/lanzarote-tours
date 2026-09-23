@@ -134,45 +134,88 @@ export function buildPaymentUrl(
   const locale = item.customerLocale || "es";
   const hash = item.paymentHash || item.id;
   const email = encodeURIComponent(item.customerEmail || "");
-  return `${origin}/${locale}/gateway/?h=${hash}&email=${email}&ref=${encodeURIComponent(item.locator)}`;
+  return `${origin}/${locale}/gateway?h=${encodeURIComponent(hash)}&email=${email}&ref=${encodeURIComponent(item.locator)}`;
+}
+
+export function isManualCruiseGroup(group: {
+  manual?: boolean;
+  notes?: string;
+  spawnedFromId?: string;
+}): boolean {
+  if (group.manual === true) return true;
+  if (group.manual === false) return false;
+  if (group.spawnedFromId) return false;
+  const notes = group.notes || "";
+  if (
+    /automáticamente|automaticamente|grupo automático|cupo lleno/i.test(notes)
+  ) {
+    return false;
+  }
+  return true;
+}
+
+export function remainingGroupSeats(
+  group: { maxPax?: number },
+  occupiedPax: number
+): number {
+  const max = Number(group.maxPax) || 0;
+  if (max <= 0) return 0;
+  return Math.max(0, max - Math.max(0, occupiedPax));
 }
 
 /** Create group_all + per_person payment links for a cruise group (manual share). */
 export async function ensureGroupPaymentLinks(
   group: CruiseGroup,
-  options?: { forcePerPerson?: boolean; personCount?: number }
-): Promise<{ groupAll: PaymentLink; perPerson: PaymentLink[] }> {
+  options?: {
+    forcePerPerson?: boolean;
+    personCount?: number;
+    occupiedPax?: number;
+  }
+): Promise<{ groupAll: PaymentLink | null; perPerson: PaymentLink[] }> {
   const data = await readData();
   const existing = data.paymentLinks.filter(
     (p) => p.groupId === group.id && p.status !== "cancelled"
   );
   const price = Number(group.pricePerPerson) || 0;
-  const maxPax = Math.max(
-    1,
-    Number(
-      options?.personCount ??
-        (group.maxPax != null && Number(group.maxPax) > 0
-          ? group.maxPax
-          : group.minPax) ??
-        1
-    ) || 1
-  );
+  const occupied =
+    options?.occupiedPax != null
+      ? Math.max(0, Number(options.occupiedPax) || 0)
+      : Math.max(0, Number(group.pax) || 0);
+  const remaining =
+    options?.personCount != null
+      ? Math.max(0, Number(options.personCount) || 0)
+      : remainingGroupSeats(group, occupied);
+  const amount = Math.round(price * remaining * 100) / 100;
+  const manual = Boolean(options?.forcePerPerson) || isManualCruiseGroup(group);
   const seriesLabel =
     group.seriesIndex && group.seriesIndex > 1
       ? ` · Grupo ${group.seriesIndex}`
       : "";
 
-  let groupAll = existing.find((p) => p.mode === "group_all");
-  if (!groupAll) {
+  let groupAll = existing.find((p) => p.mode === "group_all") || null;
+  if (remaining <= 0 || price <= 0) {
+    if (groupAll && groupAll.status === "pending") {
+      groupAll = await upsertPaymentLink({ ...groupAll, status: "cancelled" });
+      groupAll = null;
+    }
+  } else if (!groupAll) {
     groupAll = await upsertPaymentLink({
-      concept: `Grupo ${group.shipName} — ${group.excursionTitle} (${group.date})${seriesLabel} · pago completo`,
-      amount: Math.round(price * maxPax * 100) / 100,
+      concept: `Grupo ${group.shipName} — ${group.excursionTitle} (${group.date})${seriesLabel} · ${remaining} plazas libres`,
+      amount,
       customerName: group.shipName,
       customerLocale: "es",
-      notes: `Pago de todas las plazas del grupo ${group.id}`,
+      notes: `Pago de las ${remaining} plazas libres del grupo ${group.id}`,
       groupId: group.id,
       mode: "group_all",
       locator: `GRP-${group.id.replace(/^grp-/, "").slice(0, 10).toUpperCase()}`,
+    });
+  } else if (groupAll.status === "pending") {
+    groupAll = await upsertPaymentLink({
+      ...groupAll,
+      concept: `Grupo ${group.shipName} — ${group.excursionTitle} (${group.date})${seriesLabel} · ${remaining} plazas libres`,
+      amount,
+      notes: `Pago de las ${remaining} plazas libres del grupo ${group.id}`,
+      stripeCheckoutUrl: "",
     });
   }
 
@@ -180,29 +223,61 @@ export async function ensureGroupPaymentLinks(
     .filter((p) => p.mode === "per_person")
     .sort((a, b) => (a.personIndex || 0) - (b.personIndex || 0));
 
-  if (options?.forcePerPerson || perPerson.length === 0) {
-    const created: PaymentLink[] = [];
-    const start = perPerson.length + 1;
-    for (let i = start; i <= maxPax; i++) {
-      const link = await upsertPaymentLink({
-        concept: `Grupo ${group.shipName} — ${group.excursionTitle} (${group.date})${seriesLabel} · persona ${i}`,
-        amount: price,
-        customerLocale: "es",
-        notes: `Pago individual #${i} del grupo ${group.id}`,
-        groupId: group.id,
-        mode: "per_person",
-        personIndex: i,
-        personLabel: `Persona ${i}`,
-        locator: `GRP-${group.id.replace(/^grp-/, "").slice(0, 8).toUpperCase()}-P${i}`,
-      });
-      created.push(link);
+  if (!manual || remaining <= 0 || price <= 0) {
+    for (const link of perPerson) {
+      if (link.status === "pending") {
+        await upsertPaymentLink({ ...link, status: "cancelled" });
+      }
     }
-    perPerson = [...perPerson, ...created].sort(
-      (a, b) => (a.personIndex || 0) - (b.personIndex || 0)
-    );
+    return {
+      groupAll: groupAll && groupAll.status !== "cancelled" ? groupAll : null,
+      perPerson: [],
+    };
   }
 
-  return { groupAll, perPerson };
+  const kept: PaymentLink[] = [];
+  for (const link of perPerson) {
+    const index = link.personIndex || 0;
+    if (index > remaining && link.status === "pending") {
+      await upsertPaymentLink({ ...link, status: "cancelled" });
+      continue;
+    }
+    if (link.status === "pending" && link.amount !== price) {
+      kept.push(
+        await upsertPaymentLink({
+          ...link,
+          amount: price,
+          stripeCheckoutUrl: "",
+        })
+      );
+    } else {
+      kept.push(link);
+    }
+  }
+
+  const have = new Set(kept.map((p) => p.personIndex || 0));
+  for (let i = 1; i <= remaining; i++) {
+    if (have.has(i)) continue;
+    const link = await upsertPaymentLink({
+      concept: `Grupo ${group.shipName} — ${group.excursionTitle} (${group.date})${seriesLabel} · persona ${i}`,
+      amount: price,
+      customerLocale: "es",
+      notes: `Pago individual #${i} del grupo ${group.id}`,
+      groupId: group.id,
+      mode: "per_person",
+      personIndex: i,
+      personLabel: `Persona ${i}`,
+      locator: `GRP-${group.id.replace(/^grp-/, "").slice(0, 8).toUpperCase()}-P${i}`,
+    });
+    kept.push(link);
+  }
+
+  return {
+    groupAll: groupAll && groupAll.status !== "cancelled" ? groupAll : null,
+    perPerson: kept
+      .filter((p) => p.status !== "cancelled" && (p.personIndex || 0) <= remaining)
+      .sort((a, b) => (a.personIndex || 0) - (b.personIndex || 0)),
+  };
 }
 
 export async function deletePaymentLink(id: string) {
@@ -408,6 +483,7 @@ export async function upsertCruiseGroup(
       notes: input.notes || "",
       spawnedFromId: input.spawnedFromId || undefined,
       seriesIndex: input.seriesIndex != null ? Number(input.seriesIndex) : 1,
+      manual: input.manual,
     };
     return (await upsertHubCruiseGroup(created)) || created;
   }
@@ -444,6 +520,7 @@ export async function upsertCruiseGroup(
     spawnedFromId: input.spawnedFromId || undefined,
     seriesIndex:
       input.seriesIndex != null ? Number(input.seriesIndex) : 1,
+    manual: input.manual,
   };
   data.cruiseGroups.unshift(created);
   await writeData(data);

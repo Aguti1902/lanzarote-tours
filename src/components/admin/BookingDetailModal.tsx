@@ -61,7 +61,7 @@ function transferDirectionLabel(dir?: string) {
 function serviceKind(b: Booking) {
   if (b.type === "transfer") return "Traslado";
   if (b.type === "minibus") return "Minibús privado";
-  if (b.customer.cruiseShip) return "Excursión de crucero";
+  if (/^CR-?\d/i.test(b.id)) return "Excursión de crucero";
   return "Excursión";
 }
 
@@ -73,11 +73,7 @@ function voucherHtml(b: Booking) {
 }
 
 function isCruiseBooking(b: Booking) {
-  return (
-    b.id.startsWith("CR-") ||
-    Boolean(b.customer.cruiseShip?.trim()) ||
-    /crucero|escala|ship/i.test(b.customer.notes || "")
-  );
+  return /^CR-?\d/i.test(b.id);
 }
 
 export function BookingDetailModal({

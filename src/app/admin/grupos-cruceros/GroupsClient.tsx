@@ -47,6 +47,47 @@ const TABS: { id: GroupsTab; label: string; listTitle: string }[] = [
   { id: "private", label: "Privada", listTitle: "Grupos privados" },
 ];
 
+function isManualGroup(group: CruiseGroup): boolean {
+  if (group.manual === true) return true;
+  if (group.manual === false) return false;
+  if (group.spawnedFromId) return false;
+  const notes = group.notes || "";
+  if (
+    /automáticamente|automaticamente|grupo automático|cupo lleno/i.test(notes)
+  ) {
+    return false;
+  }
+  return true;
+}
+
+async function copyToClipboard(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    /* fallback */
+  }
+  try {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.top = "0";
+    area.style.left = "0";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.focus();
+    area.select();
+    const ok = document.execCommand("copy");
+    area.remove();
+    return ok;
+  } catch {
+    return false;
+  }
+}
+
 function todayIso(): string {
   const d = new Date();
   const y = d.getFullYear();
@@ -132,6 +173,7 @@ export function GroupsPanel() {
     null
   );
   const [message, setMessage] = useState("");
+  const [copiedUrl, setCopiedUrl] = useState("");
 
   const emptyForm = {
     shipName: "",
@@ -246,7 +288,9 @@ export function GroupsPanel() {
     const res = await fetch("/api/admin/extras?resource=groups", {
       method: wasEditing ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(wasEditing ? { id: editingId, ...form } : form),
+      body: JSON.stringify(
+        wasEditing ? { id: editingId, ...form } : { ...form, manual: true }
+      ),
     });
     const data = await res.json().catch(() => ({}));
     const createdId = !wasEditing
@@ -296,12 +340,13 @@ export function GroupsPanel() {
   }
 
   async function copyText(text: string) {
-    try {
-      await navigator.clipboard.writeText(text);
-      setMessage("Enlace copiado al portapapeles");
-    } catch {
-      setMessage("No se pudo copiar el enlace");
+    const ok = await copyToClipboard(text);
+    if (!ok) {
+      setMessage("No se pudo copiar. Selecciona el enlace y cópialo a mano.");
+      return;
     }
+    setCopiedUrl(text);
+    setMessage("Enlace copiado");
   }
 
   async function remove(id: string) {
@@ -537,76 +582,93 @@ export function GroupsPanel() {
             </div>
 
             <section className="rounded-xl bg-white p-5 ring-1 ring-sand-line">
-              <div className="mb-3 flex flex-wrap items-center justify-between gap-3 border-b border-sand-line pb-2">
-                <h2 className="text-sm font-bold uppercase tracking-wide">
-                  Enlaces de pago (enviar manualmente)
-                </h2>
-                <button
-                  type="button"
-                  onClick={() => ensurePaymentLinks(g.id, true)}
-                  className="text-xs font-bold text-ocean hover:underline"
-                >
-                  Regenerar enlaces por persona
-                </button>
-              </div>
               {(() => {
+                const manual = isManualGroup(g);
+                const occupied = detail.livePax || 0;
+                const max = Number(g.maxPax) || 0;
+                const remaining = max > 0 ? Math.max(0, max - occupied) : 0;
                 const links = detail.paymentLinks || [];
                 const groupAll = links.find((p) => p.mode === "group_all");
-                const perPerson = links
-                  .filter((p) => p.mode === "per_person")
-                  .sort(
-                    (a, b) => (a.personIndex || 0) - (b.personIndex || 0)
-                  );
-                if (!groupAll && perPerson.length === 0) {
-                  return (
-                    <p className="text-sm text-ink-muted">
-                      Aún no hay enlaces. Pulsa «Generar enlaces de pago».
-                    </p>
-                  );
-                }
+                const perPerson = manual
+                  ? links
+                      .filter((p) => p.mode === "per_person")
+                      .sort(
+                        (a, b) => (a.personIndex || 0) - (b.personIndex || 0)
+                      )
+                  : [];
                 return (
-                  <div className="space-y-4">
-                    {groupAll && (
+                  <>
+                    <div className="mb-3 flex flex-wrap items-center justify-between gap-3 border-b border-sand-line pb-2">
+                      <div>
+                        <h2 className="text-sm font-bold uppercase tracking-wide">
+                          Enlaces de pago
+                        </h2>
+                        <p className="mt-1 text-xs text-ink-muted">
+                          {occupied} plaza{occupied === 1 ? "" : "s"} ya reservada
+                          {occupied === 1 ? "" : "s"}
+                          {max > 0 ? ` · ${remaining} libre${remaining === 1 ? "" : "s"} de ${max}` : ""}
+                        </p>
+                      </div>
+                      {manual ? (
+                        <button
+                          type="button"
+                          onClick={() => ensurePaymentLinks(g.id, true)}
+                          className="text-xs font-bold text-ocean hover:underline"
+                        >
+                          Regenerar enlaces por persona
+                        </button>
+                      ) : null}
+                    </div>
+                    {remaining <= 0 ? (
+                      <p className="text-sm text-ink-muted">
+                        No quedan plazas libres. Las personas ya inscritas pagaron con su reserva, así que no hace falta un enlace de grupo.
+                      </p>
+                    ) : !groupAll ? (
+                      <p className="text-sm text-ink-muted">
+                        {Number(g.pricePerPerson) > 0
+                          ? "Aún no hay enlace para las plazas libres."
+                          : "Indica el precio por persona del grupo para poder generar el enlace."}
+                      </p>
+                    ) : (
                       <div className="rounded-lg bg-sky-soft/60 p-4 ring-1 ring-sand-line">
                         <p className="text-xs font-bold uppercase tracking-wide text-ocean">
-                          Pagar todo el grupo
+                          Pagar plazas libres ({remaining})
                         </p>
                         <p className="mt-1 text-sm font-semibold">
                           {formatPrice(groupAll.amount)} · {groupAll.locator} ·{" "}
                           {groupAll.status === "paid" ? "Pagado" : "Pendiente"}
                         </p>
-                        {groupAll.url && groupAll.status !== "paid" && (
-                          <div className="mt-2 flex flex-wrap items-center gap-2">
-                            <a
-                              href={groupAll.url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="break-all text-sm text-ocean hover:underline"
-                            >
-                              {groupAll.url}
-                            </a>
+                        <p className="mt-1 text-xs text-ink-muted">
+                          Este importe no incluye las {occupied} personas que ya reservaron.
+                        </p>
+                        {groupAll.url && groupAll.status !== "paid" ? (
+                          <div className="mt-2 flex min-w-0 items-center gap-2">
+                            <input
+                              readOnly
+                              value={groupAll.url}
+                              onFocus={(e) => e.currentTarget.select()}
+                              className="min-w-0 flex-1 rounded border border-sand-line bg-white px-2 py-1.5 text-xs text-ink"
+                            />
                             <button
                               type="button"
                               onClick={() => copyText(groupAll.url!)}
-                              className="inline-flex items-center gap-1 text-xs font-bold text-ocean"
+                              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-ocean ring-1 ring-sand-line"
                             >
-                              <Copy className="h-3.5 w-3.5" /> Copiar
+                              <Copy className="h-3.5 w-3.5" />
+                              {copiedUrl === groupAll.url ? "Copiado" : "Copiar"}
                             </button>
                           </div>
-                        )}
+                        ) : null}
                       </div>
                     )}
-                    {perPerson.length > 0 && (
-                      <div>
+                    {manual && perPerson.length > 0 ? (
+                      <div className="mt-4">
                         <p className="mb-2 text-xs font-bold uppercase tracking-wide text-ink-muted">
-                          Pagar uno a uno
+                          Pagar una plaza libre
                         </p>
                         <ul className="divide-y divide-sand-line rounded-lg ring-1 ring-sand-line">
                           {perPerson.map((p) => (
-                            <li
-                              key={p.id}
-                              className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm"
-                            >
+                            <li key={p.id} className="space-y-2 px-4 py-3 text-sm">
                               <div>
                                 <span className="font-semibold">
                                   {p.personLabel || `Persona ${p.personIndex}`}
@@ -624,21 +686,30 @@ export function GroupsPanel() {
                                   {p.status === "paid" ? "Pagado" : "Pendiente"}
                                 </span>
                               </div>
-                              {p.url && p.status !== "paid" && (
-                                <button
-                                  type="button"
-                                  onClick={() => copyText(p.url!)}
-                                  className="inline-flex items-center gap-1 text-xs font-bold text-ocean"
-                                >
-                                  <Copy className="h-3.5 w-3.5" /> Copiar enlace
-                                </button>
-                              )}
+                              {p.url && p.status !== "paid" ? (
+                                <div className="flex min-w-0 items-center gap-2">
+                                  <input
+                                    readOnly
+                                    value={p.url}
+                                    onFocus={(e) => e.currentTarget.select()}
+                                    className="min-w-0 flex-1 rounded border border-sand-line bg-white px-2 py-1.5 text-xs text-ink"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => copyText(p.url!)}
+                                    className="inline-flex shrink-0 items-center gap-1 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-ocean ring-1 ring-sand-line"
+                                  >
+                                    <Copy className="h-3.5 w-3.5" />
+                                    {copiedUrl === p.url ? "Copiado" : "Copiar"}
+                                  </button>
+                                </div>
+                              ) : null}
                             </li>
                           ))}
                         </ul>
                       </div>
-                    )}
-                  </div>
+                    ) : null}
+                  </>
                 );
               })()}
             </section>

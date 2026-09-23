@@ -267,12 +267,7 @@ export async function POST(request: Request) {
     }
 
     const method = (paymentMethod as PaymentMethod) || "card";
-    if (
-      (source === "cruise" ||
-        (typeof customer?.cruiseShip === "string" &&
-          customer.cruiseShip.trim())) &&
-      method === "pay_on_day"
-    ) {
+    if (source === "cruise" && method === "pay_on_day") {
       return NextResponse.json(
         {
           error:
@@ -314,13 +309,13 @@ export async function POST(request: Request) {
           ? pickupZone.trim()
           : undefined,
       groupId: groupId ? String(groupId) : undefined,
+      source: source === "cruise" ? "cruise" : undefined,
     });
 
     const isShoreBooking =
       source === "cruise" ||
       String(tourId || "").startsWith("shore-") ||
-      Boolean(customerPayload?.cruiseShip) ||
-      Boolean(booking.groupId);
+      String(tourId || "").startsWith("cruise-");
 
     if (isShoreBooking) {
       const assigned = await assignBookingToCruiseGroup(booking);

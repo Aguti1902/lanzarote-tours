@@ -29,13 +29,13 @@ export function PhoneInput({
         {dict.common.phone}
         {required ? " *" : ""}
       </span>
-      <div className="flex gap-2">
+      <div className="flex min-w-0 gap-2">
         <label className="sr-only" htmlFor="phone-prefix">
           {dict.common.phonePrefix}
         </label>
         <select
           id="phone-prefix"
-          className={`${inputClassName} w-[7.5rem] shrink-0`}
+          className="w-[6.5rem] shrink-0 rounded border border-sand-line bg-white px-2 py-1.5 text-sm outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20"
           value={selected}
           onChange={(e) => onPrefixChange(e.target.value)}
           required={required}
@@ -49,7 +49,7 @@ export function PhoneInput({
         <input
           type="tel"
           inputMode="tel"
-          className={inputClassName}
+          className={`${inputClassName} min-w-0 flex-1`}
           value={number}
           onChange={(e) => onNumberChange(e.target.value)}
           required={required}

@@ -118,16 +118,19 @@ export async function addBooking(
     amountPaidCash?: number;
     cashStatus?: CashStatus;
     paymentStatus?: Booking["paymentStatus"];
+    /** Solo para el prefijo CR. No se guarda en la reserva. */
+    source?: string;
   }
 ): Promise<Booking> {
   const bookings = await getBookings();
-  const id = await allocateBookingId(bookings, booking);
+  const { source, ...rest } = booking;
+  const id = await allocateBookingId(bookings, { ...rest, source });
   const split = splitPaymentAmounts(booking.totalPrice, booking.paymentMethod);
   const forcedUnpaid =
     booking.paymentStatus === "unpaid" &&
     booking.paymentMethod !== "pay_on_day";
   const created: Booking = {
-    ...booking,
+    ...rest,
     ...split,
     ...(forcedUnpaid
       ? {

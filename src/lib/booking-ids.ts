@@ -26,11 +26,10 @@ export function isCruiseBooking(input: {
   tourId?: string;
   customer?: { cruiseShip?: string; notes?: string };
   id?: string;
+  source?: string;
 }): boolean {
   if (input.id && /^CR-?\d/i.test(input.id)) return true;
-  if (input.customer?.cruiseShip?.trim()) return true;
-  const notes = input.customer?.notes || "";
-  if (/crucero|escala|shore|all.?aboard/i.test(notes)) return true;
+  if (input.source === "cruise") return true;
   if (input.tourId?.startsWith("cruise-") || input.tourId?.startsWith("shore-")) {
     return true;
   }
@@ -41,6 +40,7 @@ export function resolveBookingPrefix(input: {
   type?: BookingType;
   tourId?: string;
   tourTitle?: string;
+  source?: string;
   customer?: { cruiseShip?: string; notes?: string };
 }): BookingIdPrefix {
   if (input.type === "transfer") return "T";
@@ -71,6 +71,7 @@ export function buildBookingId(
     type?: BookingType;
     tourId?: string;
     tourTitle?: string;
+    source?: string;
     customer?: { cruiseShip?: string; notes?: string };
   }
 ): string {
@@ -85,6 +86,7 @@ export async function allocateBookingId(
     type?: BookingType;
     tourId?: string;
     tourTitle?: string;
+    source?: string;
     customer?: { cruiseShip?: string; notes?: string };
   }
 ): Promise<string> {

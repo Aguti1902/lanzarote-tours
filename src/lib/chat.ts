@@ -6,11 +6,27 @@ import {
   getTransfersData,
 } from "@/lib/content";
 import { formatPrice, groupSizeLabel } from "@/lib/format";
+import { isFlatPriceTour } from "@/lib/tour-pricing";
+import { localizeTours, localizeTransfers } from "@/lib/localize-content";
+import { localePath } from "@/i18n/path";
+import type { Locale } from "@/i18n/config";
+import type { Tour } from "@/types";
 
 export type ChatMessage = {
   role: "user" | "assistant";
   content: string;
 };
+
+type Lang = "es" | "en" | "de";
+
+function asLang(locale: string): Lang {
+  if (locale === "en" || locale === "de") return locale;
+  return "es";
+}
+
+function asLocale(locale: string): Locale {
+  return asLang(locale);
+}
 
 function normalize(text: string): string {
   return text
@@ -19,43 +35,68 @@ function normalize(text: string): string {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
-async function buildKnowledge(): Promise<string> {
-  const [tours, transfers, settings, cruiseData, cruiseCalls] = await Promise.all([
-    getPublicTours(),
-    getTransfersData(),
-    getSettings(),
-    getCruisesData(),
-    getCruiseCalls({ publishedOnly: true }),
+function payLabel(tour: Tour, lang: Lang): string {
+  const card =
+    lang === "en" ? "100% card" : lang === "de" ? "100% Karte" : "100% tarjeta";
+  const deposit =
+    lang === "en"
+      ? "20% card + cash balance"
+      : lang === "de"
+        ? "20% Karte + Rest bar"
+        : "20% tarjeta + resto en efectivo";
+  const onDay =
+    lang === "en"
+      ? "pay on the day"
+      : lang === "de"
+        ? "Zahlung am Tourtag"
+        : "pago el día del tour";
+  if (isFlatPriceTour(tour)) return `${card}, ${deposit}`;
+  const parts = [
+    tour.allowCard ? card : "",
+    tour.allowCard ? deposit : "",
+    tour.allowPayOnDay ? onDay : "",
+  ].filter(Boolean);
+  return parts.join(", ") || card;
+}
+
+async function buildKnowledge(locale: string): Promise<string> {
+  const lang = asLocale(locale);
+  const [rawTours, rawTransfers, settings, cruiseData, cruiseCalls] =
+    await Promise.all([
+      getPublicTours(),
+      getTransfersData(),
+      getSettings(),
+      getCruisesData(),
+      getCruiseCalls({ publishedOnly: true }),
+    ]);
+  const [tours, transfers] = await Promise.all([
+    localizeTours(rawTours, lang),
+    localizeTransfers(rawTransfers, lang),
   ]);
 
   const tourLines = tours
     .map((t) => {
-      const group = t.groupSize ? groupSizeLabel(t.groupSize) : t.category;
-      const pay = [
-        t.allowCard && "tarjeta 100% online",
-        t.allowBizum && "Bizum 100% online",
-        t.allowCard && "20% tarjeta + resto efectivo",
-        t.allowPayOnDay && "pago el día del tour",
-      ]
-        .filter(Boolean)
-        .join(", ");
-      return `- ${t.shortTitle} (${group}): ${
-        t.category === "private" || t.isPrivateActivity
-          ? `${formatPrice(t.priceAdult)} precio cerrado (grupo completo)`
-          : `${formatPrice(t.priceAdult)} adulto`
-      }, ${t.duration}. Pagos: ${pay}. URL: /excursiones/${t.slug}. ${t.summary}`;
+      const group = t.groupSize
+        ? groupSizeLabel(t.groupSize, lang)
+        : t.category;
+      const max = t.maxGroup ? ` · max ${t.maxGroup}` : "";
+      const price = isFlatPriceTour(t)
+        ? `${formatPrice(t.priceAdult)} ${lang === "en" ? "closed price" : lang === "de" ? "Festpreis" : "precio cerrado"}`
+        : `${formatPrice(t.priceAdult)} ${lang === "en" ? "adult" : lang === "de" ? "Erwachsener" : "adulto"}`;
+      const path = localePath(lang, `/excursiones/${t.slug}`);
+      return `- ${t.shortTitle || t.title} (${group}${max}): ${price}, ${t.duration}. ${payLabel(t, asLang(locale))}. ${path}. ${t.summary || ""}`;
     })
     .join("\n");
 
   const transferLines = transfers.destinations
     .map(
       (d) =>
-        `- Aeropuerto ↔ ${d.name}: ida ${formatPrice(d.priceOneWay)}, ida y vuelta ${formatPrice(d.priceReturn)} (hasta 4 pasajeros); persona extra ${formatPrice(d.priceExtraPerson ?? 10)} (${d.duration})`
+        `- ${lang === "en" ? "Airport" : lang === "de" ? "Flughafen" : "Aeropuerto"} ↔ ${d.name}: ${lang === "en" ? "one way" : lang === "de" ? "einfach" : "ida"} ${formatPrice(d.priceOneWay)}, ${lang === "en" ? "return" : lang === "de" ? "hin und zurück" : "ida y vuelta"} ${formatPrice(d.priceReturn)} (${d.duration})`
     )
     .join("\n");
 
   const upcomingCruises = cruiseCalls
-    .slice(0, 40)
+    .slice(0, 25)
     .map(
       (c) =>
         `- ${c.date} ${c.shipName} (${c.company}): ${c.arrivalTime}-${c.departureTime}`
@@ -63,116 +104,185 @@ async function buildKnowledge(): Promise<string> {
     .join("\n");
 
   return `
-Empresa: ${settings.brandName}
-Teléfono: ${settings.phone}
+Brand: ${settings.brandName}
+Phone: ${settings.phone}
 Email: ${settings.email}
-Horario: ${settings.hours}
+Hours: ${settings.hours}
+Excursions page: ${localePath(lang, "/excursiones")}
+Transfers page: ${localePath(lang, "/traslados-aeropuerto-lanzarote")}
+Cruise excursions page: ${localePath(lang, "/excursiones-cruceros")}
+Cruise calendar: ${localePath(lang, "/cruceristas")}
 
-EXCURSIONES:
+EXCURSIONS (only these exist; do not invent others):
 ${tourLines}
 
-TRASLADOS PRIVADOS (recibimiento con cartel):
+PRIVATE TRANSFERS:
 ${transferLines}
-Ventajas: ${transfers.highlights.join("; ")}
 
-CRUCERISTAS:
-${settings.cruiseHeadline}
-${settings.cruiseIntro}
-Calendario de escalas temporada ${cruiseData.season} en ${cruiseData.port} (${cruiseCalls.length} escalas).
-Próximas / ejemplo de escalas:
+CRUISE CALLS ${cruiseData.season} at ${cruiseData.port} (${cruiseCalls.length}):
 ${upcomingCruises}
-URL cruceros: /excursiones-cruceros
-URL calendario escalas Lanzarote: /cruceristas
 
-INFO CLAVE:
-- Grupo reducido: máx. 8 personas, pago anticipado con tarjeta o Bizum.
-- Grupo grande: hasta 20 personas, tarjeta, Bizum o pago el día del tour.
-- Tour privado y minibus a disposición disponibles.
-- Cancelación gratuita habitualmente hasta 48h antes.
+RULES:
+- Free cancellation if requested more than 48 hours before pickup. Less than 48 hours: no refund.
+- Private excursions: only 100% card, or 20% card and the rest in cash. Never full cash on the day.
+- Shared excursions: use only the payment methods listed on that excursion.
+- Hotel pickup on the island. Cruise guests meet at the pier and must book from the cruise pages, not by typing a ship name on a normal excursion.
+- Do not mention Grand Tour, Ruta Sur, group of 8 or group of 20 unless that exact name appears in the excursion list above.
 `.trim();
 }
 
-function localReply(message: string, knowledge: string): string {
+const replies: Record<
+  Lang,
+  {
+    hello: string;
+    thanks: string;
+    cruise: (url: string, calendar: string) => string;
+    pay: string;
+    cancel: string;
+    book: (url: string) => string;
+    fallback: string;
+    pricesIntro: string;
+    transfersIntro: (url: string) => string;
+    contact: (phone: string, email: string, hours: string) => string;
+  }
+> = {
+  es: {
+    hello:
+      "¡Hola! Soy el asistente de Lanzarote Tours. Puedo ayudarle con las excursiones que hay ahora en la web, traslados al aeropuerto, precios, pagos y escalas de crucero. ¿Qué necesita?",
+    thanks:
+      "De nada. Si quiere, le indico una excursión, un traslado o cómo reservar desde la web.",
+    cruise: (url, calendar) =>
+      `Si llega en crucero, la reserva se hace en la sección de cruceros (${url}), eligiendo naviera, barco y salida. El calendario de escalas está en ${calendar}. En las excursiones normales no hace falta indicar el barco. Dígame la fecha o el nombre del barco y le oriento.`,
+    pay: "En las excursiones privadas solo hay dos opciones: pagar el 100% con tarjeta, o un 20% con tarjeta y el resto en efectivo el día del tour. En el resto de excursiones, las formas de pago son las que aparecen en cada ficha. La cancelación gratuita es hasta 48 horas antes.",
+    cancel:
+      "La cancelación es gratuita si la recibimos con más de 48 horas de antelación respecto a la recogida. Con menos de 48 horas no hay reembolso.",
+    book: (url) =>
+      `Puede reservar en cada ficha de excursión o en ${url}. Elija fecha, personas y forma de pago. Si me dice fecha, zona del hotel o si llega en crucero, le oriento.`,
+    fallback:
+      "Puedo ayudarle con las excursiones publicadas, traslados al aeropuerto, precios, formas de pago y cruceros. Pregúnteme, por ejemplo, por una excursión concreta o por un traslado.",
+    pricesIntro: "Estos son los precios publicados ahora mismo:",
+    transfersIntro: (url) =>
+      `Traslados privados, con cartel en la terminal. Puede reservarlos en ${url}.`,
+    contact: (phone, email, hours) =>
+      `Puede llamarnos al ${phone} o escribir a ${email}. Horario: ${hours}.`,
+  },
+  en: {
+    hello:
+      "Hello! I am the Lanzarote Tours assistant. I can help with the excursions currently on the website, airport transfers, prices, payments and cruise calls. What do you need?",
+    thanks:
+      "You are welcome. I can point you to an excursion, a transfer or how to book on the website.",
+    cruise: (url, calendar) =>
+      `If you arrive by cruise, book in the cruise section (${url}) by choosing the cruise line, ship and sailing. The call calendar is at ${calendar}. You do not need to enter the ship on a regular excursion. Tell me the date or the ship name and I will guide you.`,
+    pay: "Private excursions only offer two options: pay 100% by card, or 20% by card and the rest in cash on the day. Other excursions use the payment methods shown on each page. Free cancellation is up to 48 hours before pickup.",
+    cancel:
+      "Cancellation is free if we receive it more than 48 hours before pickup. With less than 48 hours there is no refund.",
+    book: (url) =>
+      `You can book on each excursion page or at ${url}. Choose the date, number of guests and payment method. Tell me the date, hotel area or if you arrive by cruise and I will guide you.`,
+    fallback:
+      "I can help with the published excursions, airport transfers, prices, payment methods and cruises. Ask me about a specific tour or a transfer.",
+    pricesIntro: "These are the prices published right now:",
+    transfersIntro: (url) =>
+      `Private transfers, with a name board in the terminal. You can book them at ${url}.`,
+    contact: (phone, email, hours) =>
+      `You can call ${phone} or email ${email}. Hours: ${hours}.`,
+  },
+  de: {
+    hello:
+      "Hallo! Ich bin der Assistent von Lanzarote Tours. Ich helfe bei den Ausflügen auf der Website, Flughafentransfers, Preisen, Zahlung und Kreuzfahrtstopps. Wobei darf ich helfen?",
+    thanks:
+      "Gern. Ich kann einen Ausflug, einen Transfer oder die Online-Buchung empfehlen.",
+    cruise: (url, calendar) =>
+      `Wenn Sie mit dem Kreuzfahrtschiff kommen, buchen Sie im Kreuzfahrtbereich (${url}): Reederei, Schiff und Abfahrt wählen. Der Stopp-Kalender ist unter ${calendar}. Auf normalen Ausflügen müssen Sie das Schiff nicht angeben. Nennen Sie Datum oder Schiffsname.`,
+    pay: "Bei privaten Ausflügen gibt es nur zwei Möglichkeiten: 100% per Karte oder 20% per Karte und den Rest bar am Tourtag. Bei den übrigen Ausflügen gelten die Zahlungsarten der jeweiligen Seite. Kostenlose Stornierung bis 48 Stunden vor der Abholung.",
+    cancel:
+      "Die Stornierung ist kostenlos, wenn wir sie mehr als 48 Stunden vor der Abholung erhalten. Bei weniger als 48 Stunden gibt es keine Erstattung.",
+    book: (url) =>
+      `Sie können auf jeder Ausflugsseite oder unter ${url} buchen. Wählen Sie Datum, Personen und Zahlungsart. Nennen Sie Datum, Hotelzone oder ob Sie mit dem Schiff kommen.`,
+    fallback:
+      "Ich helfe bei den veröffentlichten Ausflügen, Flughafentransfers, Preisen, Zahlungsarten und Kreuzfahrten. Fragen Sie nach einem konkreten Ausflug oder einem Transfer.",
+    pricesIntro: "Das sind die aktuell veröffentlichten Preise:",
+    transfersIntro: (url) =>
+      `Private Transfers, mit Namensschild im Terminal. Buchung unter ${url}.`,
+    contact: (phone, email, hours) =>
+      `Sie erreichen uns unter ${phone} oder ${email}. Zeiten: ${hours}.`,
+  },
+};
+
+function localReply(message: string, knowledge: string, locale: string): string {
+  const lang = asLang(locale);
+  const t = replies[lang];
   const q = normalize(message);
+  const excursions = localePath(asLocale(locale), "/excursiones");
+  const transfers = localePath(
+    asLocale(locale),
+    "/traslados-aeropuerto-lanzarote"
+  );
+  const cruises = localePath(asLocale(locale), "/excursiones-cruceros");
+  const calendar = localePath(asLocale(locale), "/cruceristas");
 
   if (
-    /hola|buenas|hey|hello|buenos dias|buenas tardes|saludos/.test(q) &&
+    /^(hola|buenas|hey|hello|hi|hallo|guten tag|buenos dias|buenas tardes)\b/.test(
+      q
+    ) &&
     q.length < 40
   ) {
-    return "¡Hola! Soy el asistente de Lanzarote Tours. Puedo ayudarte con excursiones (Ruta Sur, Grand Tour, privados), traslados al aeropuerto, precios, pagos y opciones para cruceristas. ¿Qué te interesa?";
+    return t.hello;
   }
-
-  if (/gracias|thank/.test(q)) {
-    return "¡De nada! Si quieres, te ayudo a elegir entre grupo reducido, grupo grande, tour privado o un traslado. También puedes reservar desde la web.";
+  if (/gracias|thank|danke/.test(q) && q.length < 40) return t.thanks;
+  if (/crucero|cruise|schiff|crucerista|escala|hafenstopp|barco|ship/.test(q)) {
+    return t.cruise(cruises, calendar);
   }
-
-  if (/crucero|crucerista|barco|escala|puerto|calendario/.test(q)) {
-    return "Si llegas en crucero a Lanzarote (Puerto de Los Mármoles), te recogemos en el puerto y adaptamos horarios a tu escala. En /excursiones-cruceros elige naviera, barco y salida para ver el itinerario completo y las excursiones. En /cruceristas está el calendario de escalas 2026-2027. Dime fecha o nombre del barco y te indico qué hay ese día.";
-  }
-
-  if (/traslad|aeropuerto|taxi|recogida|transfer|playa blanca|puerto del carmen|costa teguise|arrecife|puerto calero/.test(q)) {
+  if (
+    /traslad|aeropuerto|airport|flughafen|transfer|taxi|recogida|playa blanca|puerto del carmen|costa teguise/.test(
+      q
+    )
+  ) {
     const lines = knowledge
       .split("\n")
-      .filter((l) => l.includes("Aeropuerto ↔"))
+      .filter((line) => line.includes("↔"))
       .join("\n");
-    return `Traslados 100% privados, con cartel con tu nombre en la terminal.\n\n${lines}\n\nPuedes reservar en /traslados. ¿A qué zona vas?`;
+    return `${t.transfersIntro(transfers)}\n\n${lines}`;
   }
-
-  if (/pago|bizum|tarjeta|efectivo|cobro/.test(q)) {
-    return "En **grupo grande** puedes pagar con tarjeta, Bizum o el día del tour. En **grupo reducido**, privado y minibus se confirma normalmente con tarjeta o Bizum. Los traslados admiten tarjeta, Bizum o pago al conductor.";
+  if (/pago|pagar|pay|zahlung|bezahlen|tarjeta|card|karte|efectivo|cash|bar\b/.test(q)) {
+    return t.pay;
   }
-
-  if (/grupo reducido|pequeño|intimo|intim/.test(q)) {
-    return "El **grupo reducido** es máximo 8 personas: más cercanía con el guía y ritmo flexible. Tenemos Ruta Sur y Grand Tour en este formato. Precio un poco más alto que el grupo grande, con pago anticipado (tarjeta/Bizum). ¿Quieres media jornada (Ruta Sur) o día completo (Grand Tour)?";
+  if (/cancel|reembol|storno|anular/.test(q)) return t.cancel;
+  if (/contacto|telefono|phone|telefon|email|correo|whatsapp|horario|hours/.test(q)) {
+    const phone = knowledge.match(/Phone: (.+)/)?.[1] || "+34 646 08 05 85";
+    const email =
+      knowledge.match(/Email: (.+)/)?.[1] ||
+      "support@lanzaroteexperiencetours.com";
+    const hours = knowledge.match(/Hours: (.+)/)?.[1] || "";
+    return t.contact(phone, email, hours);
   }
-
-  if (/grupo grande|barato|econom|precio bajo|masivo/.test(q)) {
-    return "El **grupo grande** (hasta 20 personas) ofrece el mismo itinerario a mejor precio. Puedes pagar con tarjeta, Bizum o el día del tour. Ideal si priorizas el precio. ¿Ruta Sur (~5 h) o Grand Tour (~9 h)?";
-  }
-
-  if (/privado|exclusiv|a medida|familia/.test(q)) {
-    return "El **tour privado** incluye minibus y guía oficial en exclusiva (desde ~5 h, hasta 10 pasajeros). También puedes alquilar solo el **minibus a disposición** con conductor y elegir tú el recorrido — con acceso preferente en Timanfaya. ¿Prefieres con guía o solo vehículo?";
-  }
-
-  if (/timanfaya|ruta sur|sur|volcan|montanas del fuego|geria|golfo/.test(q)) {
-    return "La **Ruta Sur** visita Timanfaya, El Golfo, panorámica de Salinas y La Geria (~5 h). Está en grupo reducido y grupo grande. Entradas a Timanfaya incluidas. ¿La quieres más íntima (reducido) o más económica (grande)?";
-  }
-
-  if (/grand tour|dia completo|jameos|cactus|completo/.test(q)) {
-    return "El **Grand Tour** es el día completo (~9 h): Timanfaya, El Golfo, La Geria, Jameos del Agua y Jardín de Cactus, con entradas incluidas. Disponible en grupo reducido y grupo grande. Perfecto si quieres ver lo esencial de la isla en un solo día.";
-  }
-
-  if (/precio|cuanto|cuesta|tarif|euro|€/.test(q)) {
-    const tourBits = knowledge
+  if (/precio|cuanto|cuesta|price|cost|preis|kostet|€/.test(q)) {
+    const lines = knowledge
       .split("\n")
-      .filter((l) => l.startsWith("- ") && l.includes("adulto"))
-      .slice(0, 6)
+      .filter((line) => line.startsWith("- ") && !line.includes("↔"))
+      .slice(0, 8)
       .join("\n");
-    return `Estos son precios orientativos actuales:\n\n${tourBits}\n\nPara traslados, pregunta por tu zona o ve a /traslados. ¿Quieres que te compare grupo reducido vs grande?`;
+    return `${t.pricesIntro}\n\n${lines}`;
   }
+  if (/reserva|reservar|book|buchen/.test(q)) return t.book(excursions);
 
-  if (/cancel|reembol|anular/.test(q)) {
-    return "En la mayoría de servicios la cancelación es gratuita hasta 48 horas antes de la recogida. Con menos de 48 h normalmente no hay reembolso. Si me dices qué servicio has reservado, te concreto mejor.";
+  const matched = knowledge
+    .split("\n")
+    .filter((line) => {
+      if (!line.startsWith("- ")) return false;
+      const name = normalize(line.slice(2, 48));
+      return q.split(/\s+/).some((word) => word.length > 3 && name.includes(word));
+    })
+    .slice(0, 4);
+  if (matched.length) {
+    return `${t.pricesIntro}\n\n${matched.join("\n")}`;
   }
-
-  if (/contacto|telefono|llamar|email|correo|whatsapp|horario/.test(q)) {
-    const phone = knowledge.match(/Teléfono: (.+)/)?.[1] || "+34 600 000 000";
-    const email = knowledge.match(/Email: (.+)/)?.[1] || "hola@lanzarotetravels.com";
-    const hours = knowledge.match(/Horario: (.+)/)?.[1] || "Lunes–Domingo · 8:00–20:00";
-    return `Puedes contactarnos en ${phone} o ${email}. Horario: ${hours}. También puedes reservar online desde la web.`;
-  }
-
-  if (/reserva|reservar|book|contratar/.test(q)) {
-    return "Puedes reservar online desde cada ficha de excursión o en /traslados. Elige fecha, personas y método de pago. Si me dices fecha, zona de hotel o si vienes en crucero, te oriento hacia la mejor opción.";
-  }
-
-  return "Puedo ayudarte con:\n• Excursiones (Ruta Sur, Grand Tour, privado, minibus)\n• Grupo reducido vs grupo grande\n• Traslados aeropuerto\n• Precios y formas de pago\n• Escalas de crucero\n\nPregúntame, por ejemplo: «¿Cuánto cuesta el Grand Tour en grupo grande?» o «Traslado a Playa Blanca».";
+  return t.fallback;
 }
 
 const langName: Record<string, string> = {
-  es: "español",
+  es: "Spanish",
   en: "English",
-  de: "Deutsch",
+  de: "German",
 };
 
 async function openaiReply(
@@ -182,7 +292,7 @@ async function openaiReply(
 ): Promise<string | null> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) return null;
-  const language = langName[locale] || "español";
+  const language = langName[asLang(locale)] || "Spanish";
 
   try {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -193,16 +303,16 @@ async function openaiReply(
       },
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL || "gpt-4o-mini",
-        temperature: 0.4,
+        temperature: 0.2,
         messages: [
           {
             role: "system",
-            content: `You are the booking assistant for Lanzarote Tours. Reply in ${language}, briefly, clearly and kindly (max 120 words unless listing prices). Use only this company information. If unsure, invite the user to contact us or book on the website. Do not invent prices missing from the context. Include internal links when helpful (/${locale}/excursions or /${locale}/excursiones, /${locale}/airport-transfers or /${locale}/traslados-aeropuerto-lanzarote, /${locale}/shore-excursions or /${locale}/excursiones-cruceros, /${locale}/cruise-passengers or /${locale}/cruceristas). Use the URL slug language matching ${locale}.
+            content: `You are the booking assistant for Lanzarote Tours, a local family company in Lanzarote. Reply only in ${language}, in a polite and brief way (max 140 words unless listing prices). Use ONLY the excursions, prices and rules in CONTEXT. Never invent tours, prices or payment methods. If a tour is not in the list, say so and link to the excursions page. Private tours never offer paying the full amount in cash on the day. Include the paths from CONTEXT when helpful.
 
 CONTEXT:
 ${knowledge}`,
           },
-          ...messages.slice(-10).map((m) => ({
+          ...messages.slice(-8).map((m) => ({
             role: m.role,
             content: m.content,
           })),
@@ -227,21 +337,15 @@ export async function answerChat(
 }> {
   const lastUser = [...messages].reverse().find((m) => m.role === "user");
   if (!lastUser?.content?.trim()) {
-    const empty =
-      locale === "en"
-        ? "Tell me how I can help: excursions, transfers or cruises."
-        : locale === "de"
-          ? "Sagen Sie mir, womit ich helfen kann: Ausflüge, Transfers oder Kreuzfahrten."
-          : "Cuéntame en qué puedo ayudarte: excursiones, traslados o cruceros.";
-    return { reply: empty, mode: "local" };
+    return { reply: replies[asLang(locale)].hello, mode: "local" };
   }
 
-  const knowledge = await buildKnowledge();
+  const knowledge = await buildKnowledge(locale);
   const ai = await openaiReply(messages, knowledge, locale);
   if (ai) return { reply: ai, mode: "openai" };
 
   return {
-    reply: localReply(lastUser.content, knowledge),
+    reply: localReply(lastUser.content, knowledge, locale),
     mode: "local",
   };
 }

@@ -44,24 +44,22 @@ export default function CarritoPage() {
     };
   }, [total, paymentMethod]);
 
-  const hasCruiseItem = items.some(
-    (item) => item.source === "cruise" || Boolean(item.cruiseShip)
-  );
+  const hasCruiseItem = items.some((item) => item.source === "cruise");
+  const hasPrivateItem = items.some((item) => item.pricingMode === "flat");
+  const allowPayOnDay = !hasCruiseItem && !hasPrivateItem;
 
   useEffect(() => {
-    if (hasCruiseItem && paymentMethod === "pay_on_day") {
+    if (!allowPayOnDay && paymentMethod === "pay_on_day") {
       setPaymentMethod("card");
     }
-  }, [hasCruiseItem, paymentMethod]);
+  }, [allowPayOnDay, paymentMethod]);
 
   async function handleCheckout(e: FormEvent) {
     e.preventDefault();
     if (!items.length) return;
     setError("");
-    if (hasCruiseItem && paymentMethod === "pay_on_day") {
-      setError(
-        "En excursiones de crucero no está disponible el pago el día del tour."
-      );
+    if (!allowPayOnDay && paymentMethod === "pay_on_day") {
+      setError(dict.booking.payOnDay);
       return;
     }
     const tooSoon = items.find(
@@ -89,7 +87,7 @@ export default function CarritoPage() {
             totalPrice: item.totalPrice,
             paymentMethod,
             locale,
-            source: item.source || (item.cruiseShip ? "cruise" : undefined),
+            source: item.source === "cruise" ? "cruise" : undefined,
             // Evitar N checkouts: el carrito crea un checkout combinado después
             skipStripeCheckout: true,
             customer: {
@@ -98,7 +96,7 @@ export default function CarritoPage() {
               phone: composeInternationalPhone(phonePrefix, phone),
               phonePrefix,
               hotel,
-              cruiseShip: item.cruiseShip,
+              cruiseShip: item.source === "cruise" ? item.cruiseShip : undefined,
               notes: item.notes,
             },
           }),
@@ -280,7 +278,7 @@ export default function CarritoPage() {
                         id: "pay_on_day" as const,
                         label: dict.booking.payOnDay,
                         icon: <Wallet className="h-4 w-4 shrink-0" />,
-                        show: !hasCruiseItem,
+                        show: allowPayOnDay,
                       },
                     ] as const
                   )

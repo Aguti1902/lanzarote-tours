@@ -39,9 +39,19 @@ export async function GET(request: Request) {
   });
 
   const livePax = livePaxForGroup(group, bookings, groups);
-  const paymentLinks = (await getPaymentLinks()).filter(
-    (p) => p.groupId === group.id && p.status !== "cancelled"
-  );
+  let paymentLinks: Awaited<ReturnType<typeof getPaymentLinks>> = [];
+  try {
+    const refreshed = await ensureGroupPaymentLinks(group, {
+      occupiedPax: livePax,
+    });
+    paymentLinks = [refreshed.groupAll, ...refreshed.perPerson].filter(
+      (link): link is NonNullable<typeof link> => Boolean(link)
+    );
+  } catch {
+    paymentLinks = (await getPaymentLinks()).filter(
+      (p) => p.groupId === group.id && p.status !== "cancelled"
+    );
+  }
 
   const forwardedHost = request.headers.get("x-forwarded-host");
   const origin =
@@ -87,8 +97,11 @@ export async function POST(request: Request) {
     }
 
     if (action === "ensure-links") {
+      const bookings = await getBookingsForCruiseGroups();
+      const livePax = livePaxForGroup(group, bookings, groups);
       const links = await ensureGroupPaymentLinks(group, {
         forcePerPerson: Boolean(body.forcePerPerson),
+        occupiedPax: livePax,
         personCount:
           body.personCount != null ? Number(body.personCount) : undefined,
       });
@@ -98,10 +111,12 @@ export async function POST(request: Request) {
           ? `${request.headers.get("x-forwarded-proto") || "https"}://${request.headers.get("x-forwarded-host")}`
           : new URL(request.url).origin);
       return NextResponse.json({
-        groupAll: {
-          ...links.groupAll,
-          url: buildPaymentUrl(links.groupAll, origin),
-        },
+        groupAll: links.groupAll
+          ? {
+              ...links.groupAll,
+              url: buildPaymentUrl(links.groupAll, origin),
+            }
+          : null,
         perPerson: links.perPerson.map((p) => ({
           ...p,
           url: buildPaymentUrl(p, origin),

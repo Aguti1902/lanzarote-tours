@@ -174,6 +174,7 @@ export async function syncCruiseGroupCapacity(
           : `Grupo automático #${seriesIndex} — cupo lleno en ${group.id}`,
         spawnedFromId: group.id,
         seriesIndex,
+        manual: false,
       });
       // Enlaces listos en detalles para enviar el pago manualmente
       try {
@@ -196,6 +197,12 @@ export async function syncCruiseGroupCapacity(
       nextStatus === "full",
     seriesIndex: group.seriesIndex ?? 1,
   });
+
+  try {
+    await ensureGroupPaymentLinks(updated, { occupiedPax: livePax });
+  } catch {
+    /* se pueden regenerar en el panel */
+  }
 
   return { group: updated, spawned };
 }
@@ -289,6 +296,7 @@ export async function assignBookingToCruiseGroup(
       sailingId: sailing?.id,
       status: "open",
       seriesIndex: 1,
+      manual: false,
       notes: `Grupo creado automáticamente con la reserva ${booking.id}`,
     });
     try {

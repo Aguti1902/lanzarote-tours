@@ -933,7 +933,7 @@ const es: Dictionary = {
       "Debe reservar con al menos 48 horas de antelación para evitar overbooking.",
     pickupTimeNote:
       "La hora de recogida se confirma por WhatsApp / email según su zona.",
-    moreDetails: "Hotel, barco y notas (opcional)",
+    moreDetails: "Hotel y notas (opcional)",
   },
   transferForm: {
     title: "Reservar traslado",
@@ -1000,10 +1000,10 @@ const es: Dictionary = {
     placeholder: "Escriba su pregunta…",
     writing: "Escribiendo…",
     suggestions: [
-      "¿Timanfaya o Grand Tour?",
-      "Traslado a Playa Blanca",
-      "Vengo en crucero un día",
-      "¿Puedo pagar 20% y el resto en efectivo?",
+      "¿Qué excursiones hay?",
+      "Traslado al aeropuerto",
+      "Llego en crucero",
+      "¿Cómo puedo pagar?",
     ],
     error:
       "Ahora mismo no he podido responder. Pruebe de nuevo o llámenos al +34 646 08 05 85.",
@@ -1479,7 +1479,7 @@ const en: Dictionary = {
       "Bookings require at least 48 hours' notice to avoid overbooking.",
     pickupTimeNote:
       "Pick-up time is confirmed by WhatsApp / email according to your area.",
-    moreDetails: "Hotel, ship and notes (optional)",
+    moreDetails: "Hotel and notes (optional)",
   },
   transferForm: {
     title: "Book a transfer",
@@ -1546,10 +1546,10 @@ const en: Dictionary = {
     placeholder: "Type your question…",
     writing: "Typing…",
     suggestions: [
-      "Timanfaya or Grand Tour?",
-      "Transfer to Playa Blanca",
-      "I arrive by cruise for one day",
-      "Can I pay 20% and the rest in cash?",
+      "Which excursions do you offer?",
+      "Airport transfer",
+      "I arrive by cruise",
+      "How can I pay?",
     ],
     error:
       "I could not reply right now. Please try again or call +34 646 08 05 85.",
@@ -2034,7 +2034,7 @@ const de: Dictionary = {
       "Buchungen sind nur mit mindestens 48 Stunden Vorlauf möglich, um Overbooking zu vermeiden.",
     pickupTimeNote:
       "Die Abholzeit wird per WhatsApp / E-Mail je nach Zone bestätigt.",
-    moreDetails: "Hotel, Schiff und Notizen (optional)",
+    moreDetails: "Hotel und Notizen (optional)",
   },
   transferForm: {
     title: "Transfer buchen",
@@ -2101,10 +2101,10 @@ const de: Dictionary = {
     placeholder: "Schreiben Sie Ihre Frage…",
     writing: "Schreibt…",
     suggestions: [
-      "Timanfaya oder Grand Tour?",
-      "Transfer nach Playa Blanca",
-      "Ich komme einen Tag mit dem Schiff",
-      "Kann ich 20% und den Rest bar zahlen?",
+      "Welche Ausflüge gibt es?",
+      "Transfer vom Flughafen",
+      "Ich komme mit dem Kreuzfahrtschiff",
+      "Wie kann ich bezahlen?",
     ],
     error:
       "Ich konnte gerade nicht antworten. Bitte erneut versuchen oder +34 646 08 05 85 anrufen.",

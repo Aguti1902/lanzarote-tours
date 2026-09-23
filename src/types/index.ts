@@ -340,6 +340,8 @@ export interface CruiseGroup {
   spawnedFromId?: string;
   /** Display ordinal within the same ship/date/excursion series (1, 2, …). */
   seriesIndex?: number;
+  /** Creado a mano en el panel. Los enlaces por persona solo aplican aquí. */
+  manual?: boolean;
 }
 
 export interface SeoRedirect {

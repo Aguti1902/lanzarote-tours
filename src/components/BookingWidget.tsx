@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CreditCard, Percent, ShoppingCart, Wallet } from "lucide-react";
-import type { CruiseCall, PaymentMethod, Tour } from "@/types";
+import type { PaymentMethod, Tour } from "@/types";
 import { formatPrice } from "@/lib/format";
 import { isFlatPriceTour } from "@/lib/tour-pricing";
 import {
@@ -39,12 +39,10 @@ export function BookingWidget({ tour }: { tour: Tour }) {
   );
   const [phone, setPhone] = useState("");
   const [hotel, setHotel] = useState("");
-  const [cruiseShip, setCruiseShip] = useState("");
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [cartMsg, setCartMsg] = useState("");
-  const [dayShips, setDayShips] = useState<CruiseCall[]>([]);
   const [showExtras, setShowExtras] = useState(false);
 
   const isMinibus = tour.category === "minibus";
@@ -57,32 +55,10 @@ export function BookingWidget({ tour }: { tour: Tour }) {
   const canBookDate = !date || isTourDateBookable(tour, date);
 
   useEffect(() => {
-    if (!date || !tour.cruiseFriendly) {
-      return;
+    if (isPrivate && paymentMethod === "pay_on_day") {
+      setPaymentMethod("card");
     }
-    let cancelled = false;
-    fetch(`/api/cruises?published=1&from=${encodeURIComponent(date)}`)
-      .then((r) => r.json())
-      .then((data) => {
-        if (cancelled) return;
-        const ships = ((data.calls || []) as CruiseCall[]).filter(
-          (c) => c.date === date
-        );
-        setDayShips(ships);
-        setCruiseShip((current) => {
-          if (ships.length === 1 && !current.trim()) return ships[0].shipName;
-          return current;
-        });
-      })
-      .catch(() => {
-        if (!cancelled) setDayShips([]);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [date, tour.cruiseFriendly]);
-
-  const shipsForDate = date && tour.cruiseFriendly ? dayShips : [];
+  }, [isPrivate, paymentMethod]);
 
   const total = useMemo(() => {
     if (isMinibus) return priceAdult + Math.max(0, hours - 4) * 60;
@@ -104,19 +80,19 @@ export function BookingWidget({ tour }: { tour: Tour }) {
         id: "card" as const,
         label: dict.booking.card,
         icon: <CreditCard className="h-4 w-4 shrink-0" />,
-        show: tour.allowCard,
+        show: isPrivate || tour.allowCard,
       },
       {
         id: "deposit_20" as const,
         label: dict.booking.deposit,
         icon: <Percent className="h-4 w-4 shrink-0" />,
-        show: tour.allowCard,
+        show: isPrivate || tour.allowCard,
       },
       {
         id: "pay_on_day" as const,
         label: dict.booking.payOnDay,
         icon: <Wallet className="h-4 w-4 shrink-0" />,
-        show: tour.allowPayOnDay,
+        show: tour.allowPayOnDay && !isPrivate,
       },
     ] as const
   ).filter((m) => m.show);
@@ -192,11 +168,9 @@ export function BookingWidget({ tour }: { tour: Tour }) {
             phone: composeInternationalPhone(phonePrefix, phone),
             phonePrefix,
             hotel,
-            cruiseShip,
             notes,
           },
           minibus: isMinibus ? { hours } : undefined,
-          source: cruiseShip ? "cruise" : undefined,
         }),
       });
       const data = await res.json();
@@ -338,25 +312,23 @@ export function BookingWidget({ tour }: { tour: Tour }) {
             autoComplete="name"
           />
         </Field>
-        <div className="grid grid-cols-2 gap-2">
-          <Field label={`${dict.common.email} *`}>
-            <input
-              type="email"
-              className={inputClass}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-            />
-          </Field>
-          <PhoneInput
-            prefix={phonePrefix}
-            number={phone}
-            onPrefixChange={setPhonePrefix}
-            onNumberChange={setPhone}
-            inputClassName={inputClass}
+        <Field label={`${dict.common.email} *`}>
+          <input
+            type="email"
+            className={inputClass}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="email"
           />
-        </div>
+        </Field>
+        <PhoneInput
+          prefix={phonePrefix}
+          number={phone}
+          onPrefixChange={setPhonePrefix}
+          onNumberChange={setPhone}
+          inputClassName={inputClass}
+        />
 
         <button
           type="button"
@@ -375,51 +347,6 @@ export function BookingWidget({ tour }: { tour: Tour }) {
                 value={hotel}
                 onChange={(e) => setHotel(e.target.value)}
               />
-            </Field>
-            <Field label={dict.booking.cruiseShip}>
-              {shipsForDate.length > 0 ? (
-                <>
-                  <select
-                    className={inputClass}
-                    value={
-                      shipsForDate.some((s) => s.shipName === cruiseShip)
-                        ? cruiseShip
-                        : cruiseShip
-                          ? "__other__"
-                          : ""
-                    }
-                    onChange={(e) => {
-                      if (e.target.value === "__other__") {
-                        setCruiseShip("");
-                        return;
-                      }
-                      setCruiseShip(e.target.value);
-                    }}
-                  >
-                    <option value="">—</option>
-                    {shipsForDate.map((s) => (
-                      <option key={s.id} value={s.shipName}>
-                        {s.shipName} ({s.arrivalTime}–{s.departureTime})
-                      </option>
-                    ))}
-                    <option value="__other__">Otro…</option>
-                  </select>
-                  {!shipsForDate.some((s) => s.shipName === cruiseShip) && (
-                    <input
-                      className={`${inputClass} mt-2`}
-                      value={cruiseShip}
-                      onChange={(e) => setCruiseShip(e.target.value)}
-                      placeholder={dict.booking.cruiseShip}
-                    />
-                  )}
-                </>
-              ) : (
-                <input
-                  className={inputClass}
-                  value={cruiseShip}
-                  onChange={(e) => setCruiseShip(e.target.value)}
-                />
-              )}
             </Field>
             <Field label={dict.booking.notes}>
               <textarea
