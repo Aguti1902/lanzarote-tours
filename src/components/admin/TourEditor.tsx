@@ -291,7 +291,8 @@ export function TourEditor({ initial }: { initial?: Tour }) {
     ].sort((a, b) => a.date.localeCompare(b.date));
     set("blockedDates", next);
     setBlockDate("");
-    setMessage("Fecha bloqueada");
+    setError("");
+    setMessage("Fecha añadida. Pulsa «Guardar disponibilidad» para cerrarla en la web.");
   }
 
   async function handleSave() {
