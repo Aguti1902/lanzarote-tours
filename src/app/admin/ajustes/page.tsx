@@ -680,7 +680,7 @@ export default function AdminAjustesPage() {
             <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-950 ring-1 ring-amber-200">
               Para cambiar «Lanzarote, una isla para descubrir» y los apartados
               con fotos: baje a <strong>Apartados de contenido</strong> en este
-              mismo bloque (idioma {locale === "es" ? "Español" : adminLocaleLabels[locale]}).
+              mismo bloque (idioma {adminLocaleLabels[locale]}).
               Las <strong>preguntas frecuentes</strong> también se editan aquí
               abajo en este idioma.
             </p>
