@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   const localeParam = searchParams.get("locale") || "es";
   if (!isLocale(localeParam)) {
     return NextResponse.json(
-      { error: "locale debe ser es, en o de" },
+      { error: "locale debe ser es, en, de o fr" },
       { status: 400 }
     );
   }
@@ -54,7 +54,7 @@ export async function PUT(request: Request) {
     const locale = body.locale as string;
     if (!isLocale(locale)) {
       return NextResponse.json(
-        { error: "locale debe ser es, en o de" },
+        { error: "locale debe ser es, en, de o fr" },
         { status: 400 }
       );
     }

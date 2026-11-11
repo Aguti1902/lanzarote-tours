@@ -3,6 +3,7 @@ import type { Locale } from "@/i18n/config";
 export function intlLocale(locale: Locale | string = "es"): string {
   if (locale === "en") return "en-GB";
   if (locale === "de") return "de-DE";
+  if (locale === "fr") return "fr-FR";
   return "es-ES";
 }
 
@@ -56,6 +57,7 @@ export function groupSizeLabel(
     es: { small: "Grupo reducido", large: "Grupo grande", private: "Privado" },
     en: { small: "Small group", large: "Large group", private: "Private" },
     de: { small: "Kleine Gruppe", large: "Große Gruppe", private: "Privat" },
+    fr: { small: "Petit groupe", large: "Grand groupe", private: "Privé" },
   } as const;
   const L = map[(locale as Locale) in map ? (locale as Locale) : "es"];
   if (size === "small") return L.small;
@@ -89,6 +91,13 @@ export function paymentLabel(
       deposit_10: "10% Karte + Rest bar",
       deposit_20: "20% Karte + Rest bar",
     },
+    fr: {
+      card: "Paiement 100 % en ligne",
+      bizum: "Paiement 100 % en ligne",
+      pay_on_day: "Paiement le jour même",
+      deposit_10: "10 % par carte + solde en espèces",
+      deposit_20: "20 % par carte + solde en espèces",
+    },
   };
   const L = map[locale as string] || map.es;
   return L[method] ?? method;
@@ -107,6 +116,9 @@ const LANG_LABELS: Record<string, Record<string, string>> = {
     english: "Inglés",
     deutsch: "Alemán",
     german: "Alemán",
+    français: "Francés",
+    francais: "Francés",
+    french: "Francés",
   },
   en: {
     es: "Spanish",
@@ -120,6 +132,9 @@ const LANG_LABELS: Record<string, Record<string, string>> = {
     english: "English",
     deutsch: "German",
     german: "German",
+    français: "French",
+    francais: "French",
+    french: "French",
   },
   de: {
     es: "Spanisch",
@@ -133,6 +148,22 @@ const LANG_LABELS: Record<string, Record<string, string>> = {
     english: "Englisch",
     deutsch: "Deutsch",
     german: "Deutsch",
+  },
+  fr: {
+    es: "Espagnol",
+    en: "Anglais",
+    de: "Allemand",
+    it: "Italien",
+    fr: "Français",
+    pt: "Portugais",
+    español: "Espagnol",
+    espanol: "Espagnol",
+    english: "Anglais",
+    deutsch: "Allemand",
+    german: "Allemand",
+    français: "Français",
+    francais: "Français",
+    french: "Français",
   },
 };
 

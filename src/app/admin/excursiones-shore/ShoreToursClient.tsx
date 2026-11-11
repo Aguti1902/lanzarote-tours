@@ -18,6 +18,7 @@ import {
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { syncShoreTourStructuredFields } from "@/lib/shore-tour-display";
+import { adminLocaleLabels } from "@/i18n/config";
 
 type DetailTab =
   | "details"
@@ -27,7 +28,7 @@ type DetailTab =
   | "seo"
   | "multimedia";
 
-type LangKey = "es" | "en" | "de";
+type LangKey = "es" | "en" | "de" | "fr";
 
 const PORTS = [
   "Lanzarote",
@@ -189,6 +190,7 @@ export function ShoreToursPanel() {
       translations: {
         en: { ...emptyTranslation(), ...(current.translations?.en || {}) },
         de: { ...emptyTranslation(), ...(current.translations?.de || {}) },
+        fr: { ...emptyTranslation(), ...(current.translations?.fr || {}) },
       },
     });
     setTab("details");
@@ -235,7 +237,11 @@ export function ShoreToursPanel() {
       schedule: emptySchedule(),
       blockedDates: [],
       seo: { title: "", description: "", keywords: "" },
-      translations: { en: emptyTranslation(), de: emptyTranslation() },
+      translations: {
+        en: emptyTranslation(),
+        de: emptyTranslation(),
+        fr: emptyTranslation(),
+      },
     });
     setTab("details");
     setLang("es");
@@ -255,7 +261,7 @@ export function ShoreToursPanel() {
       return false;
     }
     const isNew = !items.some((t) => t.id === source.id);
-    const cleanLocale = (locale: "en" | "de") => {
+    const cleanLocale = (locale: Exclude<LangKey, "es">) => {
       const raw = source.translations?.[locale] || {};
       const next: CruiseShoreTourTranslation = {};
       if (raw.title?.trim()) next.title = raw.title.trim();
@@ -314,6 +320,7 @@ export function ShoreToursPanel() {
         translations: {
           en: cleanLocale("en"),
           de: cleanLocale("de"),
+          fr: cleanLocale("fr"),
         },
       }),
       id: savedId,
@@ -359,6 +366,7 @@ export function ShoreToursPanel() {
         translations: {
           en: { ...emptyTranslation(), ...(saved.translations?.en || {}) },
           de: { ...emptyTranslation(), ...(saved.translations?.de || {}) },
+          fr: { ...emptyTranslation(), ...(saved.translations?.fr || {}) },
         },
       });
       setMessage("Excursión guardada");
@@ -474,7 +482,7 @@ export function ShoreToursPanel() {
   }
 
   function updateTranslation(
-    locale: "en" | "de",
+    locale: Exclude<LangKey, "es">,
     patch: Partial<CruiseShoreTourTranslation>
   ) {
     if (!draft) return;
@@ -841,15 +849,12 @@ export function ShoreToursPanel() {
                   <option value="es">Español</option>
                   <option value="en">Inglés</option>
                   <option value="de">Alemán</option>
+                  <option value="fr">Francés</option>
                 </select>
               </Field>
               <h2 className="pb-2 text-lg font-bold">
                 Traducciones del tour en{" "}
-                {lang === "es"
-                  ? "Español"
-                  : lang === "en"
-                    ? "Inglés"
-                    : "Alemán"}
+                {adminLocaleLabels[lang]}
               </h2>
             </div>
 
@@ -1138,22 +1143,19 @@ export function ShoreToursPanel() {
                   <option value="es">Español</option>
                   <option value="en">Inglés</option>
                   <option value="de">Alemán</option>
+                  <option value="fr">Francés</option>
                 </select>
               </Field>
               <h2 className="pb-2 text-lg font-bold">
                 SEO (
-                {lang === "es"
-                  ? "Español"
-                  : lang === "en"
-                    ? "Inglés"
-                    : "Alemán"}
+                {adminLocaleLabels[lang]}
                 )
               </h2>
             </div>
             <div className="rounded-lg bg-sky-soft/60 px-4 py-3 text-sm text-ink-muted ring-1 ring-sand-line">
               <p className="font-semibold text-ink">Cómo rellenar el SEO</p>
               <ol className="mt-2 list-decimal space-y-1 pl-5">
-                <li>Elige el idioma (ES / EN / DE) y completa los 3 campos.</li>
+                <li>Elige el idioma (ES / EN / DE / FR) y completa los 3 campos.</li>
                 <li>
                   <strong>Meta title</strong>: ~50–60 caracteres con la palabra
                   clave principal.

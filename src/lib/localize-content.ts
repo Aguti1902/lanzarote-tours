@@ -322,7 +322,7 @@ export async function localizeTour(
   const fileOverlay = (await loadTranslations(locale)).tours[tour.id] as
     | Record<string, unknown>
     | undefined;
-  const embeddedRaw = tour.translations?.[locale as "en" | "de"] as
+  const embeddedRaw = tour.translations?.[locale] as
     | Record<string, unknown>
     | undefined;
   const embedded = hasTranslationContent(embeddedRaw)
@@ -422,7 +422,7 @@ export async function localizeShoreTour(
     overlayMap[SHORE_TOUR_I18N_ALIASES[tour.id] || ""]) as
     | Record<string, unknown>
     | undefined;
-  const embeddedRaw = tour.translations?.[locale as "en" | "de"] as
+  const embeddedRaw = tour.translations?.[locale] as
     | Record<string, unknown>
     | undefined;
   const embedded = hasTranslationContent(embeddedRaw)
@@ -481,7 +481,7 @@ export function localizeHouse(
   locale: Locale
 ): VacationHouse {
   if (locale === "es") return house;
-  const t = house.translations?.[locale as "en" | "de"];
+  const t = house.translations?.[locale];
   if (!t) return house;
   return {
     ...house,

@@ -3,17 +3,13 @@ import type { Locale } from "@/i18n/config";
 import { locales } from "@/i18n/config";
 import { readCmsJson, readCmsJsonFresh, writeCmsJson } from "@/lib/supabase/cms-store";
 
-export type UiTranslationOverrides = {
-  es: Record<string, string>;
-  en: Record<string, string>;
-  de: Record<string, string>;
-};
-
-const empty: UiTranslationOverrides = { es: {}, en: {}, de: {} };
+export type UiTranslationOverrides = Record<Locale, Record<string, string>>;
 
 function emptyMaps(): UiTranslationOverrides {
-  return { es: {}, en: {}, de: {} };
+  return Object.fromEntries(locales.map((locale) => [locale, {}])) as UiTranslationOverrides;
 }
+
+const empty: UiTranslationOverrides = emptyMaps();
 
 export async function getUiTranslationOverrides(): Promise<UiTranslationOverrides> {
   try {
@@ -21,9 +17,10 @@ export async function getUiTranslationOverrides(): Promise<UiTranslationOverride
       "uiTranslations.json"
     );
     return {
-      es: data.es || {},
-      en: data.en || {},
-      de: data.de || {},
+      ...emptyMaps(),
+      ...Object.fromEntries(
+        locales.map((locale) => [locale, data[locale] || {}])
+      ),
     };
   } catch {
     return emptyMaps();
@@ -34,9 +31,8 @@ export async function saveUiTranslationOverrides(
   data: UiTranslationOverrides
 ): Promise<void> {
   await writeCmsJson("uiTranslations.json", {
-    es: data.es || {},
-    en: data.en || {},
-    de: data.de || {},
+    ...emptyMaps(),
+    ...Object.fromEntries(locales.map((locale) => [locale, data[locale] || {}])),
   });
 }
 
@@ -53,9 +49,10 @@ export async function updateUiTranslations(
       "uiTranslations.json"
     );
     data = {
-      es: raw.es || {},
-      en: raw.en || {},
-      de: raw.de || {},
+      ...emptyMaps(),
+      ...Object.fromEntries(
+        locales.map((locale) => [locale, raw[locale] || {}])
+      ),
     };
   } catch {
     data = emptyMaps();

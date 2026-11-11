@@ -1,4 +1,4 @@
-import { isLocale, type Locale } from "./config";
+import { isLocale, locales, type Locale } from "./config";
 import { remapExcursionPath } from "./tour-slugs";
 
 /**
@@ -12,45 +12,66 @@ export const ROUTE_LOCALES = [
     es: "/excursiones-cruceros",
     en: "/shore-excursions",
     de: "/kreuzfahrtausfluege",
+    fr: "/excursions-croisiere",
   },
   {
     es: "/reserva/confirmacion",
     en: "/booking/confirmation",
     de: "/buchung/bestaetigung",
+    fr: "/reservation/confirmation",
   },
   {
     es: "/gestionar-reserva",
     en: "/manage-booking",
     de: "/buchung-verwalten",
+    fr: "/gerer-reservation",
   },
   {
     es: "/cancelar-reserva",
     en: "/cancel-booking",
     de: "/buchung-stornieren",
+    fr: "/annuler-reservation",
   },
-  { es: "/sobre-nosotros", en: "/about-us", de: "/uber-uns" },
-  { es: "/excursiones", en: "/excursions", de: "/ausfluege" },
+  {
+    es: "/sobre-nosotros",
+    en: "/about-us",
+    de: "/uber-uns",
+    fr: "/a-propos",
+  },
+  { es: "/excursiones", en: "/excursions", de: "/ausfluege", fr: "/visites" },
   {
     es: "/traslados-aeropuerto-lanzarote",
     en: "/airport-transfers",
     de: "/flughafen-transfer",
+    fr: "/transfert-aeroport",
   },
   {
     es: "/cruceristas",
     en: "/cruise-passengers",
     de: "/kreuzfahrtgaeste",
+    fr: "/passagers-croisiere",
   },
-  { es: "/cruceros", en: "/cruises", de: "/kreuzfahrten" },
-  { es: "/crucero", en: "/cruise", de: "/kreuzfahrt" },
-  { es: "/casas", en: "/holiday-homes", de: "/ferienhaeuser" },
-  { es: "/contacto", en: "/contact", de: "/kontakt" },
-  { es: "/carrito", en: "/cart", de: "/warenkorb" },
-  { es: "/factura", en: "/invoice", de: "/rechnung" },
-  { es: "/voucher", en: "/voucher", de: "/voucher" },
-  { es: "/gateway", en: "/gateway", de: "/gateway" },
-  { es: "/privacidad", en: "/privacy", de: "/datenschutz" },
-  { es: "/condiciones", en: "/terms", de: "/agb" },
-  { es: "/cookies", en: "/cookies", de: "/cookies" },
+  { es: "/cruceros", en: "/cruises", de: "/kreuzfahrten", fr: "/croisieres" },
+  { es: "/crucero", en: "/cruise", de: "/kreuzfahrt", fr: "/croisiere" },
+  {
+    es: "/casas",
+    en: "/holiday-homes",
+    de: "/ferienhaeuser",
+    fr: "/maisons-de-vacances",
+  },
+  { es: "/contacto", en: "/contact", de: "/kontakt", fr: "/contactez-nous" },
+  { es: "/carrito", en: "/cart", de: "/warenkorb", fr: "/panier" },
+  { es: "/factura", en: "/invoice", de: "/rechnung", fr: "/facture" },
+  { es: "/voucher", en: "/voucher", de: "/voucher", fr: "/voucher" },
+  { es: "/gateway", en: "/gateway", de: "/gateway", fr: "/gateway" },
+  {
+    es: "/privacidad",
+    en: "/privacy",
+    de: "/datenschutz",
+    fr: "/confidentialite",
+  },
+  { es: "/condiciones", en: "/terms", de: "/agb", fr: "/conditions" },
+  { es: "/cookies", en: "/cookies", de: "/cookies", fr: "/cookies" },
 ] as const;
 
 /** Alias → segmento canónico del mismo idioma (umlauts, sinónimos legacy). */
@@ -112,7 +133,7 @@ function matchRoute(
 /** Detecta en qué “idioma de slug” está escrito el path (sin locale). */
 function detectSlugLocale(pathname: string): Locale | null {
   const path = applyAlias(normalizePathname(pathname));
-  for (const locale of ["es", "en", "de"] as Locale[]) {
+  for (const locale of locales) {
     if (matchRoute(path, locale)) return locale;
   }
   return null;
@@ -127,7 +148,7 @@ export function toInternalPath(path: string): string {
   const clean = applyAlias(normalizePathname(pathname));
   if (clean === "/") return search ? `/${search}` : "/";
 
-  for (const locale of ["es", "en", "de"] as Locale[]) {
+  for (const locale of locales) {
     const matched = matchRoute(clean, locale);
     if (matched) {
       return `${matched.route.es}${matched.rest}${search}`;
@@ -136,7 +157,7 @@ export function toInternalPath(path: string): string {
   return `${clean}${search}`;
 }
 
-/** Path interno (ES) → path localizado para el locale (sin prefijo /es|/en|/de). */
+/** Path interno (ES) → path localizado para el locale (sin prefijo /es|/en|/de|/fr). */
 export function toLocalizedPath(locale: Locale, internalPath: string): string {
   const { pathname, search } = splitPathAndQuery(internalPath);
   const clean = normalizePathname(pathname);

@@ -68,12 +68,13 @@ export default async function HomePage({ params }: Props) {
   ]);
 
   const lp = (path: string) => localePath(locale, path);
-  const bannerText =
-    (locale === "en"
-      ? settings.bannerEn
-      : locale === "de"
-        ? settings.bannerDe
-        : settings.bannerEs) || dict.home.marquee;
+  const bannerByLocale = {
+    es: settings.bannerEs,
+    en: settings.bannerEn,
+    de: settings.bannerDe,
+    fr: settings.bannerFr,
+  } as const;
+  const bannerText = bannerByLocale[locale] || dict.home.marquee;
 
   return (
     <>

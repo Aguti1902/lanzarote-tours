@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Field, adminInput } from "@/components/admin/Field";
-import type { Locale } from "@/i18n/config";
+import { adminLocaleLabels, locales, type Locale } from "@/i18n/config";
 
 type Item = {
   key: string;
@@ -15,11 +15,10 @@ type Item = {
 
 const PAGE_SIZE = 50;
 
-const localeTabs: { id: Locale; label: string }[] = [
-  { id: "es", label: "Español" },
-  { id: "en", label: "Inglés" },
-  { id: "de", label: "Alemán" },
-];
+const localeTabs: { id: Locale; label: string }[] = locales.map((id) => ({
+  id,
+  label: adminLocaleLabels[id],
+}));
 
 export default function AdminTraduccionesPage() {
   const [locale, setLocale] = useState<Locale>("es");
@@ -122,7 +121,7 @@ export default function AdminTraduccionesPage() {
         <div>
           <h1 className="text-3xl font-bold">Traducciones UI</h1>
           <p className="mt-1 max-w-2xl text-sm text-ink-muted">
-            Todos los textos de la interfaz pública (ES / EN / DE) son editables.
+            Todos los textos de la interfaz pública (ES / EN / DE / FR) son editables.
             Vaciar un campo restaura el valor base del código. Las claves anidadas
             (p. ej. <code className="text-xs">home.advantages.0.text</code>) también
             se pueden editar.

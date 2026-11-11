@@ -1,3 +1,5 @@
+import type { Locale } from "@/i18n/config";
+
 export type GroupSize = "small" | "large";
 export type TourCategory = "excursion" | "private" | "minibus" | "transfer";
 export type PaymentMethod =
@@ -100,6 +102,7 @@ export interface Tour {
   translations?: {
     en?: TourTranslation;
     de?: TourTranslation;
+    fr?: TourTranslation;
   };
 }
 
@@ -138,6 +141,7 @@ export interface VacationHouse {
   translations?: {
     en?: VacationHouseTranslation;
     de?: VacationHouseTranslation;
+    fr?: VacationHouseTranslation;
   };
 }
 
@@ -248,6 +252,7 @@ export interface SiteSettings {
   bannerEs?: string;
   bannerEn?: string;
   bannerDe?: string;
+  bannerFr?: string;
 }
 
 export type PaymentLinkMode = "standard" | "group_all" | "per_person";
@@ -263,7 +268,7 @@ export interface PaymentLink {
   status: "pending" | "paid" | "cancelled";
   customerName?: string;
   customerEmail?: string;
-  customerLocale?: "es" | "en" | "de";
+  customerLocale?: Locale;
   notes?: string;
   paidAt?: string;
   paymentMethod?: string;
@@ -347,7 +352,7 @@ export interface CruiseGroup {
 export interface SeoRedirect {
   id: string;
   httpCode: 301 | 302;
-  locale: "es" | "en" | "de";
+  locale: Locale;
   fromSlug: string;
   toSlug: string;
 }
@@ -441,6 +446,7 @@ export interface CruiseShoreTour {
   translations?: {
     en?: CruiseShoreTourTranslation;
     de?: CruiseShoreTourTranslation;
+    fr?: CruiseShoreTourTranslation;
   };
 }
 
@@ -532,7 +538,7 @@ export interface Booking {
   /** Web de origen cuando la reserva se ve desde el hub (grupos de crucero). */
   siteId?: string;
   siteLabel?: string;
-  /** Idioma de la web al reservar (es/en/de). */
+  /** Idioma de la web al reservar (es/en/de/fr). */
   locale?: string;
   /** Zona de recogida (legacy zone). */
   pickupZone?: string;

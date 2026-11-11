@@ -20,6 +20,7 @@ export const PROTECTED_LIVE_CMS = [
   "uiTranslations.json",
   "i18n/en.json",
   "i18n/de.json",
+  "i18n/fr.json",
 ] as const;
 
 export type ProtectedLiveCmsFile = (typeof PROTECTED_LIVE_CMS)[number];

@@ -17,11 +17,18 @@ export type ChatMessage = {
   content: string;
 };
 
-type Lang = "es" | "en" | "de";
+type Lang = "es" | "en" | "de" | "fr";
 
 function asLang(locale: string): Lang {
-  if (locale === "en" || locale === "de") return locale;
+  if (locale === "en" || locale === "de" || locale === "fr") return locale;
   return "es";
+}
+
+function phrase(
+  lang: Lang,
+  copy: { es: string; en: string; de: string; fr: string }
+): string {
+  return copy[lang];
 }
 
 function asLocale(locale: string): Locale {
@@ -36,20 +43,24 @@ function normalize(text: string): string {
 }
 
 function payLabel(tour: Tour, lang: Lang): string {
-  const card =
-    lang === "en" ? "100% card" : lang === "de" ? "100% Karte" : "100% tarjeta";
-  const deposit =
-    lang === "en"
-      ? "20% card + cash balance"
-      : lang === "de"
-        ? "20% Karte + Rest bar"
-        : "20% tarjeta + resto en efectivo";
-  const onDay =
-    lang === "en"
-      ? "pay on the day"
-      : lang === "de"
-        ? "Zahlung am Tourtag"
-        : "pago el día del tour";
+  const card = phrase(lang, {
+    es: "100% tarjeta",
+    en: "100% card",
+    de: "100% Karte",
+    fr: "100 % par carte",
+  });
+  const deposit = phrase(lang, {
+    es: "20% tarjeta + resto en efectivo",
+    en: "20% card + cash balance",
+    de: "20% Karte + Rest bar",
+    fr: "20 % par carte + solde en espèces",
+  });
+  const onDay = phrase(lang, {
+    es: "pago el día del tour",
+    en: "pay on the day",
+    de: "Zahlung am Tourtag",
+    fr: "paiement le jour de l'excursion",
+  });
   if (isFlatPriceTour(tour)) return `${card}, ${deposit}`;
   const parts = [
     tour.allowCard ? card : "",
@@ -81,8 +92,8 @@ async function buildKnowledge(locale: string): Promise<string> {
         : t.category;
       const max = t.maxGroup ? ` · max ${t.maxGroup}` : "";
       const price = isFlatPriceTour(t)
-        ? `${formatPrice(t.priceAdult)} ${lang === "en" ? "closed price" : lang === "de" ? "Festpreis" : "precio cerrado"}`
-        : `${formatPrice(t.priceAdult)} ${lang === "en" ? "adult" : lang === "de" ? "Erwachsener" : "adulto"}`;
+        ? `${formatPrice(t.priceAdult)} ${phrase(lang, { es: "precio cerrado", en: "closed price", de: "Festpreis", fr: "prix forfaitaire" })}`
+        : `${formatPrice(t.priceAdult)} ${phrase(lang, { es: "adulto", en: "adult", de: "Erwachsener", fr: "adulte" })}`;
       const path = localePath(lang, `/excursiones/${t.slug}`);
       return `- ${t.shortTitle || t.title} (${group}${max}): ${price}, ${t.duration}. ${payLabel(t, asLang(locale))}. ${path}. ${t.summary || ""}`;
     })
@@ -91,7 +102,7 @@ async function buildKnowledge(locale: string): Promise<string> {
   const transferLines = transfers.destinations
     .map(
       (d) =>
-        `- ${lang === "en" ? "Airport" : lang === "de" ? "Flughafen" : "Aeropuerto"} ↔ ${d.name}: ${lang === "en" ? "one way" : lang === "de" ? "einfach" : "ida"} ${formatPrice(d.priceOneWay)}, ${lang === "en" ? "return" : lang === "de" ? "hin und zurück" : "ida y vuelta"} ${formatPrice(d.priceReturn)} (${d.duration})`
+        `- ${phrase(lang, { es: "Aeropuerto", en: "Airport", de: "Flughafen", fr: "Aéroport" })} ↔ ${d.name}: ${phrase(lang, { es: "ida", en: "one way", de: "einfach", fr: "aller simple" })} ${formatPrice(d.priceOneWay)}, ${phrase(lang, { es: "ida y vuelta", en: "return", de: "hin und zurück", fr: "aller-retour" })} ${formatPrice(d.priceReturn)} (${d.duration})`
     )
     .join("\n");
 
@@ -206,6 +217,26 @@ const replies: Record<
     contact: (phone, email, hours) =>
       `Sie erreichen uns unter ${phone} oder ${email}. Zeiten: ${hours}.`,
   },
+  fr: {
+    hello:
+      "Bonjour ! Je suis l'assistant de Lanzarote Tours. Je peux vous aider pour les excursions actuellement sur le site, les transferts aéroport, les prix, les paiements et les escales de croisière. Que puis-je faire pour vous ?",
+    thanks:
+      "Avec plaisir. Je peux vous indiquer une excursion, un transfert ou comment réserver sur le site.",
+    cruise: (url, calendar) =>
+      `Si vous arrivez en croisière, la réservation se fait dans la section croisières (${url}), en choisissant la compagnie, le navire et le départ. Le calendrier des escales est sur ${calendar}. Il n'est pas nécessaire d'indiquer le navire sur une excursion classique. Dites-moi la date ou le nom du navire et je vous oriente.`,
+    pay: "Pour les excursions privées, deux options seulement : payer 100 % par carte, ou 20 % par carte et le reste en espèces le jour de l'excursion. Pour les autres excursions, les moyens de paiement sont ceux indiqués sur chaque fiche. L'annulation est gratuite jusqu'à 48 heures avant la prise en charge.",
+    cancel:
+      "L'annulation est gratuite si nous la recevons plus de 48 heures avant la prise en charge. À moins de 48 heures, il n'y a pas de remboursement.",
+    book: (url) =>
+      `Vous pouvez réserver sur chaque fiche d'excursion ou sur ${url}. Choisissez la date, le nombre de personnes et le moyen de paiement. Indiquez-moi la date, la zone de l'hôtel ou si vous arrivez en croisière, et je vous oriente.`,
+    fallback:
+      "Je peux vous aider pour les excursions publiées, les transferts aéroport, les prix, les moyens de paiement et les croisières. Demandez-moi, par exemple, une excursion précise ou un transfert.",
+    pricesIntro: "Voici les prix publiés en ce moment :",
+    transfersIntro: (url) =>
+      `Transferts privés, avec pancarte à votre nom dans le terminal. Vous pouvez les réserver sur ${url}.`,
+    contact: (phone, email, hours) =>
+      `Vous pouvez nous appeler au ${phone} ou écrire à ${email}. Horaires : ${hours}.`,
+  },
 };
 
 function localReply(message: string, knowledge: string, locale: string): string {
@@ -221,19 +252,19 @@ function localReply(message: string, knowledge: string, locale: string): string 
   const calendar = localePath(asLocale(locale), "/cruceristas");
 
   if (
-    /^(hola|buenas|hey|hello|hi|hallo|guten tag|buenos dias|buenas tardes)\b/.test(
+    /^(hola|buenas|hey|hello|hi|hallo|guten tag|buenos dias|buenas tardes|bonjour|salut|bonsoir)\b/.test(
       q
     ) &&
     q.length < 40
   ) {
     return t.hello;
   }
-  if (/gracias|thank|danke/.test(q) && q.length < 40) return t.thanks;
-  if (/crucero|cruise|schiff|crucerista|escala|hafenstopp|barco|ship/.test(q)) {
+  if (/gracias|thank|danke|merci/.test(q) && q.length < 40) return t.thanks;
+  if (/crucero|cruise|schiff|crucerista|escala|hafenstopp|barco|ship|croisiere|bateau|escale/.test(q)) {
     return t.cruise(cruises, calendar);
   }
   if (
-    /traslad|aeropuerto|airport|flughafen|transfer|taxi|recogida|playa blanca|puerto del carmen|costa teguise/.test(
+    /traslad|aeropuerto|airport|flughafen|transfer|taxi|recogida|playa blanca|puerto del carmen|costa teguise|aeroport|transfert/.test(
       q
     )
   ) {
@@ -243,11 +274,11 @@ function localReply(message: string, knowledge: string, locale: string): string 
       .join("\n");
     return `${t.transfersIntro(transfers)}\n\n${lines}`;
   }
-  if (/pago|pagar|pay|zahlung|bezahlen|tarjeta|card|karte|efectivo|cash|bar\b/.test(q)) {
+  if (/pago|pagar|pay|zahlung|bezahlen|tarjeta|card|karte|efectivo|cash|bar\b|paiement|payer|carte|especes/.test(q)) {
     return t.pay;
   }
-  if (/cancel|reembol|storno|anular/.test(q)) return t.cancel;
-  if (/contacto|telefono|phone|telefon|email|correo|whatsapp|horario|hours/.test(q)) {
+  if (/cancel|reembol|storno|anular|annul/.test(q)) return t.cancel;
+  if (/contacto|telefono|phone|telefon|email|correo|whatsapp|horario|hours|telephone|courriel/.test(q)) {
     const phone = knowledge.match(/Phone: (.+)/)?.[1] || "+34 646 08 05 85";
     const email =
       knowledge.match(/Email: (.+)/)?.[1] ||
@@ -255,7 +286,7 @@ function localReply(message: string, knowledge: string, locale: string): string 
     const hours = knowledge.match(/Hours: (.+)/)?.[1] || "";
     return t.contact(phone, email, hours);
   }
-  if (/precio|cuanto|cuesta|price|cost|preis|kostet|€/.test(q)) {
+  if (/precio|cuanto|cuesta|price|cost|preis|kostet|prix|coute|coûte|€/.test(q)) {
     const lines = knowledge
       .split("\n")
       .filter((line) => line.startsWith("- ") && !line.includes("↔"))
@@ -263,7 +294,7 @@ function localReply(message: string, knowledge: string, locale: string): string 
       .join("\n");
     return `${t.pricesIntro}\n\n${lines}`;
   }
-  if (/reserva|reservar|book|buchen/.test(q)) return t.book(excursions);
+  if (/reserva|reservar|book|buchen|reserver|réserver/.test(q)) return t.book(excursions);
 
   const matched = knowledge
     .split("\n")
@@ -283,6 +314,7 @@ const langName: Record<string, string> = {
   es: "Spanish",
   en: "English",
   de: "German",
+  fr: "French",
 };
 
 async function openaiReply(

@@ -1,0 +1,1189 @@
+{
+  "settings": {
+    "hours": "Contactez-nous 24 h/24 et 7 j/7",
+    "tagline": "Excursions guidées à Lanzarote",
+    "homeHeadline": "Lanzarote Tours",
+    "homeSubheadline": "Excursions guidées à Lanzarote",
+    "aboutTitle": "Lanzarote Tours",
+    "aboutLead": "Nous sommes une entreprise familiale locale qui propose des excursions guidées à Lanzarote. L'expérience est au cœur de notre démarche, et l'excursion est le moyen d'atteindre notre objectif : votre satisfaction.",
+    "aboutText": "Cela nous permet de veiller à la qualité en proposant des excursions en petits groupes, dans nos propres minibus et uniquement en espagnol.\n\nLanzarote (Réserve de biosphère) possède un paysage unique au monde, et les visiteurs ont souvent l'impression d'avoir atterri sur une autre planète. L'île est connue pour son silence, sa tranquillité, l'accueil chaleureux de ses habitants et un paysage volcanique magistralement façonné par des artistes tels que César Manrique et Jesús Soto.\n\nNous organisons des excursions guidées en direct, sans intermédiaires, en espagnol et en petits groupes (14 personnes maximum). Nous venons vous chercher à la porte de votre hébergement.",
+    "aboutValues": "Le client d'abord\nIntégrité\nQualité\nDurabilité\nTravail d'équipe\nPlace à la créativité",
+    "aboutPromise": "Nous veillons à la qualité en proposant des excursions en petits groupes, dans nos propres minibus et uniquement en espagnol. Votre satisfaction est notre objectif.",
+    "excursionsTitle": "Activités et excursions guidées à Lanzarote",
+    "excursionsIntro": "Excursions, activités et visites guidées pour découvrir le meilleur de Lanzarote en petits groupes et uniquement en espagnol.",
+    "excursionsText": "Nous organisons des excursions guidées en direct, sans intermédiaires, avec prise en charge à votre hébergement et en petits groupes (14 personnes maximum).\n\nChaque itinéraire est conçu pour que vous profitiez de Timanfaya, des Jameos del Agua, de l'œuvre de César Manrique et des coins les moins fréquentés de l'île, avec du temps et des explications claires.",
+    "blogTitle": "Blog de Lanzarote",
+    "blogIntro": "Idées et conseils pour profiter au mieux de votre séjour sur l'île.",
+    "blogText": "Sur notre blog, vous trouverez des guides pratiques, des recommandations de saison et des réponses aux questions les plus fréquentes avant de réserver une excursion ou un transfert.\n\nNous mettons nos contenus à jour pour vous aider à organiser plus efficacement votre séjour à Lanzarote.",
+    "cruiseHeadline": "Excursions à terre aux îles Canaries",
+    "cruiseIntro": "Profitez de l'escale de votre croisière à Lanzarote (saison 2026–2027, Puerto de Los Mármoles) et découvrez l'île lors d'excursions adaptées à votre heure limite de retour à bord.",
+    "cruiseText": "Nous concevons les excursions à terre en fonction du temps réellement disponible pendant votre escale : prise en charge au quai, visite des sites essentiels et retour au navire avec une marge de temps.\n\nConsultez le calendrier des escales, choisissez votre compagnie de croisière et réservez l'excursion qui correspond le mieux à votre heure limite de retour à bord.",
+    "transferTitle": "Transferts privés aéroport ↔ hôtel",
+    "transferIntro": "Passez plus de temps à profiter de l'île et moins de temps à l'aéroport en réservant un transfert privé vers votre hôtel. Notre chauffeur vous attendra dans le terminal des arrivées.",
+    "transferText": "Nous proposons des transferts privés de porte à porte entre l'aéroport de Lanzarote (ACE) et les principales stations touristiques : Playa Blanca, Puerto del Carmen, Costa Teguise, Puerto Calero et d'autres.\n\nVous pouvez réserver un transfert aller simple à l'arrivée, un transfert aller simple au départ ou un aller-retour. Le tarif est par véhicule (et non par personne), et le chauffeur vous attendra avec une pancarte à votre nom.\n\nSi votre vol est retardé, nous ajustons l'heure de prise en charge. Indiquez votre numéro de vol et votre hôtel lors de la réservation pour une arrivée sans stress."
+  },
+  "tours": {
+    "timanfaya-experience": {
+      "title": "Excursion Timanfaya et Montañas del Fuego",
+      "shortTitle": "Timanfaya et Montañas del Fuego",
+      "duration": "Environ 5 heures",
+      "summary": "Découvrez le parc national de Timanfaya, Los Hervideros, El Golfo, les Salinas de Janubio et La Geria en petit groupe et uniquement en espagnol.",
+      "description": "Visite guidée du parc national de Timanfaya et des Montañas del Fuego. Comprend les démonstrations géothermiques, la Route des volcans, la côte de Timanfaya (Los Hervideros et El Golfo), une vue panoramique sur les Salinas de Janubio et une dégustation à La Geria. Petits groupes de 14 personnes maximum, uniquement en espagnol. Prise en charge à la porte de votre hébergement.",
+      "highlights": [
+        "Petit groupe : 14 personnes maximum",
+        "Uniquement en espagnol",
+        "Prise en charge à votre hébergement",
+        "Entrée à Timanfaya incluse",
+        "Minibus climatisé avec Wi-Fi"
+      ],
+      "places": [
+        "Parc national de Timanfaya",
+        "Los Hervideros",
+        "El Golfo et la lagune verte",
+        "Salinas de Janubio",
+        "La Geria"
+      ],
+      "included": [
+        "Transport en minibus climatisé",
+        "Guide officiel hispanophone",
+        "Entrée au parc national de Timanfaya",
+        "Assurance touristique"
+      ],
+      "notIncluded": [
+        "Balade à dromadaire (en option)",
+        "Déjeuner"
+      ],
+      "recommendations": [
+        "Chaussures confortables",
+        "Appareil photo",
+        "Veste légère"
+      ],
+      "cancellationPolicy": "Annulation gratuite jusqu'à 48 heures avant la prise en charge.",
+      "languages": [
+        "Français"
+      ]
+    },
+    "grand-tour-experience": {
+      "title": "Grand Tour Experience : l'héritage du paysage",
+      "shortTitle": "Grand Tour Experience",
+      "duration": "Environ 8 heures",
+      "summary": "Toute l'île en une journée : nord et sud, Manrique, Timanfaya, Jameos del Agua, Mirador del Río et plus encore.",
+      "description": "Le Grand Tour Experience réunit en une journée les sites essentiels de Lanzarote : Timanfaya, la côte sud, les lieux de César Manrique dans le nord (Jameos del Agua, Cueva de los Verdes ou Mirador del Río, selon l'itinéraire) et les paysages uniques de l'île. Petit groupe, uniquement en espagnol, avec prise en charge à votre hébergement.",
+      "highlights": [
+        "Itinéraire complet nord et sud",
+        "14 personnes maximum",
+        "Uniquement en espagnol",
+        "Prise en charge à votre hébergement"
+      ],
+      "places": [
+        "Timanfaya",
+        "Jameos del Agua",
+        "Cueva de los Verdes",
+        "Mirador del Río",
+        "La Geria"
+      ],
+      "included": [
+        "Transport en minibus",
+        "Guide officiel hispanophone",
+        "Billets d'entrée indiqués dans l'itinéraire",
+        "Assurance touristique"
+      ],
+      "notIncluded": [
+        "Déjeuner",
+        "Boissons"
+      ],
+      "recommendations": [
+        "Journée complète : emportez de l'eau et une collation",
+        "Chaussures confortables",
+        "Protection solaire"
+      ],
+      "cancellationPolicy": "Annulation gratuite jusqu'à 48 heures avant la prise en charge.",
+      "languages": [
+        "Français"
+      ]
+    },
+    "tour-privado": {
+      "title": "Excursion privée à Lanzarote : minibus + guide",
+      "shortTitle": "Excursion privée",
+      "duration": "Sur mesure",
+      "summary": "Un minibus et un guide officiel rien que pour votre groupe. Un itinéraire conçu pour vous.",
+      "description": "Composez votre journée à Lanzarote avec un minibus privé et un guide officiel. Idéal pour les familles, les groupes d'amis ou les passagers de croisière qui souhaitent explorer à leur rythme, en toute souplesse.",
+      "highlights": [
+        "Véhicule et guide exclusivement pour votre groupe",
+        "Itinéraire personnalisé",
+        "Idéal pour les familles et les groupes",
+        "Horaires flexibles"
+      ],
+      "places": [
+        "Selon l'itinéraire convenu"
+      ],
+      "included": [
+        "Minibus privé",
+        "Guide officiel",
+        "Assurance touristique"
+      ],
+      "notIncluded": [
+        "Entrées des sites",
+        "Repas"
+      ],
+      "recommendations": [
+        "Indiquez-nous vos préférences lors de la réservation"
+      ],
+      "cancellationPolicy": "Annulation gratuite jusqu'à 48 heures à l'avance.",
+      "languages": [
+        "Français"
+      ]
+    },
+    "cesar-manrique": {
+      "title": "Excursion César Manrique Experience",
+      "shortTitle": "César Manrique Experience",
+      "duration": "Environ 6 heures",
+      "summary": "Le talent d'un homme et son amour pour sa terre : la Fondation, les Jameos del Agua, le Mirador del Río et le Jardín de Cactus.",
+      "description": "Une excursion consacrée à l'œuvre de César Manrique : Fondation César Manrique, Jameos del Agua, Mirador del Río et Jardín de Cactus. Petits groupes et uniquement en espagnol.",
+      "highlights": [
+        "Axée sur César Manrique",
+        "14 personnes maximum",
+        "Uniquement en espagnol"
+      ],
+      "places": [
+        "Fondation César Manrique",
+        "Jameos del Agua",
+        "Mirador del Río",
+        "Jardín de Cactus"
+      ],
+      "included": [
+        "Transport",
+        "Guide officiel",
+        "Billets d'entrée de l'itinéraire"
+      ],
+      "notIncluded": [
+        "Déjeuner"
+      ],
+      "recommendations": [
+        "Chaussures confortables"
+      ],
+      "cancellationPolicy": "Annulation gratuite jusqu'à 48 heures à l'avance.",
+      "languages": [
+        "Français"
+      ]
+    },
+    "ruta-vino": {
+      "title": "Route des vins de Lanzarote",
+      "shortTitle": "Route des vins",
+      "duration": "Environ 4 heures",
+      "summary": "Découvrez La Geria, ses volcans et des dégustations de malvoisie dans les bodegas locales.",
+      "description": "Une expérience œnologique à La Geria : vignes plantées dans des cuvettes, bodegas et dégustation des vins de Lanzarote.",
+      "highlights": [
+        "Dégustations de vin",
+        "Petit groupe",
+        "Uniquement en espagnol"
+      ],
+      "places": [
+        "La Geria",
+        "Bodegas locales"
+      ],
+      "included": [
+        "Transport",
+        "Guide",
+        "Dégustations"
+      ],
+      "notIncluded": [
+        "Achats en bodega"
+      ],
+      "recommendations": [
+        "Les dégustations d'alcool ne conviennent pas aux mineurs"
+      ],
+      "cancellationPolicy": "Annulation gratuite jusqu'à 48 heures à l'avance.",
+      "languages": [
+        "Français"
+      ]
+    },
+    "senderismo-norte": {
+      "title": "Randonnée dans le nord de Lanzarote : Ermita de Las Nieves – El Bosquecillo – Haría",
+      "shortTitle": "Randonnée dans le nord",
+      "duration": "Environ 5 heures",
+      "summary": "Une randonnée guidée dans le nord verdoyant de Lanzarote, avec un guide local.",
+      "description": "Randonnée guidée par l'Ermita de Las Nieves, El Bosquecillo et la vallée de Haría. Idéale pour les amoureux de la nature et des panoramas.",
+      "highlights": [
+        "Guide de randonnée",
+        "Petit groupe",
+        "Paysages du nord"
+      ],
+      "places": [
+        "Ermita de Las Nieves",
+        "El Bosquecillo",
+        "Haría"
+      ],
+      "included": [
+        "Transport",
+        "Guide",
+        "Assurance"
+      ],
+      "notIncluded": [
+        "Repas",
+        "Bâtons de marche"
+      ],
+      "recommendations": [
+        "Chaussures de randonnée",
+        "Eau",
+        "Chapeau"
+      ],
+      "cancellationPolicy": "Annulation gratuite jusqu'à 48 heures à l'avance.",
+      "languages": [
+        "Français"
+      ]
+    },
+    "graciosa-catamaran": {
+      "title": "La Graciosa en catamaran",
+      "shortTitle": "La Graciosa en catamaran",
+      "duration": "Environ 8 heures",
+      "summary": "Une journée complète à La Graciosa en catamaran : plages, snorkeling et une atmosphère unique.",
+      "description": "Excursion en catamaran vers l'île de La Graciosa. Temps libre sur les plages, possibilité de faire du snorkeling et déjeuner à bord, selon disponibilité.",
+      "highlights": [
+        "Catamaran",
+        "Plages de La Graciosa",
+        "Journée complète"
+      ],
+      "places": [
+        "Órzola",
+        "La Graciosa"
+      ],
+      "included": [
+        "Transport terrestre",
+        "Ferry / catamaran",
+        "Guide"
+      ],
+      "notIncluded": [
+        "Extras à bord"
+      ],
+      "recommendations": [
+        "Maillot de bain",
+        "Serviette",
+        "Protection solaire"
+      ],
+      "cancellationPolicy": "Annulation gratuite jusqu'à 48 heures à l'avance.",
+      "languages": [
+        "Français"
+      ]
+    },
+    "delfines-atardecer": {
+      "title": "Excursion d'observation des dauphins au coucher de soleil romantique de Lanzarote",
+      "shortTitle": "Dauphins au coucher du soleil",
+      "duration": "Environ 3 heures",
+      "summary": "Une sortie en mer au coucher du soleil, avec observation des dauphins et vue sur le soleil qui se couche.",
+      "description": "Une sortie en mer au coucher du soleil pour observer les dauphins (sous réserve d'observations en milieu naturel) et profiter du soleil qui se couche au large de Lanzarote.",
+      "highlights": [
+        "Coucher de soleil",
+        "Observation des dauphins",
+        "Ambiance romantique"
+      ],
+      "places": [
+        "Côte de Lanzarote"
+      ],
+      "included": [
+        "Sortie en bateau",
+        "Équipage"
+      ],
+      "notIncluded": [
+        "Boissons"
+      ],
+      "recommendations": [
+        "Vêtements chauds à cause du vent"
+      ],
+      "cancellationPolicy": "Annulation gratuite jusqu'à 48 heures à l'avance.",
+      "languages": [
+        "Français"
+      ]
+    },
+    "mercadillo-teguise": {
+      "title": "Marché de Teguise",
+      "shortTitle": "Marché de Teguise",
+      "duration": "Environ 4 heures",
+      "summary": "Visitez le traditionnel marché du dimanche à Teguise, avec transport et guide.",
+      "description": "Chaque dimanche, le village de Teguise se remplit d'artisanat, de produits locaux et d'ambiance canarienne. Transport et accompagnement inclus.",
+      "highlights": [
+        "Le dimanche",
+        "Artisanat local",
+        "Village historique"
+      ],
+      "places": [
+        "Teguise"
+      ],
+      "included": [
+        "Transport",
+        "Accompagnement"
+      ],
+      "notIncluded": [
+        "Achats"
+      ],
+      "recommendations": [
+        "Espèces pour le marché"
+      ],
+      "cancellationPolicy": "Annulation gratuite jusqu'à 48 heures à l'avance.",
+      "languages": [
+        "Français"
+      ]
+    },
+    "panoramica-sur-norte": {
+      "title": "Tour panoramique du sud et du nord de Lanzarote",
+      "shortTitle": "Panoramique sud et nord",
+      "duration": "Environ 8 heures",
+      "summary": "Un parcours panoramique dans le sud et le nord de Lanzarote : villages, points de vue et paysages volcaniques.",
+      "description": "Découvrez le contraste entre le sud et le nord de Lanzarote lors d'une visite panoramique guidée. Idéal si vous souhaitez une vue d'ensemble de l'île, avec prise en charge à votre hébergement.",
+      "highlights": [
+        "Itinéraire sud et nord",
+        "Points de vue",
+        "Prise en charge à votre hébergement"
+      ],
+      "places": [
+        "Côte sud",
+        "Villages du nord",
+        "Points de vue"
+      ],
+      "included": [
+        "Transport",
+        "Guide hispanophone",
+        "Assurance touristique"
+      ],
+      "notIncluded": [
+        "Repas",
+        "Droits d'entrée non précisés"
+      ],
+      "recommendations": [
+        "Chaussures confortables",
+        "Appareil photo",
+        "Protection solaire"
+      ],
+      "cancellationPolicy": "Annulation gratuite jusqu'à 48 heures avant la prise en charge.",
+      "languages": [
+        "Français"
+      ]
+    },
+    "traslado-concierto-jameos": {
+      "title": "Transfert + concert aux Jameos del Agua",
+      "shortTitle": "Transfert concert Jameos",
+      "duration": "Environ 4 heures",
+      "summary": "Transfert aller-retour et accès à un concert aux Jameos del Agua de César Manrique.",
+      "description": "Profitez d'un concert dans le cadre unique des Jameos del Agua. Comprend le transfert aller-retour depuis votre zone d'hébergement et l'entrée selon le programme.",
+      "highlights": [
+        "Lieu unique de Manrique",
+        "Transfert aller-retour",
+        "Ambiance en soirée"
+      ],
+      "places": [
+        "Jameos del Agua"
+      ],
+      "included": [
+        "Transfert aller-retour",
+        "Accès au concert (selon l'annonce)",
+        "Assurance touristique"
+      ],
+      "notIncluded": [
+        "Boissons",
+        "Produits dérivés"
+      ],
+      "recommendations": [
+        "Veste légère",
+        "Appareil photo"
+      ],
+      "cancellationPolicy": "Annulation gratuite jusqu'à 48 heures avant la prise en charge.",
+      "languages": [
+        "Français"
+      ]
+    },
+    "astro-tour-experience": {
+      "title": "Astro Tour Experience",
+      "shortTitle": "Astro Tour",
+      "duration": "Environ 3 heures",
+      "summary": "Observation des étoiles sous le ciel dégagé de Lanzarote, lors d'une expérience astronomique guidée.",
+      "description": "Observez les étoiles et les constellations avec des télescopes et des explications d'experts, sur un site au ciel sombre de l'île.",
+      "highlights": [
+        "Ciel nocturne dégagé",
+        "Télescopes",
+        "Guide expert"
+      ],
+      "places": [
+        "Point d'observation sous ciel sombre"
+      ],
+      "included": [
+        "Transport",
+        "Guide",
+        "Matériel d'observation"
+      ],
+      "notIncluded": [
+        "Nourriture et boissons"
+      ],
+      "recommendations": [
+        "Vêtements chauds",
+        "Chaussures fermées"
+      ],
+      "cancellationPolicy": "Annulation gratuite jusqu'à 48 heures avant la prise en charge.",
+      "languages": [
+        "Français"
+      ]
+    },
+    "tour-parque-nacional-de-timanfaya-montanas-del-fuego": {
+      "title": "Forfait d'entrées pour tous les centres touristiques de Lanzarote.",
+      "summary": "Il y a beaucoup à visiter à Lanzarote. Grottes, volcans, vues impressionnantes, jardin, musées, et plus encore. Si vous souhaitez visiter tous les centres touristiques de Lanzarote, nous vous recommandons de profiter du BON POUR 6 CENTRES et de bénéficier de réductions. En plus d'économiser jusqu'à 20 % sur les droits d'entrée, vous accélérerez l'accès dans certains centres. \nLe BON POUR 6 CENTRES comprend les billets pour : Timanfaya, et",
+      "description": "Il y a beaucoup à visiter à Lanzarote. Grottes, volcans, vues impressionnantes, jardin, musées, et plus encore.\nSi vous souhaitez visiter tous les centres touristiques de Lanzarote, nous vous recommandons de profiter du BON POUR 6 CENTRES et de bénéficier de réductions. En plus d'économiser jusqu'à 20 % sur les droits d'entrée, vous accélérerez l'accès dans certains centres. \n\nLe bon pour 6 centres comprend l'entrée au parc national de Timanfaya, aux Jameos del Agua, à la Cueva de los Verdes, au Mirador del Río, au Jardín de Cactus et au Castillo de San José. Tous constituent la principale référence touristique, indispensables pour comprendre la véritable essence de Lanzarote. \nLe parc national de Timanfaya, connu sous le nom de Montañas del Fuego, vous surprendra par son mystérieux paysage lunaire, formé par de grandes éruptions volcaniques entre 1730 et 1736. Le parc national de Timanfaya est ouvert de 9 h 30 à 16 h. La Cueva de los Verdes et les Jameos del Agua se trouvent à l'intérieur des tunnels volcaniques produits par l'éruption du volcan de la Corona. Les deux grottes ont été aménagées pour accueillir les visiteurs, avec d'impressionnants systèmes d'éclairage. Aux Jameos, il existe même un petit auditorium pour des concerts, conçu par César Manrique. La Cueva de los Verdes est ouverte de 10 h à 16 h et les Jameos del Agua de 10 h à 17 h. Le Jardín de Cactus est situé dans une ancienne carrière et rassemble des milliers de spécimens de différentes espèces de cactus des îles Canaries et d'autres régions du monde. Le Jardín de Cactus est ouvert de 10 h à 17 h. Le Mirador del Río est un belvédère situé au sommet de falaises de 480 mètres, dominant le détroit qui sépare Lanzarote de l'île voisine de La Graciosa. Le Mirador del Río est ouvert de 10 h à 17 h. Le Musée international d'art contemporain (MIAC), situé dans le Castillo de San José, expose des œuvres de Miró, Millares, Mompó, Cárdenas et Manrique. Le Castillo de San José est ouvert de 11 h à 18 h. Il y a beaucoup à visiter à Lanzarote. Grottes, volcans, superbes points de vue, jardin, musées, et plus encore.\nLorsque vous terminez votre réservation, vous pouvez télécharger le BON DE RÉSERVATION que vous devez IMPRIMER et REMETTRE à la billetterie du premier centre que vous visitez afin d'obtenir le BON POUR 6 CENTRES. Il est valable 14 jours et indique tous les centres touristiques à visiter. Ce BON POUR 6 CENTRES doit être PRÉSENTÉ et CACHETÉ dans chaque centre que vous visitez. Veuillez noter que si vous perdez votre BON POUR 6 CENTRES, vous ne pourrez pas le réclamer et vous perdrez non seulement l'argent versé, mais aussi le droit de visiter les lieux qui n'ont pas encore été visités.",
+      "included": [
+        "L'entrée aux Jameos del Agua, à la Cueva de los Verdes, au parc national de Timanfaya, au Jardín de Cactus, au Mirador del Río et au Musée d'art contemporain du Castillo de San José."
+      ],
+      "notIncluded": [
+        "L'entrée aux Jameos del Agua en soirée, à partir de 19 h 00, fait l'objet d'un supplément de 2,00 euros par personne."
+      ],
+      "recommendations": [
+        "Veuillez vérifier votre commande avec attention avant de la confirmer. Une fois confirmée, elle ne peut être ni modifiée ni annulée. Veuillez noter que nous ne pouvons être tenus responsables si vous ne suivez pas ces instructions.",
+        "Que dois-je faire du bon de réservation ? Lorsque vous effectuez votre réservation, nous vous enverrons par e-mail notre BON DE RÉSERVATION, que vous devez IMPRIMER et REMETTRE à la billetterie du premier centre que vous allez visiter. Une fois le BON DE RÉSERVATION remis, on vous remettra une ENTRÉE individuelle, valable jusqu'à 14 jours et indiquant tous les centres touristiques à visiter. Cette ENTRÉE doit être PRÉSENTÉE et CACHETÉE dans chaque centre. Si vous perdez l'ENTRÉE, vous ne pourrez pas la réclamer et vous perdrez non seulement l'argent versé, mais aussi le droit de visiter les lieux qui n'ont pas encore été visités.",
+        "Combien de temps ai-je pour utiliser le forfait de billets ? Vous pouvez visiter les centres quand vous le souhaitez, en sachant que l'ENTRÉE sera valable 14 jours après la première visite.",
+        "Dois-je imprimer mon BON DE RÉSERVATION ? Il est indispensable de présenter le bon de réservation imprimé, faute de quoi vous ne pourrez pas accéder aux centres.",
+        "Où échange-t-on le BON DE RÉSERVATION contre le FORFAIT DE BILLETS ? Le BON DE RÉSERVATION doit être remis à la billetterie du premier centre que vous allez visiter, et l'on vous remettra le BILLET indiquant les centres inclus. N'OUBLIEZ PAS que cette ENTRÉE doit être cachetée dans les autres centres. NE LES PERDEZ PAS !",
+        "Que comprennent mes billets ? Les billets sont conçus pour une visite en autonomie avec votre voiture de location. Toutefois, la Cueva de los Verdes se visite en groupe avec un guide du centre. Lors de la visite du parc national de Timanfaya, vous devrez présenter le billet pour monter dans le bus qui emprunte l'impressionnante Route des volcans."
+      ],
+      "shortTitle": "Forfait d'entrées pour tous les centres touristiques"
+    },
+    "traslado-en-bus-y-paseo-en-camellos-en-timanfaya-montanas-del-fuego-lanzarote": {
+      "title": "Balade à dromadaire au parc national de Timanfaya",
+      "summary": "La balade à dromadaire est l'une des activités les plus populaires de l'île, et la pratiquer dans un cadre aussi spectaculaire que le parc national de Timanfaya est une expérience en soi. Il s'agit d'une activité courte, particulièrement amusante pour les enfants et les familles.\n\nQue vous veniez en voiture de location ou dans le cadre d'une excursion à Timanfaya, vous pouvez gagner du temps en achetant votre billet à l'avance sur notre site.  \n\nLa balade dure environ 25 minutes",
+      "description": "La balade à dromadaire est l'une des activités les plus populaires de l'île, et la pratiquer dans un cadre aussi spectaculaire que le parc national de Timanfaya est une expérience en soi. Il s'agit d'une activité courte, particulièrement amusante pour les enfants et les familles.\n\nQue vous veniez en voiture de location ou dans le cadre d'une excursion à Timanfaya, vous pouvez gagner du temps en achetant votre billet à l'avance sur notre site.\n\nLa balade dure environ 25 minutes et suit un sentier balisé dans le paysage lunaire de Timanfaya. Vous constaterez que les dromadaires sont très bien soignés, ont une espérance de vie d'environ 45 ans et sont domestiqués depuis des milliers d'années.\n\nAprès la balade à dromadaire, vous pouvez poursuivre vers le sud de l'île. Ne manquez pas la Route des volcans, ni le centre d'accueil de Mancha Blanca en direction de Tinajo, où vous pouvez visiter le musée et regarder un documentaire sur les volcans de Lanzarote. \n\nImportant : à la fin du processus de réservation, veuillez télécharger votre BON, que vous devez IMPRIMER et REMETTRE au personnel du parc des dromadaires afin de profiter de l'expérience.",
+      "recommendations": [
+        "Ne convient pas",
+        "Aux femmes enceintes et aux personnes à mobilité réduite",
+        "Important : à la fin du processus de réservation, veuillez télécharger votre BON, que vous devez IMPRIMER et REMETTRE au personnel du parc des dromadaires afin de profiter de l'expérience."
+      ],
+      "shortTitle": "Balade à dromadaire au parc national de Timanfaya"
+    },
+    "contratar-un-guia-privado-en-lanzarote-excursiones-privadas-en-lanzarote-guias-t": {
+      "title": "Engagez votre guide local privé à Lanzarote. Profitez de vos excursions avec nos guides de Lanzarote.",
+      "description": "Si vous voyagez en couple, en famille ou en groupe, et que vous avez décidé de parcourir l'île par vos propres moyens, vous pouvez toujours enrichir l'expérience en faisant appel à un guide local, qui vous renseignera sur Lanzarote et les lieux à visiter, vous évitera les files d'attente dans la plupart des centres touristiques et apportera une valeur ajoutée à votre séjour.\nNotre équipe de guides est qualifiée, porte le label de qualité, parle anglais, français, espagnol, italien, allemand et portugais, et a l'expérience de l'organisation d'itinéraires, d'excursions sur plusieurs jours, de l'œuvre de Manrique et des sentiers de randonnée.\nSi vous avez déjà une voiture de location, vous pouvez faire appel à un guide local qui vous indiquera les lieux à visiter, le meilleur moment pour les centres touristiques et vous évitera également les files d'attente dans la plupart d'entre eux. Sachez toutefois que la législation espagnole interdit au guide de conduire votre voiture de location.\n\nSi vous recherchez une excursion privée comprenant le transport et le guide, ou si vous souhaitez simplement éviter les files d'attente aux billetteries, vous pouvez réserver ces services chez nous. Envoyez-nous un e-mail ou réservez les services souhaités sur notre site.",
+      "included": [
+        "Guide privé pendant 2 heures."
+      ],
+      "notIncluded": [
+        "Le guide coûte 95,00 euros pour 2 heures. Chaque heure supplémentaire est facturée 35 euros."
+      ],
+      "recommendations": [
+        "Nous vous recommandons d'acheter les billets à l'avance afin de gagner du temps en évitant les files d'attente à la billetterie. Vous pouvez acheter les billets sur notre site.",
+        "https://www.lanzaroteexperiencetours.com/en/excursions/voucher-combined-discount-tickets-jameos-agua-cueva-verdes-mirador-r%C3%ADo-cactus-garden-%20san-jose-castle-timanfaya-national-park/",
+        "Si vous souhaitez que nous organisions votre transport et le service de guidage, vous pouvez réserver votre excursion privée sur notre site.",
+        "https://www.lanzaroteexperiencetours.com/en/excursions/lanzarote-private-tour-guided-walks-private-tours-cruise-excursions-in-Lanzarote/"
+      ],
+      "shortTitle": "Votre guide local privé à Lanzarote"
+    },
+    "senderismo-parque-natural-de-los-volcanes-en-lanzarote": {
+      "title": "Randonnée | parc naturel de Los Volcanes, à Lanzarote",
+      "summary": "Une sortie unique pour voir des volcans, des cratères, des coulées de lave, des mers de lave et des cendres volcaniques. Des paysages saisissants où l'on observe les formes et les couleurs les plus variées, ainsi que les différentes étapes de la formation de la vie. L'excursion se déroule en bordure du parc national de Timanfaya. Randonnée facile.",
+      "description": "Une sortie unique pour voir des volcans, des cratères, des coulées de lave, des mers de lave et des cendres volcaniques. Des paysages saisissants où l'on observe les formes et les couleurs les plus variées, ainsi que les différentes étapes de la formation de la vie. L'excursion se déroule en bordure du parc national de Timanfaya. Randonnée facile.\nUn paysage écrasant, où le feu, la cendre et la roche se confondent. Parcourez le parc naturel de Los Volcanes avec l'aide d'un expert local en randonnée.\nSaviez-vous que le parc naturel de Los Volcanes est un espace protégé qui représente le volcanisme de Lanzarote ? La surface de ce parc naturel est couverte de lave issue d'éruptions datées de 1730-1736 et de 1824.\n\nVous pouvez profiter d'une randonnée entre les volcans, rien que pour vous et votre groupe, jusqu'à 8 personnes. C'est une randonnée exclusive, avec le guide à votre disposition, pour parler tranquillement des trésors cachés de Lanzarote.\n\nL'itinéraire se déroule à l'intérieur du parc naturel de Los Volcanes, vers l'est. La carte indique les zones précises où l'on s'arrête et où l'on commente les points d'intérêt. Parmi les points caractéristiques de l'itinéraire figurent le volcan de La Rilla, le volcan de Señalo et la caldeira de Santa Catalina.\n\nCe seront 7 kilomètres et 3 heures de marche sur un circuit en boucle à travers ce parc naturel.\n\nApprendre la science des volcans. \nLa remarquable conservation du paysage, grâce au climat aride de Lanzarote, vous laissera stupéfait. Préparez-vous à remonter 25 millions d'années, jusqu'à l'Oligocène. Au fond de la mer, un édifice volcanique émergeait, l'île de Lanzarote, qui, en surgissant de la mer, a émis du magma, et la lave a commencé à s'accumuler. Ce voyage vous mènera de la naissance des îles Canaries jusqu'à aujourd'hui. Vous découvrirez les forces internes de notre planète et ce qu'étaient Lanzarote et les îles Canaries à leurs débuts. Une véritable leçon de science volcanique. \n\nPaysage lunaire. \nDes vues uniques sur un paysage volcanique aux formations étranges, dues à la solidification de la lave. Affûtez le regard et repérez ces formations singulières : nous traverserons les coulées de lave, nous monterons sur les cônes volcaniques, nous longerons les tubes volcaniques et nous découvrirons des formations de lacs de lave, des cratères, des tunnels, des hornitos et bien plus encore. \n\nÀ la recherche de la végétation. \nLa végétation est rare et n'est présente que dans les zones où la lave s'est solidifiée depuis plus longtemps. Sur la lave, nous trouverons une timide renaissance de la vie : champignons, lichens, asperge majorera et gongarillo purpurario. \n\nLa faune qui résiste. Le parc naturel de Los Volcanes a été déclaré zone de protection spéciale pour les oiseaux (ZEPA). Une ZEPA est une catégorie d'espaces protégés recensés par les États membres de l'Union européenne comme des zones naturelles d'une importance particulière pour la conservation des oiseaux menacés d'extinction. Malgré les conditions extrêmes d'aridité, de manque de végétation et d'eau, 200 espèces habitent ce parc (50 % de vertébrés), dont 24 sont protégées. Les reptiles et les oiseaux se distinguent.",
+      "included": [
+        "Parcours de 3 heures dans le parc naturel de Los Volcanes (7 km)",
+        "Guide expert qui interprète le paysage",
+        "Bâton de randonnée (en option)",
+        "Assurance : accidents et responsabilité civile",
+        "Compensation de l'empreinte carbone."
+      ],
+      "recommendations": [
+        "N'oubliez pas : chaussures de sport ou bottines."
+      ],
+      "shortTitle": "Randonnée | parc naturel de Los Volcanes"
+    },
+    "excursion-a-fuerteventura-desde-lanzarote-playas-corralejo-cotillo-dunas-de-corr": {
+      "title": "Excursion d'une journée vers les plus belles plages de Fuerteventura : Corralejo, El Cotillo et les dunes",
+      "summary": "Découvrez les plus belles plages de sable blanc de Fuerteventura lors d'une excursion d'une journée depuis Lanzarote. Nous visitons les dunes, le village de pêcheurs d'El Cotillo et la ville de Corralejo.",
+      "description": "Découvrez les plus belles plages de sable blanc de Fuerteventura lors d'une excursion d'une journée depuis Lanzarote. Nous visitons les dunes, le village de pêcheurs d'El Cotillo et la ville de Corralejo.\nLe premier arrêt est Corralejo, où vous aurez du temps libre pour explorer cette charmante ville et faire un peu de shopping.\n\nL'arrêt suivant est le pittoresque village de pêcheurs d'El Cotillo, où vous pourrez vous promener en front de mer et regarder les vagues déferler. El Cotillo fascine tous ceux qui ont la chance de le découvrir sur place. \n\nNous vous emmenons ensuite en promenade panoramique jusqu'au site le plus célèbre de Fuerteventura, l'unique parc naturel de Las Dunas, où nous nous arrêtons pour gravir les impressionnantes dunes de sable blanc.\n\nN'oubliez pas votre appareil photo : vous voudrez garder cette vue pour toujours ! Nous terminons la journée sur la plage du parc naturel, célèbre pour être l'une des plus belles des îles Canaries, avec son sable blanc et ses eaux cristallines.",
+      "included": [
+        "Découverte des dunes du parc naturel de Corralejo, à Fuerteventura",
+        "Prise en charge et dépose gratuites à Lanzarote",
+        "Temps libre pour parfaire votre bronzage",
+        "Exploration du charmant village de pêcheurs d'El Cotillo"
+      ],
+      "recommendations": [
+        "À emporter : passeport ou carte d'identité, chaussures confortables, maillot de bain, serviette, protection solaire, eau, veste"
+      ],
+      "shortTitle": "Journée vers les plus belles plages de Fuerteventura"
+    },
+    "safari-norte-lanzarote-jeep": {
+      "title": "Safari en jeep dans le nord de Lanzarote",
+      "summary": "Le nord de l'île est le territoire le mieux préservé de Lanzarote, où la vie rurale, les cultures et les villages entretiennent une relation respectueuse avec l'environnement.\nItinéraire :\nPendant le safari guidé en jeep à Lanzarote, vous partez pour un parcours aventure en véhicules 4x4, en partie hors piste, et vous découvrez le nord sous son plus beau jour. Vous visiterez des lieux enchanteurs et des points de vue à couper le souffle",
+      "description": "Le nord de l'île est le territoire le mieux préservé de Lanzarote, où la vie rurale, les cultures et les villages entretiennent une relation respectueuse avec l'environnement.\n\nItinéraire :\n Pendant le safari guidé en jeep à Lanzarote, vous partez pour un parcours aventure en véhicules 4x4, en partie hors piste, et vous découvrez le nord sous son plus beau jour. Vous visiterez des lieux enchanteurs et des points de vue à couper le souffle. Nos jeeps sont des Land Rover Defender 110 SW — 7 places maximum par jeep, chauffeur compris.  \n\nGuatiza, Mala, Arrieta, Punta Mujeres, Caletón Blanco, Risco de Famara, Máguez, Haría, Teguise, Nazaret, Tahiche  \n\nDéparts : les mardis et les jeudis \nDurée : \n7 heures \n\nLangues : en espagnol, en anglais et en allemand  \nTarif :\n 59,00 € adultes, 40,00 € enfants, 6,00 € de supplément pour la prise en charge depuis Playa Blanca — par adulte et par enfant \nInclus :\nEntrée aux Jameos del Agua ou à la Cueva de los Verdes (au choix, l'une des deux visites)   \n\nNon inclus : les billets des visites facultatives ne sont pas compris dans le prix et se règlent directement à la billetterie des centres : Mirador del Río, Fundación César Manrique, Lago Omar. Le déjeuner et les boissons ne sont pas compris dans le prix. \n\nUn safari en jeep à couper le souffle dans le nord de Lanzarote. Le safari en jeep à Lanzarote vous fait traverser le paysage contrasté du nord et découvrir de charmants villages au cœur d'un paysage volcanique d'une beauté indescriptible. L'excursion mouvementée commence le matin à votre hôtel et vous roulez en Land Rover Defender 110 SW 4x4 de 7 places, avec le chauffeur et les autres jeeps, en direction de Guatiza. Vous y visitez une plantation de cactus et observez de très près l'élevage de la cochenille. De ces cochenilles qui s'installent sur le figuier de Barbarie, on obtient le carmin, colorant rouge utilisé notamment pour colorer les boissons, les cosmétiques et les tissus. Vous rejoignez ensuite le village de Mala et passez devant le plus ancien jardin de cactus des îles Canaries. En poursuivant vers le nord par les villages d'Arrieta et de Punta Mujeres, vous atteignez enfin les Jameos del Agua et la Cueva de los Verdes, deux des réalisations les plus importantes de l'architecte paysagiste César Manrique. Le safari en jeep dans le nord de Lanzarote comprend l'entrée à l'un de ces deux sites. C'est vous qui choisissez lequel visiter.\n\nVous longez la côte nord et atteignez la célèbre plage de rêve Caletón Blanco, qui séduit par son eau cristalline et son sable blanc. Tout près, également dans la commune de Haría, vous pouvez visiter le village de pêcheurs d'Órzola. Vous avez alors la possibilité d'explorer la petite localité, connue pour ses excellents restaurants de poisson, de vous rafraîchir avec une boisson dans un café agréable ou de manger quelque chose. Le safari découverte en jeep à Lanzarote se poursuit vers Ye et vous vous arrêtez au Mirador del Río, un célèbre belvédère de l'île volcanique de l'Atlantique. De là, vous avez une vue magnifique sur les îles au large : La Graciosa, Montaña Clara et Alegranza. Un autre arrêt a lieu au Mirador de Guinate, où le guide explique les différentes couches de roche. À la fin de cette passionnante sortie en jeep à Lanzarote, vous traversez le village authentique de Los Valles et l'ancienne capitale de l'île, Teguise, puis vous atteignez enfin l'ancienne résidence de César Manrique, dernier point de ce voyage d'exploration.",
+      "included": [
+        "Billet pour « los jameos del agua » ou « cueva de los verdes »"
+      ],
+      "notIncluded": [
+        "Nourriture et boissons."
+      ],
+      "recommendations": [
+        "Nos jeeps sont des Land Rover Defender 110 SW — 7 places maximum par jeep, chauffeur compris.",
+        "L'entreprise se réserve le droit de modifier l'itinéraire en raison des conditions météorologiques.",
+        "Veuillez porter des vêtements chauds en hiver.",
+        "Pour des raisons de sécurité, les boissons alcoolisées ne sont pas autorisées."
+      ],
+      "shortTitle": "Safari en jeep dans le nord de Lanzarote"
+    },
+    "fuerteventura-dunas-corralejo-cotillo": {
+      "title": "Île de Fuerteventura",
+      "summary": "Le jeudi, nous vous proposons de passer à Fuerteventura, une île aux plages paradisiaques et aux couleurs turquoise et émeraude. Une escapade plus que recommandée depuis la proche île de Lanzarote. Nous venons vous chercher à l'arrêt de bus le plus proche de votre hôtel pour vous conduire à Playa Blanca, où vous prenez le bateau de Líneas Romero pour Fuerteventura. La traversée dure environ 30 minutes. À Fuerteventura, vous",
+      "description": "Le mercredi, nous vous proposons de passer à Fuerteventura, une île aux plages paradisiaques et aux couleurs turquoise et émeraude. Une escapade plus que recommandée depuis la proche île de Lanzarote. Nous venons vous chercher à l'arrêt de bus le plus proche de votre hôtel pour vous conduire à Playa Blanca, où vous prenez le bateau de Líneas Romero pour Fuerteventura. La traversée dure environ 30 minutes. À Fuerteventura, vous aurez du temps libre pour visiter les lieux qui vous intéressent le plus sur l'île.\n\nUne fois à Fuerteventura, la ville de Corralejo offre une charmante promenade, pleine de boutiques et de restaurants. Si vous souhaitez passer une journée détente, vous pouvez prendre le soleil sur les belles plages de Flag Beach, El Moro ou El Burro. Sur ces plages, vous pouvez aussi assister au spectacle de voiles et de couleurs offert par ceux qui pratiquent la planche à voile et le kitesurf. Le moyen idéal de se déplacer à Fuerteventura est la voiture de location, le taxi ou le bus. Vous pouvez en profiter pour visiter El Cotillo, une autre localité également célèbre pour ses falaises, ses plages sauvages et préservées, et une houle hypnotique. Si vous le souhaitez, vous pouvez prendre un bus ou un taxi pour aller aux dunes. Le parc naturel de Las Dunas de Corralejo est un désert qui abrite les plus grandes dunes des îles Canaries et une mer d'un bleu turquoise dont on tombe amoureux. \nNe vous trompez pas sur l'heure du retour, afin de ne pas manquer le ferry pour Lanzarote.",
+      "included": [
+        "Transfert en autocar depuis et vers le point de prise en charge le plus proche de votre hôtel",
+        "Ferry aller-retour pour Fuerteventura avec Wi-Fi gratuit",
+        "Assurance voyage"
+      ],
+      "recommendations": [
+        "Vous devez disposer des documents exigés par la réglementation en vigueur : DNI, passeport ou NIE, et les présenter au personnel de Líneas Romero à l'embarquement. Les enfants de moins de 14 ans ne sont pas tenus de présenter une pièce d'identité ni aucun autre document. Les personnes sous la garde desquelles ils voyagent seront responsables des mineurs.",
+        "Merci d'avoir les documents en main à l'embarquement : l'opération en est accélérée et tout le monde y gagne.",
+        "Vêtements confortables, chapeau ou casquette",
+        "Protection solaire",
+        "Maillot de bain",
+        "Chaussures de plage",
+        "Serviette de plage",
+        "Appareil photo"
+      ],
+      "shortTitle": "Île de Fuerteventura"
+    },
+    "la-graciosa-a-tu-aire-traslado-y-ferry": {
+      "title": "Bus + ferry pour visiter l'île de La Graciosa.",
+      "summary": "L'île de La Graciosa, à découvrir en toute liberté.\nUn séjour à Lanzarote n'est pas complet si vous n'incluez pas une visite de La Graciosa dans votre itinéraire. Une petite île, à taille humaine et tranquille, où vous trouverez des plages paradisiaques, des attraits naturels et l'un des rares endroits où il n'y a toujours pas d'asphalte. Vous pouvez louer des jeeps, des vélos, vous promener et profiter des plages de l'île paradisiaque.",
+      "description": "L'île de La Graciosa, à découvrir en toute liberté.\n\nUn séjour à Lanzarote n'est pas complet si vous n'incluez pas une visite de La Graciosa dans votre itinéraire. Une petite île, à taille humaine et tranquille, où vous trouverez des plages paradisiaques, des attraits naturels et l'un des rares endroits où il n'y a toujours pas d'asphalte. Vous pouvez louer des jeeps, des vélos, vous promener et profiter des plages de l'île paradisiaque.\nProfitez d'une journée sur l'île de La Graciosa avec ce ferry aller-retour entre Órzola (Lanzarote) et Caleta de Sebo (La Graciosa). \nNous venons vous chercher à l'arrêt de bus le plus proche et vous conduisons à Órzola, où vous prenez le ferry pour La Graciosa. Une fois à La Graciosa, vous profiterez d'un temps libre. Pendant la traversée, vous admirerez des vues spectaculaires sur le Risco de Famara. \nQue faire à La Graciosa ?\nÀ votre arrivée à La Graciosa, vous vous trouverez dans la principale localité de l'île, Caleta de Sebo, qui conserve l'atmosphère de port de pêche avec laquelle elle a été fondée au milieu du XIXe siècle. Cette petite ville de La Graciosa est inhabituelle, car ses rues ne sont pas goudronnées : vous marchez sur le même sable que sur la plage.\nOutre la baignade, vous pouvez visiter la petite église, louer une jeep 4x4 pour faire le tour de l'île, louer un bateau ou un vélo pour rejoindre les plages. \nEt bien sûr, il y a les incontournables plages de La Graciosa, en particulier « la playa de la Cocina », « playa de la Francesa » et « la playa de Montaña Amarilla », un paradis vierge où vous pouvez profiter d'une baignade rafraîchissante.   \nNous opérons du lundi au samedi.",
+      "included": [
+        "Assurance voyage",
+        "Prise en charge au point le plus proche de votre hôtel",
+        "Transfert en autocar jusqu'au port d'Órzola",
+        "Ferry jusqu'à Caleta de Sebo (La Graciosa)",
+        "Temps libre à La Graciosa",
+        "Ferry jusqu'au Puerto de Órzola (Lanzarote)",
+        "Transfert en autocar jusqu'au point le plus proche de votre hôtel"
+      ],
+      "recommendations": [
+        "Vous devez disposer des documents exigés par la réglementation en vigueur : DNI, passeport ou NIE, et les présenter au personnel à l'embarquement. Les enfants de moins de 14 ans ne sont pas tenus de présenter une pièce d'identité ni aucun autre document. Les personnes sous la garde desquelles ils voyagent seront responsables des mineurs.",
+        "Merci d'avoir les documents en main à l'embarquement : l'opération en est accélérée et tout le monde y gagne.",
+        "Vêtements confortables, chapeau ou casquette",
+        "Protection solaire",
+        "Maillot de bain",
+        "Chaussures de plage",
+        "Serviette de plage",
+        "Appareil photo"
+      ],
+      "shortTitle": "Bus + ferry pour visiter l'île de La Graciosa."
+    },
+    "excursiones-maritimas-lanzarote-catamaran-a-las-playas-de-papagayo": {
+      "title": "Excursion en catamaran vers la plage de Papagayo",
+      "summary": "Cette excursion vous permet de profiter d'activités nautiques dans le secteur des plages paradisiaques de Papagayo, au sud de Lanzarote.\nUn autocar vient vous chercher au point le plus proche de votre hôtel et vous conduit à Puerto del Carmen, où vous embarquez sur un luxueux catamaran. Un mojito et une bouchée de tortilla vous attendent pour vous accueillir. Nous naviguerons vers le sud le long de la côte, en longeant",
+      "description": "À bord du luxueux catamaran à voile, vous serez accueilli avec style par un mojito, tandis que nous vous emmenons vers les belles plages de Papagayo, à Lanzarote. Vous partez de Puerto del Carmen et mettez le cap au sud. Les mouettes tracent leur route dans le ciel d'un bleu éclatant et la mer scintille. Prenez une boisson fraîche, profitez de la vue et du soleil qui réchauffe. Une merveilleuse journée de vacances commence. Dans une baie tranquille près de la plage de Papagayo, on jette l'ancre et l'on profite du coucher du soleil. Faites une baignade rafraîchissante dans l'océan cristallin, explorez ces superbes environs en kayak, le monde sous-marin coloré, et prenez le soleil sur le pont. Le pur plaisir des vacances ! Pendant ce temps, l'équipage prépare à bord un savoureux déjeuner. Rassasié, vous reprenez enfin le chemin du retour.\nPendant toute la durée de notre excursion, les boissons sont incluses dans le prix : eau, boissons sans alcool, sangria et bière, ainsi que le déjeuner.",
+      "included": [
+        "Transfert en autocar depuis et vers le point de prise en charge le plus proche de votre hôtel",
+        "Mojito de bienvenue et une bouchée de tortilla",
+        "Déjeuner à bord : délicieuse paella et fruits frais",
+        "Bar ouvert avec bière, sangria, eau et boissons sans alcool",
+        "Kayaks",
+        "Assurance voyage"
+      ],
+      "recommendations": [
+        "N'oubliez pas d'emporter les documents exigés par la réglementation en vigueur : pièce d'identité, passeport ou NIE, à présenter à l'embarquement. Les enfants de moins de 14 ans ne sont pas tenus de présenter une pièce d'identité ni aucun autre document. Les personnes sous la garde desquelles ils voyagent seront responsables des mineurs.",
+        "Merci d'avoir les documents en main à l'embarquement : l'opération en est accélérée et tout le monde y gagne.",
+        "Que faut-il emporter ?",
+        "Nous vous recommandons d'emporter des vêtements confortables",
+        ", un chapeau ou une casquette, une protection solaire, des chaussures de plage et une serviette de plage"
+      ],
+      "shortTitle": "Excursion en catamaran vers la plage de Papagayo"
+    },
+    "excursion-isla-de-lobos-lanzarote": {
+      "title": "Sortie en bateau vers l'île de Lobos",
+      "summary": "Rejoignez-nous pour cette excursion d'une demi-journée à la découverte de Lobos, une île paradisiaque située à seulement 2 kilomètres (1 mile) au nord de l'île de Fuerteventura.\nUne fois à Lobos, vous découvrirez une île vierge d'environ 6 km² où vous pourrez explorer le petit village, randonner, aller jusqu'à l'ancien phare, vous baigner dans les piscines naturelles couleur émeraude et profiter de plages intactes et de lagunes cristallines.\nDéparts :\n\nMardi",
+      "description": "Rejoignez-nous pour cette excursion d'une demi-journée à la découverte de Lobos, une île paradisiaque située à seulement 2 kilomètres (1 mile) au nord de l'île de Fuerteventura.\n\nUne fois à Lobos, vous découvrirez une île vierge d'environ 6 km² où vous pourrez explorer le petit village, randonner, aller jusqu'à l'ancien phare, vous baigner dans les piscines naturelles couleur émeraude et profiter de plages intactes et de lagunes cristallines.\n\nDéparts :\n\nLes mardis et les jeudis (le samedi uniquement en été)\n\nHoraires : 10 h 00 - 15 h 00 (environ 5 h) \n\n10 h 00 - Départ de la marina de Puerto del Carmen\n\n10 h 00 - 11 h 30 (durée 1 h 30) Lobos - la route des dauphins\n\n11 h 30 - Arrivée à Lobos\n\n11 h 30 - 14 h 00 (durée 2 h 30) Temps libre à Lobos\n\n14 h 00 - Départ de Lobos\n\n14 h 00 - 14 h 40 (durée 0 h 40) Retour à Playa Blanca\n\n14 h 40 - Retour en bus à l'hôtel \n\nInclus : \n\nTransfert depuis l'hôtel et sorties en bateau\n\nPique-nique-déjeuner et boissons. \n\nTarifs :\n\nAdultes 59 €\n\nEnfants 35 €\nNous venons vous chercher à l'arrêt de bus le plus proche de votre hôtel et vous conduisons à la marina de Puerto del Carmen, où nous embarquons sur le hors-bord pour un trajet d'1 h 30 jusqu'à l'île de Lobos. \nPendant la traversée, l'équipage vous donnera des informations détaillées sur les espèces de cétacés que vous pourrez observer. Bien que l'observation des baleines ne soit pas garantie, cette excursion affiche un pourcentage élevé de réussite.\nÀ l'arrivée, vous trouverez le centre d'accueil, où vous pouvez prendre des informations générales sur la petite île. L'île possède de splendides zones de baignade, comme la plage de La Concha, au sable jaune, totalement abritée des vagues, et El Puertito, où vous pouvez profiter d'une eau merveilleusement claire. \nUne belle occasion de voir des *dauphins sauvages et libres. Les observations ne sont toutefois pas garanties à 100 %.\nL'île de Lobos est une très petite île d'environ 4,58 km² seulement. Elle se trouve au nord-est de l'île de Fuerteventura. Les deux îles sont séparées par le détroit de La Bocayna, dont la profondeur maximale est de 30 mètres. On voit clairement l'île depuis Corralejo.\nElle doit son nom au fait que, par le passé, des phoques moines (également appelés lions de mer) vivaient sur cette île. Aujourd'hui, ils y sont totalement disparus.\n\nLa petite île fait partie du parc naturel des dunes de Corralejo. Elle abrite plus de 130 espèces végétales et plusieurs espèces d'oiseaux ; on remarque particulièrement le goéland argenté, l'outarde (à certaines périodes de l'année) et le puffin cendré. Les fonds marins constituent une réserve sous-marine et recèlent une richesse écologique considérable. Le point culminant (123 m) se trouve à La Caldera.\n\nDans la moitié est de l'île, on trouve de nombreux hornitos, des monticules appelés « petits fours » (souvent de forme circulaire et s'élevant en pointe), un élément attrayant et singulier du paysage.\nDes découvertes archéologiques récentes ont conclu que la Rome antique avait établi sur l'île un établissement (peut-être saisonnier), lié à l'obtention de la pourpre.",
+      "included": [
+        "Transfert depuis l'hôtel.",
+        "Temps libre à Lobos.",
+        "Pique-nique-déjeuner et boissons."
+      ],
+      "recommendations": [
+        "Maillot de bain, serviette et protection solaire",
+        "Vêtements chauds (pendant la traversée en bateau, la sensation thermique baisse)"
+      ],
+      "shortTitle": "Sortie en bateau vers l'île de Lobos"
+    },
+    "excursion-privada-navegar-catamaran-grupos-de-amigos-familias-papagayo": {
+      "title": "Excursion privée en catamaran de luxe",
+      "summary": "Vous êtes-vous déjà demandé à quoi ressemblerait la côte de Lanzarote vue depuis un voilier de luxe ? Nous vous proposons de traverser l'océan Atlantique et de voir la côte de Lanzarote depuis notre navigation en catamaran de luxe.\nCette excursion en mer de 4 heures vous permet d'observer le profil de Lanzarote à distance : l'île de feu et de mer.\n\nLe catamaran de luxe VI mettra le cap vers la plage de Papagayo, en longeant",
+      "description": "Vous êtes-vous déjà demandé à quoi ressemblerait la côte de Lanzarote vue depuis un voilier de luxe ? Nous vous proposons de traverser l'océan Atlantique et de voir la côte de Lanzarote depuis notre navigation en catamaran de luxe.\n\nCette excursion en mer de 4 heures vous permet d'observer le profil de Lanzarote à distance : l'île de feu et de mer.\n\nLe catamaran de luxe VI mettra le cap vers la plage de Papagayo, en longeant la côte de Lanzarote, et l'expérience comprend un toast à bord, une collation en circuit court (km 0), un bar ouvert de boissons sans alcool et de boissons premium et, avant le retour à Puerto Calero, le déjeuner sera servi.\nCe superbe catamaran, à l'usage exclusif de votre groupe d'amis ou de votre famille, est l'expérience de navigation par excellence.\nBienvenue \n\nUne fois à bord, vous serez accueilli par un délicieux toast au cava D.O. Bermejo, et l'on servira une mise en bouche de tapas à base de fromage local, de saumon fumé, de jambon serrano et de fruits secs.\n\nNavigation\n\nAvant d'appareiller, le capitaine présentera la carte de route et les détails de la navigation. Si vous le souhaitez, vous pouvez assister le capitaine et son équipage en prenant la barre, en hissant les voiles et en naviguant sur l'océan Atlantique.\n\nPar conditions météorologiques optimales, nous naviguerons à la voile dans les deux sens, à l'aller comme au retour.\n\nService\n\nPendant la journée, vous disposerez d'un bar ouvert de boissons sans alcool et de boissons premium : bières Coronita, vin blanc D.O. Chardonnay, vin rouge D.O. Ribera del Duero et jus.\n\nPlages\n\nLe bateau appareillera de Puerto Calero en direction des plages de Papagayo, joyau des plages de Lanzarote pour leur sable doré et leurs eaux calmes et émeraude. Elles se trouvent au sud de l'île, dans le monument naturel de Los Ajaches. Nous y jetterons l'ancre pendant 2 h 30.\n\n \n\n \nActivités\n\nÀ votre convenance, vous pouvez :\n\n– Débarquer sur la plage en bateau pneumatique\n\n– Faire du snorkeling avec le matériel de bord\n\n– Vous détendre sur le pont du catamaran\n\n– Piquer une tête rafraîchissante lorsque la chaleur l'exige\n\n– Faire un tour en mer en paddle\n\n \nRepas à bord\n\nAprès la matinée de navigation et le mouillage à la plage de Papagayo, le déjeuner sera servi avant de reprendre la mer vers le port. Les plats seront préparés dans la cuisine du bateau avec des produits du kilomètre zéro.",
+      "included": [
+        "Catamaran à voile avec équipage professionnel",
+        "Boisson de bienvenue",
+        "Déjeuner",
+        "Bar ouvert premium",
+        "Service de serveur",
+        "Matériel nécessaire pour le snorkeling",
+        "Accès au bateau pneumatique",
+        "Accès au paddle",
+        "Assurance",
+        "Compensation de l'empreinte carbone"
+      ],
+      "notIncluded": [
+        "Transfert"
+      ],
+      "recommendations": [
+        "Quand ?",
+        "Les horaires sont flexibles : une fois votre réservation effectuée, nous vous contacterons pour organiser un horaire qui vous convient.",
+        "Tarifs",
+        "800 € pour les groupes jusqu'à 8 personnes",
+        "100 € de supplément par personne"
+      ],
+      "shortTitle": "Excursion privée en catamaran de luxe"
+    },
+    "tour-excursion-fotografico-lanzarote": {
+      "title": "Photo Safari Lanzarote Experience",
+      "summary": "Immortalisez les paysages de Lanzarote lors d'une excursion unique\n\nAvez-vous déjà voulu apprendre d'un photographe professionnel comment photographier les paysages de vos rêves ? Alors cette Lanzarote Experience Tour est faite pour vous : circuit photographique des sites volcaniques de Lanzarote. Pendant quatre heures, vous pouvez découvrir et immortaliser la beauté cachée des coins les plus incroyables de cette île",
+      "description": "Immortalisez les paysages de Lanzarote lors d'une excursion unique\n\nAvez-vous déjà voulu apprendre d'un photographe professionnel comment photographier les paysages de vos rêves ? Alors cette Lanzarote Experience Tour est faite pour vous : circuit photographique des sites volcaniques de Lanzarote. Pendant quatre heures, vous pouvez découvrir et immortaliser la beauté cachée des coins les plus incroyables de cette île.\n\nCircuits photo :\n\n1. Volcans et La Geria,\n\n2. Teguise et Famara,\n\n3. Salinas de Janubio et El Golfo.\nL'activité se déroule en petits groupes afin que tous les participants puissent prendre des photos et recevoir les conseils personnalisés de notre photographe professionnel.\n\nAu bout de quatre heures, l'excursion touche à sa fin. Nous nous disons au revoir après avoir échangé nos impressions sur cette expérience photographique, à la recherche des plus belles images de l'île. Vous ne regretterez pas de nous avoir rejoints !\n\n1. Volcans et La Geria\n\nLe parc naturel des volcans, avec ses paysages lunaires, sera la scène principale de ce circuit photo tout à fait inhabituel.\n\nLe Volcán del Cuervo nous donnera l'occasion d'entrer dans la caldeira pour photographier les nombreuses couleurs de ses pierres et les formes des roches modelées par la chaleur de l'éruption. Le cône se détache à l'horizon par sa forme particulière, qui rend chaque prise différente de l'autre et absolument inoubliable.\n\nLa Montaña Negra, avec ses arbustes disséminés sur les pentes de lave noire, formera un excellent contraste avec le ciel bleu et donnera à chaque cliché un attrait assuré. La Montaña Roja, éclairée par le soleil, deviendra, à travers l'objectif, d'un rouge vif qui s'estompe en orange, puis en jaune, et enfin en noir.\n\nLe parc naturel de La Geria, avec son paysage unique caractérisé par des vignes cultivées dans des trous creusés dans la roche volcanique et protégées du vent par des murets de pierre, nous permettra de réaliser des images d'un paysage unique.\n\nLieux visités :\n\n•\tVolcán del Cuervo\n\n•\tLa Geria\n\nParfait pour : les photographes qui souhaitent prendre des photos depuis l'intérieur du cratère d'un volcan. Ce n'est pas quelque chose que l'on voit tous les jours !\n\n2. Teguise et Famara\n\nLes 500 ans d'histoire de l'ancienne capitale de Lanzarote et la Caleta de Famara « sauvage », avec sa plage balayée par le vent, seront la destination de ce circuit photo inoubliable.\n\nTeguise, première et ancienne capitale de l'île, forte de plus de 500 ans d'histoire, avec l'imposante église de Nuestra Señora de Guadalupe du XVIe siècle, nous permettra de saisir de belles vues urbaines, d'appliquer la règle des tiers aux bâtiments blancs de faible hauteur et de tirer parti des ruelles pavées de pierre comme lignes de fuite.\n\nCaleta de Famara, un petit village aux chemins de sable et aux maisons serrées les unes contre les autres, nous permettra de jouer avec la lumière et les ombres pour des compositions aux motifs géométriques et « graphiques ». La plage de Famara, considérée comme l'une des plus belles et des plus sauvages de l'île, dont les dunes et les surfeurs venus du monde entier seront la scène, les décors et les protagonistes de nos clichés au pied de l'imposant Risco. Le reflet des nuages et du ciel à la surface de l'eau donnera à nos photos un charme irrésistible.\n\nNous visitons :\n\n•\tTeguise\n\n•\tFamara\n\nParfait pour : les photographes qui cherchent de superbes paysages aquatiques et des vues à couper le souffle sur la côte\n\n3. Salinas de Janubio et El Golfo\n\nCe circuit photo vers les Salinas de Janubio, avec leurs bassins aux mille couleurs, et le village de pêcheurs calme et reculé d'El Golfo nous offre des photographies à montrer aux amis. Les Salinas de Janubio resteront immobiles devant les objectifs de nos appareils, dans une très grande variété de couleurs, du blanc pur au rose vif, du noir au jaune pâle. Les pyramides typiques de sel qui sèche au soleil seront une excellente occasion de composition photographique dans les règles de l'art.\n\nLe village de pêcheurs reculé d'El Golfo et le proche Charco de los Clicos (courte marche) nous permettent de réaliser des prises de vue de paysage en exploitant les règles de composition les plus classiques et en en expérimentant de nouvelles.\n\nNous visitons :\n\nSalinas de Janubio (salines)\n\n•\tEl Golfo\n\n•\tCharco de los Clicos\n\nParfait pour : les photographes qui trouvent la beauté dans des lieux inhabituels, pleins de couleurs et de lumière.",
+      "included": [
+        "Photographe professionnel comme guide. Tout au long de l'activité, vous serez accompagné d'un photographe professionnel qui expliquera en détail toutes les techniques photographiques nécessaires pour saisir les meilleures images.",
+        "Service de transport. Nous disposons d'un véhicule confortable pour petits groupes, climatisé pendant l'excursion.",
+        "Excursion de 4 heures. Le safari photographique durera environ 4 heures.",
+        "Service de prise en charge. Nous proposons à tous nos clients une prise en charge sur demande. Ce service est offert dans toute l'île, sauf à Playa Blanca et à Órzola.",
+        "En raison de notre engagement envers l'environnement, nous compensons l'empreinte carbone générée par le transport pendant l'activité."
+      ],
+      "notIncluded": [
+        "Vous devez apporter votre propre matériel photographique."
+      ],
+      "recommendations": [
+        "Vous devez apporter votre propre matériel photographique.",
+        "Nous vous recommandons de porter des chaussures confortables. Notez que vous marcherez sur un terrain inégal",
+        "terrain. Il est en outre conseillé d'emporter une veste afin d'être prêt en cas de changement de temps.",
+        "Afin de vous offrir la meilleure expérience possible le jour même, l'itinéraire peut être modifié."
+      ],
+      "shortTitle": "Photo Safari Lanzarote Experience"
+    },
+    "bautismo-buceo-museo-atlantico-lanzarote": {
+      "title": "Apprendre à plonger au Museo Atlántico, le premier musée sous-marin d'Europe !",
+      "summary": "Avez-vous souvent envie de vivre quelque chose de nouveau dans des lieux uniques ? Apprendre à plonger dans un musée ! Cela paraît assez étrange, n'est-ce pas ? Et pourtant, c'est vrai. Pour votre première fois sous l'eau, vous nagerez parmi des bancs de poissons endémiques tels que le « bocinegro », le « cherne », ou peut-être la redoutable raie papillon ; sans oublier les différentes sculptures et le message qu'elles portent : le drame de l'immigration",
+      "description": "Avez-vous souvent envie de vivre quelque chose de nouveau dans des lieux uniques ? Apprendre à plonger dans un musée ! Cela paraît assez étrange, n'est-ce pas ? Et pourtant, c'est vrai. Pour votre première fois sous l'eau, vous nagerez parmi des bancs de poissons endémiques tels que le « bocinegro », le « cherne », ou peut-être la redoutable raie papillon ; sans oublier les différentes sculptures et le message qu'elles portent : le drame de l'immigration, le mauvais usage des ressources naturelles, mais toujours avec une lueur d'espoir. \n\nLes baptêmes de plongée ne demandent aucune expérience préalable, et un moniteur qualifié vous accompagnera du début à la fin : sans aucun doute, vous profiterez pleinement de votre plongée !\nLe musée sous-marin de Lanzarote, le « Museo Atlántico », a été conçu comme un lieu destiné à promouvoir l'éducation et à préserver et protéger le milieu marin et naturel, comme partie intégrante du système de valeurs humaines. Jason deCaires Taylor nous adresse un message latent dans son œuvre : la défense des océans. Ce projet de musée crée un immense récif artificiel composé d'une série de sculptures en ciment au pH neutre qui, avec le temps, aideront la biomasse marine à prospérer et faciliteront la reproduction des espèces sur l'île. Le musée se trouve à 12-15 mètres de profondeur, dans des eaux limpides près de la côte sud de Lanzarote, dans la Bahía de Las Coloradas, un lieu choisi principalement en raison des caractéristiques physiques de ses fonds. Il couvre une surface de 2 500 mètres carrés, accessible aux plongeurs en apnée et aux plongeurs bouteille.\n Les plongeurs peuvent profiter du magnifique musée de l'Atlantique, plonger parmi les statues créées par l'artiste Jason deCaires Taylor et visiter un récif voisin, Las Coloradas.\nLe Museo Atlántico est un musée unique en son genre aux îles Canaries — et, plus largement, dans le monde ! Diverses œuvres d'art au pH neutre, spécialement conçues pour favoriser la vie aquatique, ont été déposées au fond de la mer. Depuis 2016, année de la création du musée sous-marin à Lanzarote, la présence de poissons dans la zone a augmenté et les sculptures sont devenues des récifs peu conventionnels. Cela a l'air formidable, n'est-ce pas ? Alors, vivez-le par vous-même !\n\nL'expérience étape par étape\n\n1.\tPremière plongée : nous vous donnerons une leçon théorique où seront posées les bases de la plongée, comme la sécurité, ce qu'il faut faire et ne pas faire, afin que votre première plongée soit aussi fluide que possible. Juste après la leçon, nous la mettrons en pratique à Playa Flamingo.\n\n2.\tDeuxième plongée : nous retournerons dans l'eau cristalline de Playa Flamingo, où votre moniteur vous emmènera à 12 mètres sous l'eau pour pratiquer quelques exercices de sécurité supplémentaires et d'autres techniques de plongée plus avancées.\n\n3.\tPause : après les deux premières plongées, nous ferons une pause dans notre centre de plongée, où vous pourrez profiter d'une collation sur notre terrasse et vous reposer un moment avant de repartir comme neuf pour votre plongée finale !\n\n4.\tDiscover Scuba Diving : nous sommes prêts pour le Discover Scuba Diving ! Nous nous rendrons au Museo Atlántico, un musée époustouflant à Lanzarote. Un merveilleux monde immergé fait de diverses œuvres d'art, habitat de poissons, de récifs et d'autres animaux marins. Vous ne regretterez pas d'avoir choisi cet endroit pour votre première expérience de plongée !",
+      "included": [
+        "3 plongées",
+        "Petits groupes : 2 plongeurs – 1 moniteur",
+        "L'âge minimum pour l'activité est de 9 ans",
+        "Entrée au musée + bateau",
+        "Équipement complet de plongée",
+        "Assurance",
+        "Réduction spéciale dans notre boutique de plongée",
+        "Collations biologiques entre les plongées",
+        "Aire de jeux pour les enfants dans notre centre de plongée"
+      ],
+      "notIncluded": [
+        "Transferts"
+      ],
+      "recommendations": [
+        "Horaire : de 08 h 00 à 16 h 30, tous les jours",
+        "Langues : en anglais, en espagnol",
+        "Préavis de réservation requis : 3 jours",
+        "Durée : environ 8 h 30",
+        "Idéal pour : amis, couples, familles",
+        "Attention ! Vous devez attendre au moins 24 heures après vos plongées avant de prendre l'avion."
+      ],
+      "shortTitle": "Apprendre à plonger au Museo Atlántico"
+    },
+    "alquiler-lancha-motora-en-la-graciosa": {
+      "title": "Location de bateau à moteur à La Graciosa, sans permis !",
+      "summary": "Profitez d'une belle expérience à La Graciosa : louez un bateau à moteur, naviguez en autonomie et détendez-vous en pleine mer. Aucun permis nautique n'est exigé.",
+      "description": "Profitez d'une belle expérience à La Graciosa : louez un bateau à moteur, naviguez en autonomie et détendez-vous en pleine mer. Aucun permis nautique n'est exigé.\nSi vous souhaitez visiter l'île de La Graciosa et naviguer par vos propres moyens, nous vous recommandons de louer un bateau à moteur et de profiter des plages de La Graciosa. Il vous suffit d'avoir envie de devenir skipper pour pouvoir naviguer avec celui-ci. Nous vous fournirons un bateau semi-rigide Vanguard équipé d'un moteur Suzuki, d'une capacité de 4 personnes. Il est doté d'une double coque en fibre de verre moulée, qui le rend plus léger et plus facile à conduire. \nPour que la navigation soit une expérience facile, confortable et amusante, les bateaux disposent d'une console avec volant, de sièges, d'un démarreur électrique, etc. \nLe bateau sera ravitaillé en carburant et vous pourrez naviguer pendant 1 heure. \nSi vous le souhaitez, vous pouvez le louer pour une durée plus longue. \nVoici les tarifs : \n1 heure : 50,00 €\n2 heures : 80,00 €\n4 heures : 130,00 €\nJournée complète : 180,00 € \nSi vous aimez les sports nautiques comme le snorkeling, cette location vous permettra de les pratiquer en pleine mer. Vous pouvez louer le matériel ou apporter le vôtre.",
+      "included": [
+        "Rames, ancre, aussières auxiliaires, réservoir de carburant (consommation de carburant), gilets homologués, équipement de sécurité obligatoire, assurance."
+      ],
+      "notIncluded": [
+        "Extras :",
+        "Réfrigérateur +10,00 €",
+        "Équipement de snorkeling +10,00 €",
+        "Enceintes Bluetooth +10,00 €",
+        "Bimini rétractable +10,00 €"
+      ],
+      "recommendations": [
+        "Emportez aussi votre maillot de bain et de la protection solaire pour ne pas brûler."
+      ],
+      "shortTitle": "Location de bateau à La Graciosa, sans permis !"
+    },
+    "espeleologia-familia-lanzarote-cueva-de-los-naturalistas": {
+      "title": "Spéléologie en famille. Cueva de los Naturalistas",
+      "summary": "Nous vous proposons de découvrir et de profiter de l'intérieur d'une grotte volcanique. Un baptême de spéléologie vous permettra un premier contact avec le monde souterrain, en famille et entre amis.",
+      "description": "Nous vous proposons de découvrir et de profiter de l'intérieur d'une grotte volcanique. Un baptême de spéléologie vous permettra un premier contact avec le monde souterrain, en famille et entre amis.\nÉgalement connue sous le nom de Cueva de Las Palomas de Masdache, il s'agit d'un tube volcanique formé dans les coulées de lave pahoehoe des dernières phases de l'éruption de Timanfaya, de 1730 à 1736. Sa formation est associée aux variations du volume de lave émis pendant la période d'activité. Le tube a été cartographié par des spéléologues. Son orientation est approximativement nord-ouest–sud-est et il s'étend sur environ 1 640 m de longueur. Quant à son tracé, le tube se divise en deux branches. Ce tube se caractérise par un haut degré de conservation et présente toute la gamme des morphologies propres à ce type de grottes volcaniques, comme les corniches, les plateformes de lave, les colonnes centrales, les stalactites au plafond et à la base de la grotte (les mieux conservées des îles Canaries), formées par égouttement de lave. Le tube se compose de plusieurs galeries dans lesquelles on peut voir des effondrements partiels du plafond et des jameos.\n\nCe géosite présente un intérêt volcanologique majeur et, à titre secondaire, géomorphologique. S'y ajoute un intérêt historique et spéléologique. Il fait partie du géosite « VC007 Parque Nacional de Timanfaya », d'importance internationale.",
+      "recommendations": [
+        "La visite du tube volcanique ne dure pas plus de 30 minutes",
+        "Nous recommandons de porter des chaussures adaptées à la marche sur un terrain inégal. L'usage de lampes de poche est indispensable. Veuillez prendre les précautions nécessaires pour ne pas endommager les stalactites. En sortant de la cavité, vous vous trouverez dans une mer de lave : attention à ne pas marcher sur les lichens."
+      ],
+      "shortTitle": "Spéléologie en famille. Cueva de los Naturalistas"
+    },
+    "servicio-de-canguro-en-lanzarote": {
+      "title": "Service de baby-sitting et de nounou à Lanzarote",
+      "summary": "Vous prévoyez des vacances en famille à Lanzarote ?\n N'aimeriez-vous pas explorer sans les enfants dans les jambes, aller à la plage et vous détendre, ou simplement profiter d'un dîner romantique avec votre partenaire ?  \nNos nounous du service de garde d'enfants sont disponibles 24 heures sur 24,\n 365 jours par an ! Le tarif est de 18,00 € de l'heure, avec un minimum de 3 heures de service.\nDites-nous quoi faire avec vos enfants",
+      "description": "Vous prévoyez des vacances en famille à Lanzarote ? N'aimeriez-vous pas explorer sans les enfants dans les jambes, aller à la plage et vous détendre, ou simplement profiter d'un dîner romantique avec votre partenaire ?  \n\nNos nounous du service de garde d'enfants sont disponibles 24 heures sur 24, 365 jours par an ! Le tarif est de 18,00 € de l'heure, avec un minimum de 3 heures de service.\n\nNous comprenons à quel point les vacances en famille sont particulières et nous veillons à ce que votre baby-sitter prenne grand soin de vos enfants. \n\nNotre priorité est que les enfants se sentent à l'aise, en sécurité, heureux et bien entourés.\nEnvie de quelques heures de qualité, l'esprit libre ?\nLe service de baby-sitting est conçu pour permettre aux parents de profiter d'un moment de qualité sans contrainte sur cette île magique. En vous proposant d'excellents baby-sitters qui s'occuperont de vos petits. Que vous souhaitiez prendre un verre, un déjeuner tranquille, faire des courses sans stress, un dîner romantique, une fête… Nous venons volontiers à votre hôtel et prenons soin de vos proches.\n\nNotre équipe de baby-sitters, soigneusement sélectionnés, possède les qualifications requises, de l'expérience, parle plusieurs langues et est titulaire d'une certification de premiers secours.\n\nNos collaborateurs :  \n\nAiment les enfants, parlent anglais, sont éducateurs de maternelle\nPsychologue de l'enfant\nSont assurés\nOnt fait l'objet d'une vérification des antécédents (CRB)\nSont fiables. Que fait le baby-sitter avec les enfants ?\n\nTout dépend de l'horaire de la réservation. S'il s'agit d'une garde de jour, le baby-sitter sortira avec les enfants, pour explorer et jouer dans le domaine ou le jardin de l'hôtel ou de l'hébergement.\n\nUne garde en soirée se déroule autrement : le baby-sitter emmènera peut-être les enfants dîner tôt au restaurant de l'hôtel, puis les installera pour la soirée, avec le bain, l'histoire et le rituel du coucher.\nLes baby-sitters ne font pas le ménage, ne font pas la lessive, ne conduisent pas vos enfants dans une voiture (sauf autorisation et accord au moment de la réservation), ne font pas de courses, ne font pas de livraisons, ne donnent pas de médicaments, ne supervisent pas la prise de médicaments et n'autorisent personne qui n'ait pas été préalablement autorisé par le client à entrer dans le logement ou la chambre d'hôtel.\nY a-t-il quelque chose que les baby-sitters ne peuvent pas faire ?\n\nLes baby-sitters ne font pas le ménage, ne font pas la lessive, ne conduisent pas vos enfants dans une voiture (sauf autorisation et accord au moment de la réservation), ne font pas de courses, ne font pas de livraisons, ne donnent pas de médicaments, ne supervisent pas la prise de médicaments et n'autorisent personne qui n'ait pas été préalablement autorisé par le client à entrer dans le logement ou la chambre d'hôtel.",
+      "recommendations": [
+        "Les baby-sitters sont disponibles le jour, le soir ou pour la nuit. Le tarif est de 18,00 € de l'heure, avec un minimum de 3 heures de service."
+      ],
+      "shortTitle": "Service de baby-sitting et de nounou à Lanzarote"
+    },
+    "sea-treck-lanzarote": {
+      "title": "Sea Trek, la meilleure expérience sous-marine !",
+      "summary": "Sea Trek est un système innovant qui vous permet de marcher facilement sur les fonds marins et \n\nC'est l'activité parfaite pour quiconque souhaite découvrir la vie marine de Lanzarote sans consacrer une partie de ses vacances à une formation plus exigeante.\n\nSi vous savez marcher et respirer, vous pouvez faire un Sea Trek !",
+      "description": "Sea Trek est un système innovant qui vous permet de marcher facilement sur les fonds marins et\n c'est l'activité parfaite pour quiconque souhaite découvrir la vie marine de Lanzarote sans consacrer une partie de ses vacances à une formation plus exigeante. \nSi vous savez marcher et respirer, vous pouvez faire un Sea Trek !\n\nCette nouvelle expérience vous donnera une sensation d'apesanteur, comme si vous étiez sur la Lune, tandis que vous marchez sur les fonds marins, entouré de l'impressionnante vie marine de Lanzarote. \n\nPour pratiquer cette activité, vous devez avoir huit ans ou plus, mais vous n'avez pas besoin de savoir nager. Vous pouvez la faire avec des lunettes, aucune expérience n'est requise, et tout le monde peut y participer quel que soit son niveau de forme — il vous suffit de marcher, de respirer et de suivre une brève formation de 10 minutes. L'activité dure 30 minutes et atteint une profondeur maximale de six mètres.",
+      "notIncluded": [
+        "Photos et vidéos 25 € (clé USB)"
+      ],
+      "recommendations": [
+        "Durée : 60 minutes.",
+        "Âge minimum : 8 ans",
+        "Le Sea Trek pour les personnes à mobilité réduite est une nouvelle expérience que nous développons et améliorons.",
+        "Tarif 180 €",
+        "Âge minimum 8 ans.",
+        "Durée 30 min.",
+        "Profondeur maximale 4 mètres.",
+        "3 moniteurs par personne.",
+        "Fauteuil adapté Native Diving.",
+        "Nous n'effectuons pas de prises en charge avec fauteuil.",
+        "Vérifiez les disponibilités.",
+        "Cette activité doit être préparée à l'avance."
+      ],
+      "shortTitle": "Sea Trek, la meilleure expérience sous-marine !"
+    },
+    "piratas-experience-siguiendo-las-huellas-de-los-piratas": {
+      "title": "Pirate Experience : sur les traces des pirates",
+      "summary": "Les récits de Lanzarote sont pleins de pirates. Nous pouvons les parcourir et même les toucher en visitant les refuges de Lanzarote. \n\nUn itinéraire à Lanzarote et sur l'île de La Graciosa nous raconte leur histoire et nous ramène à l'époque où la population des îles subissait les invasions de pirates et de corsaires d'Afrique et d'Europe.\n\nProfitez d'une journée sur les traces des pirates",
+      "description": "En 1522, le pirate Jean Fleury envahit Lanzarote, ce qui déclencha la panique parmi la population des îles, qui dut trouver et construire des refuges sur l'île. Un itinéraire à Lanzarote et sur l'île de La Graciosa nous racontera son histoire et la manière dont les habitants de l'époque l'ont vécue. \nNous commencerons notre route des pirates en visitant le refuge le plus utilisé par les aborigènes à l'époque préhispanique, la Cueva de los Verdes.\n Un tube volcanique d'une grande beauté qui captive tous ses visiteurs et vous ramènera à l'époque des invasions de pirates qui ravagèrent Lanzarote du XVe au XVIIIe siècle.\nNous irons ensuite au château de Guanapay, ou Santa Bárbara, construit au XVe siècle pour protéger et mettre la population en sûreté. Le château se trouve au sommet d'un volcan qui domine Teguise. Vous y aurez une belle vue panoramique sur Teguise et le centre de Lanzarote. Le château est aujourd'hui un musée de la piraterie, où vous apprendrez des faits très intéressants sur les pirates qui assiégèrent cette île, comme Morato Arráez ou John Hawkins.\nNous mettons ensuite le cap au nord pour embarquer sur le ferry vers La Graciosa, un paradis d'eaux bleu turquoise et de plages de sable doré, dans un petit coin de l'Atlantique dont les visiteurs tombent amoureux en débarquant sur son petit quai. C'est l'île où les pirates réparaient leurs navires et où, selon les légendes, il resterait des trésors enterrés par les pirates, jamais retrouvés. Nous débarquons au quai de Caleta de Sebo, où nous visitons la localité et où nous aurons du temps libre pour manger, nous promener et nous baigner. \nLa meilleure façon de connaître l'île est en jeep, conduite par de vrais Gracioseros, qui seront heureux de vous raconter leur enfance sur la plus petite île de l'archipel. Ils vous raconteront des anecdotes tout en découvrant les plus beaux endroits que cache La Graciosa. La plage de Las Conchas, d'où vous profiterez de vues imbattables sur Montaña Clara et le Roque del Oeste, El Caletón de los Arcos, où vous verrez comment la lave crée des formes capricieuses, Playa Lambra et le petit village de Pedro Barba. \nAllez-y et vivez une véritable expérience de pirates avec nous !",
+      "included": [
+        "Transport climatisé",
+        "Service de guide local",
+        "Droit d'entrée à la Cueva de los Verdes",
+        "Ferry pour La Graciosa",
+        "Droit d'entrée au musée de la piraterie",
+        "Safari en jeep",
+        "Déjeuner"
+      ],
+      "recommendations": [
+        "Emportez un maillot de bain, un chapeau, une serviette et de la protection solaire",
+        "Chaussures confortables"
+      ],
+      "shortTitle": "Pirate Experience : sur les traces des pirates"
+    },
+    "sesion-fotografica-privada-lanzarote": {
+      "title": "Séance photo privée à Lanzarote",
+      "summary": "Faites-vous photographier dans de superbes endroits\n\nEt si vous faisiez une séance photo dans certains des plus beaux sites de l'île ? \n\nC'est une autre façon de visiter Lanzarote et de garder des souvenirs incroyables de vos vacances… des paysages uniques, des vignobles, des volcans, des falaises, des plages de sable noir. Posez avec vos amis, votre famille ou l'être aimé, avec une nature préservée en arrière-plan. Profitez de l'instant et",
+      "description": "Faites-vous photographier dans de superbes endroits\n\nEt si vous faisiez une séance photo dans certains des plus beaux sites de l'île ?\n\nC'est une autre façon de visiter Lanzarote et de garder des souvenirs incroyables de vos vacances… des paysages uniques, des vignobles, des volcans, des falaises, des plages de sable noir. Posez avec vos amis, votre famille ou l'être aimé, avec une nature préservée en arrière-plan. Profitez de l'instant et des souvenirs durables que vous garderez grâce à des photos remarquables de votre voyage aux îles Canaries !\n\nLe photographe ne se contentera pas de prendre quelques photos : il les retravaillera après la séance pour en tirer le meilleur.",
+      "included": [
+        "Séance photo",
+        "Équipe professionnelle spécialisée dans les portraits en paysage",
+        "40 photos numériques",
+        "Transport et assurance"
+      ],
+      "shortTitle": "Séance photo privée à Lanzarote"
+    },
+    "entradas-billetes-tickets-rancho-texas-park-lanzarote": {
+      "title": "Billets pour le Rancho Texas Lanzarote Park",
+      "summary": "Passez une journée passionnante au Rancho Texas, où vous pourrez admirer des animaux spectaculaires et exotiques comme les tigres blancs et les dragons de Komodo. Vous pourrez aussi profiter de diverses activités aquatiques avec les dauphins et les otaries, de numéros de cow-boys au lasso et de spectacles de rapaces tels que les aigles, les vautours et les faucons. Mais ce n'est pas tout. Le parc dispose également d'un espace piscine où petits et grands peuvent se rafraîchir. Tout est",
+      "description": "Parmi les installations du parc, vous pouvez aussi vous baigner dans sa piscine, interagir avec les dauphins et les otaries, vous promener dans ses jardins et sur ses terrasses. Vous pouvez monter à poney, faire du canoë, voir des animaux exotiques comme des crocodiles, des ratons laveurs, des otaries et des tigres. Et quand vous aurez faim, vous pourrez déjeuner dans son restaurant. Les mardis et vendredis, de 18 h 30 à 23 h, le Rancho Texas organise une fête de cow-boys, pleine d'amusement pour toute la famille. Lors de la fête de cow-boys, vous profiterez de l'atmosphère du Far West, apprendrez à danser sur de la musique country tout en savourant un dîner buffet-barbecue et des numéros de fouet et de lasso conçus pour vous faire sentir cow-boy.\nHoraires et tarifs\nLe parc est ouvert au public\n tous les jours de 9 h 30 à 17 h 30. \nTarifs : adultes : 42 €, enfants (3-12 ans) : 28 €. Horaires d'ouverture et spectacles\n\nLe Rancho Texas Lanzarote Park est ouvert tous les jours de 9 h 30 à 17 h 30.",
+      "included": [
+        "Spectacle de dauphins",
+        "Exhibition d'aras et de cacatoès",
+        "Exhibition de rapaces",
+        "Exhibition d'otaries",
+        "Spectacle de fouet et de lasso",
+        "Vous pouvez voir tous les animaux qui vivent dans notre parc et profiter de tous les univers recréés dans le style du Far West tout au long de la journée : visitez notre reptilarium, la lagune indienne, la mine d'or, notre cadran solaire, le tipi, la grotte, descendez notre tyrolienne, observez toutes les plantes indigènes qui poussent aux alentours tout en découvrant les totems répartis dans tout le parc.",
+        "Entrée à notre corral aquatique et aux toboggans.",
+        "Enfin, attendez le bus qui vous ramènera gratuitement à votre hôtel, mais avant cela n'oubliez pas de passer par notre boutique de souvenirs pour emporter un souvenir."
+      ],
+      "notIncluded": [
+        "L'interaction avec les dauphins n'est pas comprise dans le prix du billet. Coût supplémentaire : 150 euros. Séances quotidiennes à 10 h 00 - 12 h 30 - 15 h 30",
+        "L'interaction avec les otaries n'est pas comprise dans le prix du billet. Il y a un coût supplémentaire : 80 euros",
+        "Les enfants de 7 à 12 ans doivent être accompagnés d'un adulte majeur, qui doit également payer et participer à l'interaction. Les enfants de moins de 7 ans ne sont pas autorisés à participer. Séances quotidiennes à 10 h 30 et 15 h 30"
+      ],
+      "shortTitle": "Billets pour le Rancho Texas Lanzarote Park"
+    },
+    "fiesta-vaquera-country-rancho-texas-lanzarote-park": {
+      "title": "Soirée country du Rancho Texas Park",
+      "summary": "Passez une soirée amusante en famille à la soirée country du Rancho Texas Lanzarote Park ! Lors de la fête western à Puerto del Carmen, vous pourrez savourer un copieux barbecue et profiter d'un programme de soirée exceptionnel.\n\nLa soirée country du Rancho Texas Lanzarote Park est très amusante pour tous les âges.\nDurée : ~ 4 heures\n\nHoraires : 19 h 00 - 23 h 00\n\nJours : toute l'année, tous les mardis et vendredis.",
+      "description": "Une soirée pour toute la famille, pleine de divertissement et de délicieux plats, vous attend à la meilleure fête du Far West de Lanzarote.\nÀ votre arrivée, rejoignez l'ambiance avec nos cow-boys et nos Indiens, qui vous accueilleront à cheval.\nBière, sangria et boissons sans alcool à volonté vous attendent, servies par les cow-boys, les cow-girls et les Indiens. Si vous avez besoin d'un autre verre, criez simplement le mot de passe (Yeehaa). Oui, tant que vous continuez à crier Yeehaa, nous continuons à resservir toute la nuit. Vous passerez une soirée amusante avec de la danse, un barbecue et de la musique live. Entouré d'animaux sauvages, de chevaux, de cow-girls et de cow-boys, avec un numéro de lasso et de rodéo, vous pourrez fêter une vraie soirée country. D'abord, vous serez accueilli avec style par les cow-boys et les Indiens sur leurs chevaux.\n\nProfitez de la musique live aux rythmes des « Texas Bandits ». Un savoureux buffet barbecue propose un dîner typique pour tous les goûts. Toutes les boissons sont également comprises dans le prix.\n\nAprès le dîner, place à la danse ! Laissez-vous emporter par les spectacles de danse et, si vous le souhaitez, apprenez la danse de groupe en quelques minutes et rejoignez la piste !\n\nLa fête western ne serait pas une vraie soirée country sans lassos et taureaux : lors du numéro de lasso, vous verrez l'usage impressionnant du lasso et, pour les plus courageux d'entre vous, un taureau mécanique est disponible pour le rodéo.\nPendant que les enfants jouent et s'amusent avec notre petite Indienne « Free Spirit », c'est à vous de chanter et de danser avec notre groupe live « The Texas Bandits », qui joue une belle sélection de country et western anciens et nouveaux, plus quelques classiques de fête pour faire bonne mesure. Après tout cela, prenez un moment de pause et laissez nos danseurs talentueux vous divertir, puis essayez vous-même la line dance avec la fameuse « Calamity Jane ». \n\nPrenez vos partenaires et lancez-vous sur la piste pour de bons classiques country avec les Texas Bandits, puis asseyez-vous, détendez-vous et laissez la bande vous offrir un au revoir que vous n'oublierez pas. Yeehaa !! \nÀ bientôt, les amis.",
+      "included": [
+        "Buffet barbecue : travers de porc, poulet au four à bois, pommes de terre en papillote, haricots, salades, diverses sauces ; pour les enfants : nuggets de poulet, frites, glace ; boissons : bière, sangria, boissons sans alcool et vin",
+        "Promenade à poney pour les enfants, musique live, spectacles de danse, danses de groupe"
+      ],
+      "notIncluded": [
+        "Le supplément pour le transfert en BUS a un coût supplémentaire de 7,00 euros, à régler à la billetterie du Rancho Texas."
+      ],
+      "recommendations": [
+        "Heure de début ou d'ouverture : 18 h 50. Heure de fin ou de fermeture : 23 h 00. Nous vous recommandons de réserver votre place dans le bus."
+      ],
+      "shortTitle": "Soirée country du Rancho Texas Park"
+    },
+    "paquete-de-entradas-para-visitar-la-fundacion-cesar-manrique-y-museo-de-haria-ce": {
+      "title": "Billets combinés pour visiter la Fondation César Manrique et la maison-musée César Manrique à Haría",
+      "summary": "Billets combinés pour visiter les deux maisons de César Manrique à Lanzarote. L'une est la Fondation à Tahiche, et la seconde est la maison de la palmeraie dans le village de Haría, à Lanzarote.\nLa Fondation César Manrique à Tahiche est ouverte tous les jours de 10 h 00 à 18 h 00 \nLa maison-musée César Manrique à Haría est ouverte tous les jours de 10 h 30 à 18 h 00 \nBillets combinés : 15,00 € par personne.",
+      "description": "Billets combinés pour visiter les deux maisons de César Manrique à Lanzarote. L'une est la Fondation à Tahiche, et la seconde est la maison de la palmeraie dans le village de Haría, à Lanzarote.\n\nLa Fondation César Manrique à Tahiche est ouverte tous les jours de 10 h 00 à 18 h 00 \n\nLa maison-musée César Manrique à Haría est ouverte tous les jours de 10 h 30 à 18 h 00 \n\nBillets combinés : 15,00 € par personne.\nLa Fondation César Manrique se trouve dans la spectaculaire demeure conçue par César Manrique lui-même à son retour de New York. Habitée par l'artiste pendant 20 ans, de 1968 à 1988, c'est la maison dans laquelle il a vécu le plus longtemps. Elle a été implantée au milieu d'une coulée de lave issue des grandes éruptions survenues sur l'île entre 1730 et 1736. Dans cette construction, qui occupe 3 000 mètres carrés sur un domaine de 30 000 mètres carrés, le dialogue entre le bâtiment et la nature se distingue. L'étage supérieur s'inspire de l'architecture traditionnelle de Lanzarote, à laquelle il incorpore des éléments fonctionnels de conception moderne. Le niveau inférieur tire parti de cinq bulles volcaniques naturelles reliées par des tunnels creusés dans la lave. Les jardins qui entourent la maison conjuguent les fascinants contrastes de la végétation, des œuvres d'art et de la cendre volcanique avec des arbres fruitiers et d'autres plantes.\n\nLa maison-musée de Haría, dans le nord de Lanzarote, a été conçue par l'artiste pour travailler et profiter des dernières années de sa vie, et vous pouvez y découvrir le côté le plus intime et personnel de l'artiste. Un lieu d'une beauté unique, au milieu d'une extraordinaire palmeraie, situé dans le beau village de Haría. Au début de 1986, Manrique entreprit la construction de sa dernière maison en réutilisant et en adaptant une ferme en ruine, située sur une propriété qu'il avait acquise dans les années 1970. Il y vécut jusqu'en 1992, année de sa mort. Le visiteur pourra vivre une expérience unique dans un environnement naturel paisible. Un monde véritablement singulier, qui permet de se rapprocher du côté plus humain du grand artiste né à Lanzarote. Les conditions particulières du bâtiment le rendent partiellement accessible aux personnes à mobilité réduite.",
+      "shortTitle": "Billets combinés Fondation César Manrique et Haría"
+    }
+  },
+  "blog": {
+    "que-ver-en-lanzarote-en-un-dia": {
+      "title": "Que voir à Lanzarote en une journée (si vous arrivez en croisière)",
+      "excerpt": "Si votre navire fait escale à Arrecife ou à Puerto de Los Mármoles, voici votre feuille de route pour voir l'essentiel sans risquer de rater l'embarquement.",
+      "content": "Arriver à Lanzarote en croisière est une occasion en or… et le temps est compté. Avec environ 6 à 8 heures à terre, vous pouvez voir les sites les plus emblématiques de l'île sans vous presser, à condition de bien choisir.\n\n**Option A — Demi-journée (itinéraire du sud)**\nTimanfaya, El Golfo et La Geria. Idéal si l'escale est courte ou si vous souhaitez regagner le navire avec de la marge.\n\n**Option B — Journée complète (Grand Tour)**\nAjoutez les Jameos del Agua et le Jardín de Cactus. L'option la plus complète si votre escale est longue.\n\n**Conseil de pro :** réservez une excursion privée ou en minibus si vous voyagez en famille ou en groupe. Nous adaptons les horaires de départ et de retour à votre programme de croisière.\n\nChez Lanzarote Tours, nous organisons la prise en charge au port et vous ramenons largement à temps avant l'embarquement.",
+      "author": "Équipe Lanzarote Tours",
+      "tags": [
+        "Croisières",
+        "Itinéraires"
+      ]
+    },
+    "timanfaya-consejos-practicos": {
+      "title": "Timanfaya : conseils pratiques pour votre visite",
+      "excerpt": "Chaleur géothermique, Route des volcans et files d'attente : ce qu'il faut savoir avant d'entrer dans le parc national de Timanfaya.",
+      "content": "Le parc national de Timanfaya est le cœur volcanique de Lanzarote. Voici l'essentiel :\n\n**Accès prioritaire**\nAvec un transport autorisé (nos minibus et nos excursions), vous évitez les longues attentes en haute saison.\n\n**Tenue**\nPrévoyez une veste. Même s'il fait soleil sur la côte, le parc est souvent venteux.\n\n**Dromadaires**\nLa balade est facultative et se règle sur place.\n\n**Photos**\nL'Islote de Hilario et El Golfo sont difficiles à égaler : n'oubliez pas votre appareil photo.\n\nPour une expérience plus confortable, choisissez une excursion en petit groupe ou privée.",
+      "author": "Équipe Lanzarote Tours",
+      "tags": [
+        "Timanfaya",
+        "Conseils"
+      ]
+    },
+    "grupo-reducido-vs-grupo-grande": {
+      "title": "Petit groupe ou grand groupe : que choisir ?",
+      "excerpt": "Le même itinéraire, une expérience différente. Nous vous aidons à choisir selon votre style de voyage et votre budget.",
+      "content": "Chez Lanzarote Tours, nous proposons les mêmes itinéraires dans deux formats :\n\n**Petit groupe (8 pers. max.)**\nUne attention plus personnelle du guide, un rythme souple, idéal pour les couples et les familles qui apprécient le calme. Le tarif est légèrement plus élevé.\n\n**Grand groupe (jusqu'à 20 pers.)**\nLe même itinéraire à un meilleur prix. Vous pouvez payer par carte, par Bizum ou le jour de l'excursion. Parfait si vous voyagez avec un budget plus serré.\n\nIl n'y a pas de « meilleur » choix : tout dépend de ce que vous privilégiez, une expérience plus intime ou le prix. Le paysage de Lanzarote est spectaculaire dans les deux cas.",
+      "author": "Équipe Lanzarote Tours",
+      "tags": [
+        "Excursions",
+        "Guides"
+      ]
+    },
+    "traslados-aeropuerto-lanzarote": {
+      "title": "Transferts aéroport : arriver sans stress",
+      "excerpt": "Playa Blanca, Puerto del Carmen, Costa Teguise et plus encore : tarifs fixes, pancarte à votre nom et suivi de vol.",
+      "content": "Après un vol, la dernière chose dont vous avez envie est de négocier un prix ou de chercher un taxi. Un transfert privé vous apporte la tranquillité dès la première minute.\n\n**Comment cela fonctionne**\nNous vous attendons dans le terminal avec une pancarte à votre nom, vous aidons avec vos bagages et vous conduisons directement à votre hôtel.\n\n**Destinations fréquentes**\nPlaya Blanca, Puerto Calero, Puerto del Carmen, Arrecife et Costa Teguise — aller simple, retour, ou les deux.\n\n**L'avantage**\nUn tarif fixe convenu au moment de la réservation. Aucune surprise liée au trafic ou aux horaires de nuit.\n\nVous pouvez réserver votre transfert en ligne sur notre site en quelques minutes.",
+      "author": "Équipe Lanzarote Tours",
+      "tags": [
+        "Transferts",
+        "Aéroport"
+      ]
+    },
+    "la-geria-vino-volcanico": {
+      "title": "La Geria : le paysage du vin volcanique",
+      "excerpt": "Cuvettes de cendre, murets de pierre et malvoisie : pourquoi La Geria est une étape incontournable de presque toutes nos excursions.",
+      "content": "La Geria est l'un des paysages agricoles les plus remarquables d'Europe. Les vignes poussent dans des cuvettes protégées du vent par des murets de pierre volcanique en forme de croissant.\n\n**Ce que vous verrez**\nDes panoramas uniques, des bodegas et, souvent, une petite dégustation de vin local, selon l'excursion.\n\n**Quand on la visite**\nElle figure à la fois dans l'itinéraire du sud et dans le Grand Tour : un contraste parfait après Timanfaya.\n\nSi vous souhaitez profiter de l'œnotourisme à votre rythme, renseignez-vous sur une excursion privée : nous pouvons prolonger l'arrêt dans la bodega que vous préférez.",
+      "author": "Équipe Lanzarote Tours",
+      "tags": [
+        "La Geria",
+        "Culture"
+      ]
+    }
+  },
+  "transfers": {
+    "highlights": [
+      "Service 100 % privé",
+      "Accueil dans le terminal des arrivées avec une pancarte à votre nom",
+      "Véhicules confortables et climatisés",
+      "Suivi des vols en temps réel et ajustement automatique de la prise en charge",
+      "Tarifs fixes, sans mauvaise surprise",
+      "Disponible pour les arrivées à l'hôtel comme pour les départs"
+    ]
+  },
+  "shoreTours": {
+    "excursion-sur-de-lanzarote-parque-nacional-de-timanfaya": {
+      "title": "Excursion dans le sud de Lanzarote — parc national de Timanfaya",
+      "shortTitle": "Sud de Lanzarote · Timanfaya",
+      "summary": "Parc national de Timanfaya, El Golfo, Los Hervideros et La Geria. Idéale pour les escales (~5 h), avec retour au navire garanti.",
+      "description": "Excursion à terre en petit groupe dans le sud de Lanzarote : paysages géothermiques de Timanfaya, lagune verte d'El Golfo, Los Hervideros et vignoble de La Geria. Retour au navire à l'heure garanti.",
+      "duration": "5 heures",
+      "highlights": [
+        "Petits groupes, 25 personnes maximum",
+        "Une seule langue par excursion",
+        "Retour au navire à l'heure garanti",
+        "Remboursement en cas de retard au retour au navire"
+      ],
+      "places": [
+        "Timanfaya",
+        "Islote de Hilario",
+        "El Golfo",
+        "Los Hervideros",
+        "La Geria",
+        "Salinas de Janubio"
+      ]
+    },
+    "lanzarote-experience-tour-nuestra-excursion-mas-completa-para-cruceristas": {
+      "title": "Lanzarote Experience Tour : notre excursion à terre la plus complète",
+      "shortTitle": "Lanzarote Experience Tour",
+      "summary": "L'excursion en croisière la plus complète : Timanfaya, Jameos del Agua et Jardín de Cactus en une journée (~8 h), entrées comprises.",
+      "description": "Excursion à terre d'une journée combinant le parc national de Timanfaya et les sites de César Manrique dans le nord. Conçue autour de votre heure limite de retour à bord, avec prise en charge au quai.",
+      "duration": "8 heures",
+      "highlights": [
+        "Petits groupes, 25 personnes maximum",
+        "Une seule langue par excursion",
+        "Retour au navire à l'heure garanti",
+        "Principales entrées incluses"
+      ],
+      "places": [
+        "Parc national de Timanfaya",
+        "Jameos del Agua",
+        "Jardín de Cactus",
+        "La Geria"
+      ]
+    },
+    "parque-nacional-de-garajonay-la-gomera": {
+      "title": "Parc national de Garajonay — La Gomera",
+      "shortTitle": "Parc national de Garajonay",
+      "summary": "Forêt de laurisylve classée à l'UNESCO et points de vue à La Gomera, calés sur votre escale.",
+      "description": "Explorez la forêt de laurisylve unique du parc national de Garajonay et ses points de vue, avec retour au navire garanti.",
+      "duration": "4 heures",
+      "highlights": [
+        "Forêt de laurisylve classée à l'UNESCO",
+        "Retour au navire garanti"
+      ],
+      "places": [
+        "Garajonay",
+        "Valle Gran Rey",
+        "Point de vue"
+      ]
+    },
+    "dunas-de-corralejo-fuerteventura": {
+      "title": "Parc naturel des dunes de Corralejo",
+      "shortTitle": "Dunes de Corralejo",
+      "summary": "Dunes de sable blanc et villages du nord de Fuerteventura — idéal pour les escales plus courtes.",
+      "description": "Visitez les dunes du parc naturel de Corralejo et les localités côtières voisines lors d'une excursion à terre adaptée aux horaires de votre navire.",
+      "duration": "4 heures",
+      "highlights": [
+        "Dunes et villages du nord",
+        "Idéal pour les escales courtes"
+      ],
+      "places": [
+        "Parc naturel des dunes de Corralejo",
+        "Corralejo",
+        "El Cotillo"
+      ]
+    },
+    "teide-y-norte-tenerife": {
+      "title": "Teide et nord de Tenerife",
+      "shortTitle": "Teide et nord de Tenerife",
+      "summary": "Parc national du Teide et charmantes localités du nord de Tenerife.",
+      "description": "Des paysages volcaniques du Teide à La Orotava et Puerto de la Cruz, une excursion à terre classique pour les escales à Tenerife.",
+      "duration": "7 heures",
+      "highlights": [
+        "Parc national du Teide",
+        "Villages du nord"
+      ],
+      "places": [
+        "Teide",
+        "La Orotava",
+        "Puerto de la Cruz"
+      ]
+    },
+    "sur-tenerife-los-gigantes": {
+      "title": "Sud de Tenerife et Los Gigantes",
+      "shortTitle": "Sud de Tenerife · Los Gigantes",
+      "summary": "Falaises de Los Gigantes et côte ensoleillée du sud de Tenerife.",
+      "description": "Excursion à terre le long de la côte sud de Tenerife, avec vue sur les célèbres falaises de Los Gigantes.",
+      "duration": "5 heures",
+      "highlights": [
+        "Falaises de Los Gigantes",
+        "Côte sud"
+      ],
+      "places": [
+        "Los Gigantes",
+        "Costa Adeje",
+        "Point de vue"
+      ]
+    },
+    "funchal-y-monte-madeira": {
+      "title": "Funchal et Monte — Madère",
+      "shortTitle": "Funchal et Monte",
+      "summary": "Les incontournables de Funchal et la tradition des luges en osier de Monte.",
+      "description": "Découvrez Funchal et Monte, avec les jardins botaniques et le village de montagne emblématique de l'île.",
+      "duration": "4 heures",
+      "highlights": [
+        "Ville de Funchal",
+        "Tradition des luges en osier"
+      ],
+      "places": [
+        "Funchal",
+        "Monte",
+        "Jardins botaniques"
+      ]
+    },
+    "este-madeira-machico": {
+      "title": "Est de Madère — Machico et Ponta de São Lourenço",
+      "shortTitle": "Est de Madère",
+      "summary": "Paysages volcaniques et points de vue sur la pointe orientale spectaculaire de Madère.",
+      "description": "Excursion à terre vers Machico et la spectaculaire péninsule de Ponta de São Lourenço.",
+      "duration": "5 heures",
+      "highlights": [
+        "Paysages volcaniques",
+        "Points de vue de l'est"
+      ],
+      "places": [
+        "Machico",
+        "Ponta de São Lourenço",
+        "Caniçal"
+      ]
+    },
+    "jameos-y-cactus-lanzarote": {
+      "title": "Jameos del Agua et Jardín de Cactus",
+      "shortTitle": "Jameos et Jardín de Cactus",
+      "summary": "Deux chefs-d'œuvre de César Manrique dans le nord de Lanzarote, en petits groupes.",
+      "description": "Visitez les Jameos del Agua et le Jardín de Cactus, avec le temps de profiter de la vision de Manrique, entre art et nature.",
+      "duration": "5 heures",
+      "highlights": [
+        "Œuvres de César Manrique",
+        "Petits groupes"
+      ],
+      "places": [
+        "Jameos del Agua",
+        "Jardín de Cactus",
+        "Arrieta"
+      ]
+    },
+    "wine-and-volcano-lanzarote": {
+      "title": "La Geria et les volcans — route des vins",
+      "shortTitle": "Route des vins de La Geria",
+      "summary": "Vignobles volcaniques de La Geria, avec dégustation de vin et paysages lunaires.",
+      "description": "Route des vins adaptée aux escales, à travers La Geria, avec vues sur les vignes et dégustation.",
+      "duration": "4 heures",
+      "highlights": [
+        "Dégustation de vin",
+        "Paysage volcanique"
+      ],
+      "places": [
+        "La Geria",
+        "Bodega",
+        "Vues sur Timanfaya"
+      ]
+    },
+    "betancuria-fuerteventura": {
+      "title": "Betancuria et l'intérieur de Fuerteventura",
+      "shortTitle": "Intérieur de Betancuria",
+      "summary": "L'historique Betancuria, ancienne capitale, et les paysages montagneux de l'intérieur.",
+      "description": "Découvrez Betancuria et l'intérieur paisible de Fuerteventura lors d'une excursion à terre loin des plages.",
+      "duration": "5 heures",
+      "highlights": [
+        "Ancienne capitale",
+        "Paysages de l'intérieur"
+      ],
+      "places": [
+        "Betancuria",
+        "Antigua",
+        "Point de vue"
+      ]
+    },
+    "vallehermoso-la-gomera": {
+      "title": "Vallehermoso et le nord de La Gomera",
+      "shortTitle": "Nord de Vallehermoso",
+      "summary": "Vallées du nord de La Gomera et vues sur l'Atlantique.",
+      "description": "Explorez Vallehermoso, Agulo et les points de vue du nord plus verdoyant de La Gomera.",
+      "duration": "4 heures",
+      "highlights": [
+        "Vallée du nord",
+        "Vues sur l'Atlantique"
+      ],
+      "places": [
+        "Vallehermoso",
+        "Agulo",
+        "Point de vue"
+      ]
+    },
+    "shore-1": {
+      "title": "Excursion dans le sud de Lanzarote — parc national de Timanfaya",
+      "shortTitle": "Sud de Lanzarote · Timanfaya",
+      "summary": "Parc national de Timanfaya, El Golfo, Los Hervideros et La Geria. Idéale pour les escales (~5 h), avec retour au navire garanti.",
+      "description": "Excursion à terre en petit groupe dans le sud de Lanzarote : paysages géothermiques de Timanfaya, lagune verte d'El Golfo, Los Hervideros et vignoble de La Geria. Retour au navire à l'heure garanti.",
+      "duration": "5 heures",
+      "highlights": [
+        "Petits groupes, 25 personnes maximum",
+        "Une seule langue par excursion",
+        "Retour au navire à l'heure garanti",
+        "Remboursement en cas de retard au retour au navire"
+      ],
+      "places": [
+        "Timanfaya",
+        "Islote de Hilario",
+        "El Golfo",
+        "Los Hervideros",
+        "La Geria",
+        "Salinas de Janubio"
+      ]
+    },
+    "shore-2": {
+      "title": "Lanzarote Experience Tour : notre excursion à terre la plus complète",
+      "shortTitle": "Lanzarote Experience Tour",
+      "summary": "L'excursion en croisière la plus complète : Timanfaya, Jameos del Agua et Jardín de Cactus en une journée (~8 h), entrées comprises.",
+      "description": "Excursion à terre d'une journée combinant le parc national de Timanfaya et les sites de César Manrique dans le nord. Conçue autour de votre heure limite de retour à bord, avec prise en charge au quai.",
+      "duration": "8 heures",
+      "highlights": [
+        "Petits groupes, 25 personnes maximum",
+        "Une seule langue par excursion",
+        "Retour au navire à l'heure garanti",
+        "Principales entrées incluses"
+      ],
+      "places": [
+        "Parc national de Timanfaya",
+        "Jameos del Agua",
+        "Jardín de Cactus",
+        "La Geria"
+      ]
+    },
+    "shore-3": {
+      "title": "Jameos del Agua et Jardín de Cactus",
+      "shortTitle": "Jameos et Jardín de Cactus",
+      "summary": "Deux chefs-d'œuvre de César Manrique dans le nord de Lanzarote, en petits groupes.",
+      "description": "Visitez les Jameos del Agua et le Jardín de Cactus, avec le temps de profiter de la vision de Manrique, entre art et nature.",
+      "duration": "5 heures",
+      "highlights": [
+        "Œuvres de César Manrique",
+        "Petits groupes"
+      ],
+      "places": [
+        "Jameos del Agua",
+        "Jardín de Cactus",
+        "Arrieta"
+      ]
+    },
+    "shore-4": {
+      "title": "Parc national de Garajonay — La Gomera",
+      "shortTitle": "Parc national de Garajonay",
+      "summary": "Forêt de laurisylve classée à l'UNESCO et points de vue à La Gomera, calés sur votre escale.",
+      "description": "Explorez la forêt de laurisylve unique du parc national de Garajonay et ses points de vue, avec retour au navire garanti.",
+      "duration": "4 heures",
+      "highlights": [
+        "Forêt de laurisylve classée à l'UNESCO",
+        "Retour au navire garanti"
+      ],
+      "places": [
+        "Garajonay",
+        "Valle Gran Rey",
+        "Point de vue"
+      ]
+    },
+    "shore-5": {
+      "title": "Parc naturel des dunes de Corralejo",
+      "shortTitle": "Dunes de Corralejo",
+      "summary": "Dunes de sable blanc et villages du nord de Fuerteventura — idéal pour les escales plus courtes.",
+      "description": "Visitez les dunes du parc naturel de Corralejo et les localités côtières voisines lors d'une excursion à terre adaptée aux horaires de votre navire.",
+      "duration": "4 heures",
+      "highlights": [
+        "Dunes et villages du nord",
+        "Idéal pour les escales courtes"
+      ],
+      "places": [
+        "Parc naturel des dunes de Corralejo",
+        "Corralejo",
+        "El Cotillo"
+      ]
+    },
+    "shore-7": {
+      "title": "Teide et nord de Tenerife",
+      "shortTitle": "Teide et nord de Tenerife",
+      "summary": "Parc national du Teide et charmantes localités du nord de Tenerife.",
+      "description": "Des paysages volcaniques du Teide à La Orotava et Puerto de la Cruz, une excursion à terre classique pour les escales à Tenerife.",
+      "duration": "7 heures",
+      "highlights": [
+        "Parc national du Teide",
+        "Villages du nord"
+      ],
+      "places": [
+        "Teide",
+        "La Orotava",
+        "Puerto de la Cruz"
+      ]
+    }
+  },
+  "cruise": {
+    "seaDayLabel": "En mer"
+  }
+}

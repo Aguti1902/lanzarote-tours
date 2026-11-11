@@ -46,7 +46,9 @@ export function CruiseItinerary({ sailing, tours }: Props) {
       ? `Excursiones ${sailing.shipName} (${sailing.companyName}) con salida el ${departure}${nightsLabel ? ` (${nightsLabel})` : ""}`
       : locale === "de"
         ? `Ausflüge ${sailing.shipName} (${sailing.companyName}) Abfahrt ${departure}${nightsLabel ? ` (${nightsLabel})` : ""}`
-        : `Excursions for ${sailing.shipName} (${sailing.companyName}) departing ${departure}${nightsLabel ? ` (${nightsLabel})` : ""}`;
+        : locale === "fr"
+          ? `Excursions ${sailing.shipName} (${sailing.companyName}) départ le ${departure}${nightsLabel ? ` (${nightsLabel})` : ""}`
+          : `Excursions for ${sailing.shipName} (${sailing.companyName}) departing ${departure}${nightsLabel ? ` (${nightsLabel})` : ""}`;
 
   return (
     <div className="space-y-10">

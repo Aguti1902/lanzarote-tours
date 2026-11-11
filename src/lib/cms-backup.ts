@@ -23,6 +23,7 @@ export const CMS_BACKUP_FILES = [
   "tripadvisor.json",
   "i18n/en.json",
   "i18n/de.json",
+  "i18n/fr.json",
 ] as const;
 
 const DAILY_RETENTION_DAYS = 14;

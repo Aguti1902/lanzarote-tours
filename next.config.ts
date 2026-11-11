@@ -180,6 +180,31 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/fr/excursiones",
+        destination: "/fr/visites",
+        permanent: true,
+      },
+      {
+        source: "/fr/excursiones/:path*",
+        destination: "/fr/visites/:path*",
+        permanent: true,
+      },
+      {
+        source: "/fr/excursiones-cruceros",
+        destination: "/fr/excursions-croisiere",
+        permanent: true,
+      },
+      {
+        source: "/fr/excursiones-cruceros/:path*",
+        destination: "/fr/excursions-croisiere/:path*",
+        permanent: true,
+      },
+      {
+        source: "/fr/crucero/:path*",
+        destination: "/fr/croisiere/:path*",
+        permanent: true,
+      },
+      {
         source: "/blog",
         destination: "/es",
         permanent: true,
@@ -190,12 +215,12 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/:locale(es|en|de)/blog",
+        source: "/:locale(es|en|de|fr)/blog",
         destination: "/:locale",
         permanent: true,
       },
       {
-        source: "/:locale(es|en|de)/blog/:path*",
+        source: "/:locale(es|en|de|fr)/blog/:path*",
         destination: "/:locale",
         permanent: true,
       },
